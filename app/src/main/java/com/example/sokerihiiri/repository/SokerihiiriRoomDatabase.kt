@@ -24,20 +24,21 @@ public abstract class SokerihiiriDatabase : RoomDatabase() {
     abstract fun insulinInjectionDao(): InsulinInjectionDao
     abstract fun mealDao(): MealDao
 
-    companion object
-    // singleton
-    @Volatile
-    private var INSTANCE: SokerihiiriDatabase? = null
+    companion object {
+        // singleton
+        @Volatile
+        private var INSTANCE: SokerihiiriDatabase? = null
 
-    fun getDatabase(context: Context): SokerihiiriDatabase {
-        return INSTANCE ?: synchronized(this) {
-            val instance = Room.databaseBuilder(
-                context.applicationContext,
-                SokerihiiriDatabase::class.java,
-                "sokerihiiri_database"
+        fun getDatabase(context: Context): SokerihiiriDatabase {
+            return INSTANCE ?: synchronized(this) {
+                val instance = Room.databaseBuilder(
+                    context.applicationContext,
+                    SokerihiiriDatabase::class.java,
+                    "sokerihiiri_database"
                 ).build()
-            INSTANCE = instance
-            instance
+                INSTANCE = instance
+                instance
+            }
         }
     }
 }

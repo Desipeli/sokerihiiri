@@ -6,11 +6,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.sokerihiiri.repository.SokerihiiriDatabase
+import com.example.sokerihiiri.repository.SokerihiiriRepository
+import com.example.sokerihiiri.ui.AppViewModel
+import com.example.sokerihiiri.ui.AppViewModelFactory
 import com.example.sokerihiiri.ui.components.TopBar
 import com.example.sokerihiiri.ui.screens.BrowseScreen
 import com.example.sokerihiiri.ui.screens.InsulinScreen
@@ -38,6 +44,18 @@ fun SokerihiiriApp(
         backStackEntry.value?.destination?.route ?: Routes.Main.name
     )
 
+    val database = SokerihiiriDatabase.getDatabase(context = LocalContext.current)
+
+    val repository = SokerihiiriRepository(
+        bloodSugarMeasurementDao = database.bloodSugarMeasurementDao(),
+        insulinInjectionDao = database.insulinInjectionDao(),
+        mealDao = database.mealDao(),
+    )
+
+    val viewModel: AppViewModel = viewModel(
+        factory = AppViewModelFactory(repository = repository)
+    )
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -54,7 +72,9 @@ fun SokerihiiriApp(
                 MainScreen( navController = navController)
             }
             composable(route = Routes.Measurement.name) {
-                MeasurementScreen()
+                MeasurementScreen(
+                    viewModel = viewModel,
+                )
             }
             composable(route = Routes.Insulin.name) {
                 InsulinScreen()
