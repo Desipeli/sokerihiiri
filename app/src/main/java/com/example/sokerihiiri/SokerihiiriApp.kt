@@ -15,14 +15,14 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.sokerihiiri.repository.SokerihiiriDatabase
 import com.example.sokerihiiri.repository.SokerihiiriRepository
-import com.example.sokerihiiri.ui.AppViewModel
-import com.example.sokerihiiri.ui.AppViewModelFactory
+import com.example.sokerihiiri.ui.screens.Measurement.MeasurementViewModel
+import com.example.sokerihiiri.ui.screens.Measurement.AppViewModelFactory
 import com.example.sokerihiiri.ui.components.TopBar
 import com.example.sokerihiiri.ui.screens.BrowseScreen
 import com.example.sokerihiiri.ui.screens.InsulinScreen
 import com.example.sokerihiiri.ui.screens.MainScreen
 import com.example.sokerihiiri.ui.screens.MealScreen
-import com.example.sokerihiiri.ui.screens.MeasurementScreen
+import com.example.sokerihiiri.ui.screens.Measurement.MeasurementScreen
 import com.example.sokerihiiri.ui.screens.SettingsScreen
 
 enum class Routes(val title: String) {
@@ -52,7 +52,7 @@ fun SokerihiiriApp(
         mealDao = database.mealDao(),
     )
 
-    val viewModel: AppViewModel = viewModel(
+    val viewModel: MeasurementViewModel = viewModel(
         factory = AppViewModelFactory(repository = repository)
     )
 
@@ -73,7 +73,7 @@ fun SokerihiiriApp(
             }
             composable(route = Routes.Measurement.name) {
                 MeasurementScreen(
-                    viewModel = viewModel,
+                    appViewModel = viewModel,
                 )
             }
             composable(route = Routes.Insulin.name) {
