@@ -73,7 +73,7 @@ fun SokerihiiriApp(
             }
             composable(route = Routes.Measurement.name) {
                 MeasurementScreen(
-                    appViewModel = viewModel,
+                    measurementViewModel = viewModel,
                 )
             }
             composable(route = Routes.Insulin.name) {

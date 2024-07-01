@@ -4,15 +4,18 @@ import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -29,24 +32,27 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TimePickerLayoutType
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MeasurementScreen(
-    appViewModel: MeasurementViewModel,
+    measurementViewModel: MeasurementViewModel,
     modifier: Modifier = Modifier,
 ) {
 
     // https://medium.com/@droidvikas/exploring-date-and-time-pickers-compose-bytes-120e75349797
     // https://material.io/blog/material-3-compose-1-1
 
-    val uiState = appViewModel.bloodSugarMeasurementState
+    val uiState = measurementViewModel.bloodSugarMeasurementState
 
     val dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
@@ -61,13 +67,14 @@ fun MeasurementScreen(
 
     fun handleValueChange(newValue: String) {
         try {
-            appViewModel.setValue(newValue.toFloat())
+            measurementViewModel.setValue(newValue.toFloat())
         } catch (e: NumberFormatException) {
             Log.e("MeasurementScreen", "Invalid value: $newValue")
         }
     }
 
-    Box(modifier = modifier.fillMaxSize()
+    Box(modifier = modifier
+        .fillMaxSize()
         .padding(bottom = 16.dp)) {
 
         Column(
@@ -81,7 +88,14 @@ fun MeasurementScreen(
                 value = if (uiState.value <= 0.0f) "" else uiState.value.toString(),
                 onValueChange = { handleValueChange(it) },
                 label = { Text("Verensokeri mmol/l ") },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent,
+                ),
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Number),
                 keyboardActions = KeyboardActions(
                     onDone = {
                         defaultKeyboardAction(ImeAction.Done)
@@ -104,6 +118,55 @@ fun MeasurementScreen(
             TextButton(onClick = { showDatePicker = true }) {
                 Text(dateFormatter.format(Date(uiState.date)))
             }
+            
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text("Aterian jälkeen")
+                Checkbox(checked = uiState.afterMeal, onCheckedChange = {
+                    measurementViewModel.setAfterMeal(it)
+                } )
+            }
+
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                TextField(modifier = Modifier
+                    .width(64.dp),
+                    value = (uiState.minutesFromMeal / 60).toString(),
+                    onValueChange = {hours ->
+                        try {
+                            measurementViewModel.setHoursFromMeal(hours.toInt())
+                        } catch (e: NumberFormatException) {
+                            Log.e("MeasurementScreen", "Invalid value: $hours")
+                        }
+                    },
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        disabledContainerColor = Color.Transparent,
+                    ),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    enabled = uiState.afterMeal
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                TextField(modifier = Modifier
+                    .width(64.dp),
+                    value = (uiState.minutesFromMeal % 60).toString(),
+                    onValueChange = {minutes ->
+                        try {
+                            measurementViewModel.setMinutesFromMeal(minutes.toInt())
+                        } catch (e: NumberFormatException) {
+                            Log.e("MeasurementScreen", "Invalid value: $minutes")
+                        }
+                    },
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        disabledContainerColor = Color.Transparent,
+                    ),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    enabled = uiState.afterMeal,
+                )
+
+            }
         }
         TextButton(modifier = Modifier
             .align(Alignment.BottomEnd),
@@ -111,6 +174,13 @@ fun MeasurementScreen(
 
         }) {
             Text("Tallenna")
+        }
+        TextButton(modifier = Modifier
+            .align(Alignment.BottomStart),
+            onClick = {
+
+            }) {
+            Text("Takaisin")
         }
     }
 
@@ -122,7 +192,7 @@ fun MeasurementScreen(
                     showDatePicker = false
                     val selectedMillis = datePickerState.selectedDateMillis
                     if (selectedMillis != null) {
-                        appViewModel.setDate(selectedMillis)
+                        measurementViewModel.setDate(selectedMillis)
                     }
                 }) {
                     Text("OK")
@@ -151,7 +221,7 @@ fun MeasurementScreen(
             onDismissRequest = { showTimePicker = false },
             confirmButton = {
                 Button(onClick = {
-                    appViewModel.setTime(timePickerState.hour, timePickerState.minute)
+                    measurementViewModel.setTime(timePickerState.hour, timePickerState.minute)
                     showTimePicker = false
                 }) {
                     Text("OK")

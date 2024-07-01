@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.sokerihiiri.repository.BloodSugarMeasurement
 import com.example.sokerihiiri.repository.SokerihiiriRepository
 import java.time.LocalTime
+import kotlin.math.min
 
 
 class MeasurementViewModel(
@@ -24,11 +25,23 @@ class MeasurementViewModel(
     fun setDate(date: Long) {
         bloodSugarMeasurementState = bloodSugarMeasurementState.copy(date = date)
     }
-    fun setTimeFromMeal(time: Int) {
-        bloodSugarMeasurementState = bloodSugarMeasurementState.copy(timeFromMeal = time)
+    fun setHoursFromMeal(hours: Int) {
+        var newHours = hours
+        if (newHours < 0 ) newHours = 0
+
+        val minutes = bloodSugarMeasurementState.minutesFromMeal % 60
+        bloodSugarMeasurementState = bloodSugarMeasurementState.copy(minutesFromMeal = newHours*60+minutes)
     }
-    fun setBeforeMeal(beforeMeal: Boolean) {
-        bloodSugarMeasurementState = bloodSugarMeasurementState.copy(beforeMeal = beforeMeal)
+
+    fun setMinutesFromMeal(minutes: Int) {
+        var newMinutes = minutes
+        if (newMinutes < 0 || minutes > 59) newMinutes = 0
+        val hours = bloodSugarMeasurementState.minutesFromMeal / 60 * 60
+        Log.d("AppViewModel", "Tunteja oli: $hours")
+        bloodSugarMeasurementState = bloodSugarMeasurementState.copy(minutesFromMeal = hours+newMinutes)
+    }
+    fun setAfterMeal(afterMeal: Boolean) {
+        bloodSugarMeasurementState = bloodSugarMeasurementState.copy(afterMeal = afterMeal)
     }
     fun setValue(value: Float) {
         bloodSugarMeasurementState = bloodSugarMeasurementState.copy(value = value)
@@ -39,8 +52,8 @@ class MeasurementViewModel(
             val bloodSugarMeasurement = BloodSugarMeasurement(
                 value = bloodSugarMeasurementState.value,
                 timestamp = 0,
-                beforeMeal = bloodSugarMeasurementState.beforeMeal,
-                timeFromMeal = bloodSugarMeasurementState.timeFromMeal)
+                afterMeal = bloodSugarMeasurementState.afterMeal,
+                minutesFromMeal = bloodSugarMeasurementState.minutesFromMeal)
 
 
         } catch (e: Exception) {
@@ -55,8 +68,8 @@ data class BloodSugarMeasurementState(
     val hour: Int = LocalTime.now().hour,
     val minute: Int = LocalTime.now().minute,
     val date: Long = System.currentTimeMillis(),
-    val beforeMeal: Boolean = false,
-    val timeFromMeal: Int = 0,
+    val afterMeal: Boolean = false,
+    val minutesFromMeal: Int = 0,
 )
 
 class AppViewModelFactory(private val repository: SokerihiiriRepository) : ViewModelProvider.Factory {

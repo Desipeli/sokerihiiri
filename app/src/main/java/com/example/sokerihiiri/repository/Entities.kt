@@ -10,8 +10,8 @@ class BloodSugarMeasurement(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "timestamp") val timestamp: Long,
     @ColumnInfo(name = "value") val value: Float,
-    @ColumnInfo(name = "before_meal") val beforeMeal: Boolean,
-    @ColumnInfo(name = "time_from_meal") val timeFromMeal: Int
+    @ColumnInfo(name = "after_meal") val afterMeal: Boolean,
+    @ColumnInfo(name = "minutes_from_meal") val minutesFromMeal: Int
 )
 
 @Entity(tableName = "insulin_injections")
