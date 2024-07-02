@@ -60,6 +60,8 @@ fun AppTimePickerDialog(
     initialMinute: Int = LocalTime.now().minute,
     onTimeSelected: (Int, Int) -> Unit,
     confirmButtonText: String = "OK",
+    dismissButtonText: String = "Peruuta",
+    onDismissRequest: () -> Unit = { showState.value = false },
 ) {
     val timePickerState = rememberTimePickerState(
         is24Hour = true,
@@ -85,6 +87,11 @@ fun AppTimePickerDialog(
                 )
             }) {
                 Text(confirmButtonText)
+            }
+        },
+        dismissButton = {
+            Button(onClick = onDismissRequest) {
+                Text(dismissButtonText)
             }
         }
     )
