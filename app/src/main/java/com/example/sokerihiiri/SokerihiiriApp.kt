@@ -15,6 +15,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.sokerihiiri.repository.SokerihiiriDatabase
 import com.example.sokerihiiri.repository.SokerihiiriRepository
+import com.example.sokerihiiri.ui.components.BottomBar
 import com.example.sokerihiiri.ui.screens.Measurement.MeasurementViewModel
 import com.example.sokerihiiri.ui.screens.Measurement.AppViewModelFactory
 import com.example.sokerihiiri.ui.components.TopBar
@@ -58,6 +59,7 @@ fun SokerihiiriApp(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        bottomBar = { BottomBar(navController) },
         topBar = {
             TopBar(
                 title = { Text(text = "Sokerihiiri") }
