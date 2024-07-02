@@ -11,13 +11,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,14 +29,11 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TimePickerLayoutType
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.example.sokerihiiri.ui.components.NumberTextField
 import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,7 +46,7 @@ fun MeasurementScreen(
     // https://medium.com/@droidvikas/exploring-date-and-time-pickers-compose-bytes-120e75349797
     // https://material.io/blog/material-3-compose-1-1
 
-    val uiState = measurementViewModel.bloodSugarMeasurementState
+    val uiState = measurementViewModel.uiState
 
     val dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
@@ -100,26 +94,13 @@ fun MeasurementScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            TextField(
+
+            NumberTextField(
                 modifier = Modifier
                     .fillMaxWidth(0.5f),
                 value = if (uiState.value <= 0.0f) "" else uiState.value.toString(),
                 onValueChange = { handleValueChange(it) },
-                label = { Text("Verensokeri mmol/l ") },
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    disabledContainerColor = Color.Transparent,
-                ),
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done,
-                    keyboardType = KeyboardType.Number),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        defaultKeyboardAction(ImeAction.Done)
-                    }
-                )
-            )
+                label = { Text("Verensokeri mmol/l ") })
 
             Spacer(modifier = Modifier.height(64.dp))
 
@@ -146,47 +127,19 @@ fun MeasurementScreen(
 
 
             Row(verticalAlignment = Alignment.CenterVertically) {
-                TextField(modifier = Modifier
+                NumberTextField(modifier = Modifier
                     .width(64.dp),
                     value = if (uiState.minutesFromMeal < 60) "" else (uiState.minutesFromMeal / 60).toString(),
-                    label = {Text("h")},
                     onValueChange = { handleHourChange(it) },
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color.Transparent,
-                        unfocusedContainerColor = Color.Transparent,
-                        disabledContainerColor = Color.Transparent,
-                    ),
-                    keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Done,
-                        keyboardType = KeyboardType.Number),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            defaultKeyboardAction(ImeAction.Done)
-                        }
-                    ),
-                    enabled = uiState.afterMeal
-                )
+                    label = {Text("h")},
+                    enabled = uiState.afterMeal)
                 Spacer(modifier = Modifier.width(8.dp))
-                TextField(modifier = Modifier
+                NumberTextField(modifier = Modifier
                     .width(64.dp),
                     value = if (uiState.minutesFromMeal % 60 == 0) "" else (uiState.minutesFromMeal % 60).toString(),
+                    onValueChange = { handleMinutesChange(it) },
                     label = {Text("min")},
-                    onValueChange = {handleMinutesChange(it) },
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color.Transparent,
-                        unfocusedContainerColor = Color.Transparent,
-                        disabledContainerColor = Color.Transparent,
-                    ),
-                    keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Done,
-                        keyboardType = KeyboardType.Number),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            defaultKeyboardAction(ImeAction.Done)
-                        }
-                    ),
-                    enabled = uiState.afterMeal,
-                )
+                    enabled = uiState.afterMeal)
             }
         }
         TextButton(modifier = Modifier
