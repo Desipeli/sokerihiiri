@@ -171,7 +171,7 @@ fun MeasurementScreen(
         TextButton(modifier = Modifier
             .align(Alignment.BottomEnd),
             onClick = {
-
+                measurementViewModel.saveBloodSugarMeasurement()
         }) {
             Text("Tallenna")
         }

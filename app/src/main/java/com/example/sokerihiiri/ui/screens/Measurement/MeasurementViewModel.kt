@@ -6,10 +6,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.example.sokerihiiri.repository.BloodSugarMeasurement
 import com.example.sokerihiiri.repository.SokerihiiriRepository
+import com.example.sokerihiiri.utils.dateAndTimeToUTCLong
+import kotlinx.coroutines.launch
 import java.time.LocalTime
-import kotlin.math.min
 
 
 class MeasurementViewModel(
@@ -48,13 +50,25 @@ class MeasurementViewModel(
     }
 
     fun saveBloodSugarMeasurement() {
+        Log.d("AppViewModel", "saveBloodSugarMeasurement state: $bloodSugarMeasurementState")
         try {
+            val dateTime = dateAndTimeToUTCLong(
+                bloodSugarMeasurementState.date,
+                bloodSugarMeasurementState.hour,
+                bloodSugarMeasurementState.minute
+            )
+
+            Log.d("AppViewModel", "saveBloodSugarMeasurement dateTime: $dateTime")
+
             val bloodSugarMeasurement = BloodSugarMeasurement(
                 value = bloodSugarMeasurementState.value,
-                timestamp = 0,
+                timestamp = dateTime,
                 afterMeal = bloodSugarMeasurementState.afterMeal,
                 minutesFromMeal = bloodSugarMeasurementState.minutesFromMeal)
 
+            viewModelScope.launch {
+                repository.insertBloodSugarMeasurement(bloodSugarMeasurement)
+            }
 
         } catch (e: Exception) {
             Log.d("AppViewModel", "saveBloodSugarMeasurement: ${e.message}")
