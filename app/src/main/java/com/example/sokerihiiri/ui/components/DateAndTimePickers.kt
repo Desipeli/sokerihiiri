@@ -5,13 +5,11 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerLayoutType
-import androidx.compose.material3.TimePickerState
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
@@ -32,7 +30,7 @@ fun AppDatePickerDialog(
 
 
     DatePickerDialog(
-        onDismissRequest = { showState.value = false },
+        onDismissRequest = onDismissRequest,
         confirmButton = {
             TextButton(onClick = {
                 showState.value = false
@@ -41,12 +39,12 @@ fun AppDatePickerDialog(
                     onDateSelected(selectedMillis)
                 }
             }) {
-                Text("OK")
+                Text(confirmButtonText)
             }
         },
         dismissButton = {
             TextButton(onClick = { showState.value = false }) {
-                Text("Peruuta")
+                Text(dismissButtonText)
             }
         }
     ) {
@@ -60,7 +58,8 @@ fun AppTimePickerDialog(
     showState: MutableState<Boolean>,
     initialHour: Int = LocalTime.now().hour,
     initialMinute: Int = LocalTime.now().minute,
-    onTimeSelected: (Int, Int) -> Unit
+    onTimeSelected: (Int, Int) -> Unit,
+    confirmButtonText: String = "OK",
 ) {
     val timePickerState = rememberTimePickerState(
         is24Hour = true,
@@ -85,7 +84,7 @@ fun AppTimePickerDialog(
                     timePickerState.minute
                 )
             }) {
-                Text("OK")
+                Text(confirmButtonText)
             }
         }
     )
