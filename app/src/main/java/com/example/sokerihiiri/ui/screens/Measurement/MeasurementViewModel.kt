@@ -17,54 +17,54 @@ import java.time.LocalTime
 class MeasurementViewModel(
     private val repository: SokerihiiriRepository
 ) : ViewModel() {
-    var bloodSugarMeasurementState: BloodSugarMeasurementState by
+    var uiState: BloodSugarMeasurementState by
         mutableStateOf(BloodSugarMeasurementState())
             private set
 
     fun setTime(hour: Int, minute: Int) {
-        bloodSugarMeasurementState = bloodSugarMeasurementState.copy(hour = hour, minute = minute)
+        uiState = uiState.copy(hour = hour, minute = minute)
     }
     fun setDate(date: Long) {
-        bloodSugarMeasurementState = bloodSugarMeasurementState.copy(date = date)
+        uiState = uiState.copy(date = date)
     }
     fun setHoursFromMeal(hours: Int) {
         var newHours = hours
         if (newHours < 0 ) newHours = 0
 
-        val minutes = bloodSugarMeasurementState.minutesFromMeal % 60
-        bloodSugarMeasurementState = bloodSugarMeasurementState.copy(minutesFromMeal = newHours*60+minutes)
+        val minutes = uiState.minutesFromMeal % 60
+        uiState = uiState.copy(minutesFromMeal = newHours*60+minutes)
     }
 
     fun setMinutesFromMeal(minutes: Int) {
         var newMinutes = minutes
         if (newMinutes < 0 || minutes > 59) newMinutes = 0
-        val hours = bloodSugarMeasurementState.minutesFromMeal / 60 * 60
+        val hours = uiState.minutesFromMeal / 60 * 60
         Log.d("AppViewModel", "Tunteja oli: $hours")
-        bloodSugarMeasurementState = bloodSugarMeasurementState.copy(minutesFromMeal = hours+newMinutes)
+        uiState = uiState.copy(minutesFromMeal = hours+newMinutes)
     }
     fun setAfterMeal(afterMeal: Boolean) {
-        bloodSugarMeasurementState = bloodSugarMeasurementState.copy(afterMeal = afterMeal)
+        uiState = uiState.copy(afterMeal = afterMeal)
     }
     fun setValue(value: Float) {
-        bloodSugarMeasurementState = bloodSugarMeasurementState.copy(value = value)
+        uiState = uiState.copy(value = value)
     }
 
     fun saveBloodSugarMeasurement() {
-        Log.d("AppViewModel", "saveBloodSugarMeasurement state: $bloodSugarMeasurementState")
+        Log.d("AppViewModel", "saveBloodSugarMeasurement state: $uiState")
         try {
             val dateTime = dateAndTimeToUTCLong(
-                bloodSugarMeasurementState.date,
-                bloodSugarMeasurementState.hour,
-                bloodSugarMeasurementState.minute
+                uiState.date,
+                uiState.hour,
+                uiState.minute
             )
 
             Log.d("AppViewModel", "saveBloodSugarMeasurement dateTime: $dateTime")
 
             val bloodSugarMeasurement = BloodSugarMeasurement(
-                value = bloodSugarMeasurementState.value,
+                value = uiState.value,
                 timestamp = dateTime,
-                afterMeal = bloodSugarMeasurementState.afterMeal,
-                minutesFromMeal = bloodSugarMeasurementState.minutesFromMeal)
+                afterMeal = uiState.afterMeal,
+                minutesFromMeal = uiState.minutesFromMeal)
 
             viewModelScope.launch {
                 repository.insertBloodSugarMeasurement(bloodSugarMeasurement)
