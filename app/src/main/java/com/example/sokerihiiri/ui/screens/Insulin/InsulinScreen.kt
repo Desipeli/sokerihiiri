@@ -1,4 +1,4 @@
-package com.example.sokerihiiri.ui.screens
+package com.example.sokerihiiri.ui.screens.Insulin
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable

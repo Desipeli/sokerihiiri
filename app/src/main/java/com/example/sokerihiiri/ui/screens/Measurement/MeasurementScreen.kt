@@ -73,6 +73,24 @@ fun MeasurementScreen(
         }
     }
 
+    fun handleHourChange(newValue: String) {
+        try {
+            measurementViewModel.setHoursFromMeal(newValue.toInt())
+        } catch (e: NumberFormatException) {
+            Log.e("MeasurementScreen", "Invalid value: $newValue")
+            measurementViewModel.setHoursFromMeal(0)
+        }
+    }
+
+    fun handleMinutesChange(newValue: String) {
+        try {
+            measurementViewModel.setMinutesFromMeal(newValue.toInt())
+        } catch (e: NumberFormatException) {
+            Log.e("MeasurementScreen", "Invalid value: $newValue")
+            measurementViewModel.setMinutesFromMeal(0)
+        }
+    }
+
     Box(modifier = modifier
         .fillMaxSize()
         .padding(bottom = 16.dp)) {
@@ -130,42 +148,45 @@ fun MeasurementScreen(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 TextField(modifier = Modifier
                     .width(64.dp),
-                    value = (uiState.minutesFromMeal / 60).toString(),
-                    onValueChange = {hours ->
-                        try {
-                            measurementViewModel.setHoursFromMeal(hours.toInt())
-                        } catch (e: NumberFormatException) {
-                            Log.e("MeasurementScreen", "Invalid value: $hours")
-                        }
-                    },
+                    value = if (uiState.minutesFromMeal < 60) "" else (uiState.minutesFromMeal / 60).toString(),
+                    label = {Text("h")},
+                    onValueChange = { handleHourChange(it) },
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = Color.Transparent,
                         unfocusedContainerColor = Color.Transparent,
                         disabledContainerColor = Color.Transparent,
                     ),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done,
+                        keyboardType = KeyboardType.Number),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            defaultKeyboardAction(ImeAction.Done)
+                        }
+                    ),
                     enabled = uiState.afterMeal
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 TextField(modifier = Modifier
                     .width(64.dp),
-                    value = (uiState.minutesFromMeal % 60).toString(),
-                    onValueChange = {minutes ->
-                        try {
-                            measurementViewModel.setMinutesFromMeal(minutes.toInt())
-                        } catch (e: NumberFormatException) {
-                            Log.e("MeasurementScreen", "Invalid value: $minutes")
-                        }
-                    },
+                    value = if (uiState.minutesFromMeal % 60 == 0) "" else (uiState.minutesFromMeal % 60).toString(),
+                    label = {Text("min")},
+                    onValueChange = {handleMinutesChange(it) },
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = Color.Transparent,
                         unfocusedContainerColor = Color.Transparent,
                         disabledContainerColor = Color.Transparent,
                     ),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done,
+                        keyboardType = KeyboardType.Number),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            defaultKeyboardAction(ImeAction.Done)
+                        }
+                    ),
                     enabled = uiState.afterMeal,
                 )
-
             }
         }
         TextButton(modifier = Modifier
