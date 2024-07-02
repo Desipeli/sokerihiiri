@@ -175,13 +175,6 @@ fun MeasurementScreen(
         }) {
             Text("Tallenna")
         }
-        TextButton(modifier = Modifier
-            .align(Alignment.BottomStart),
-            onClick = {
-
-            }) {
-            Text("Takaisin")
-        }
     }
 
     if (showDatePicker) {
