@@ -1,4 +1,4 @@
-package com.example.sokerihiiri.ui.screens.Insulin
+package com.example.sokerihiiri.ui.screens.insulin
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement

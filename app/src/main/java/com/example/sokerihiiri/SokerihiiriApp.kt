@@ -16,16 +16,16 @@ import androidx.navigation.compose.rememberNavController
 import com.example.sokerihiiri.repository.SokerihiiriDatabase
 import com.example.sokerihiiri.repository.SokerihiiriRepository
 import com.example.sokerihiiri.ui.components.BottomBar
-import com.example.sokerihiiri.ui.screens.Measurement.MeasurementViewModel
-import com.example.sokerihiiri.ui.screens.Measurement.MeasurementViewModelFactory
+import com.example.sokerihiiri.ui.screens.measurement.MeasurementViewModel
+import com.example.sokerihiiri.ui.screens.measurement.MeasurementViewModelFactory
 import com.example.sokerihiiri.ui.components.TopBar
 import com.example.sokerihiiri.ui.screens.BrowseScreen
-import com.example.sokerihiiri.ui.screens.Insulin.InsulinScreen
-import com.example.sokerihiiri.ui.screens.Insulin.InsulinViewModel
-import com.example.sokerihiiri.ui.screens.Insulin.InsulinViewModelFactory
+import com.example.sokerihiiri.ui.screens.insulin.InsulinScreen
+import com.example.sokerihiiri.ui.screens.insulin.InsulinViewModel
+import com.example.sokerihiiri.ui.screens.insulin.InsulinViewModelFactory
 import com.example.sokerihiiri.ui.screens.MainScreen
 import com.example.sokerihiiri.ui.screens.MealScreen
-import com.example.sokerihiiri.ui.screens.Measurement.MeasurementScreen
+import com.example.sokerihiiri.ui.screens.measurement.MeasurementScreen
 import com.example.sokerihiiri.ui.screens.SettingsScreen
 
 enum class Routes(val title: String) {

@@ -1,4 +1,4 @@
-package com.example.sokerihiiri.ui.screens.Measurement
+package com.example.sokerihiiri.ui.screens.measurement
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
