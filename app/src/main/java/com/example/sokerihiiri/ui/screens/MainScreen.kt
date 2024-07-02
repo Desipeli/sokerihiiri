@@ -32,8 +32,5 @@ fun MainScreen(
         Button(onClick = { navController.navigate(Routes.Browse.name) }) {
             Text(text = Routes.Browse.title)
         }
-        Button(onClick = { navController.navigate(Routes.Settings.name) }) {
-            Text(text = Routes.Settings.title)
-        }
     }
 }

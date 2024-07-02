@@ -17,10 +17,12 @@ import com.example.sokerihiiri.repository.SokerihiiriDatabase
 import com.example.sokerihiiri.repository.SokerihiiriRepository
 import com.example.sokerihiiri.ui.components.BottomBar
 import com.example.sokerihiiri.ui.screens.Measurement.MeasurementViewModel
-import com.example.sokerihiiri.ui.screens.Measurement.AppViewModelFactory
+import com.example.sokerihiiri.ui.screens.Measurement.MeasurementViewModelFactory
 import com.example.sokerihiiri.ui.components.TopBar
 import com.example.sokerihiiri.ui.screens.BrowseScreen
-import com.example.sokerihiiri.ui.screens.InsulinScreen
+import com.example.sokerihiiri.ui.screens.Insulin.InsulinScreen
+import com.example.sokerihiiri.ui.screens.Insulin.InsulinViewModel
+import com.example.sokerihiiri.ui.screens.Insulin.InsulinViewModelFactory
 import com.example.sokerihiiri.ui.screens.MainScreen
 import com.example.sokerihiiri.ui.screens.MealScreen
 import com.example.sokerihiiri.ui.screens.Measurement.MeasurementScreen
@@ -53,8 +55,11 @@ fun SokerihiiriApp(
         mealDao = database.mealDao(),
     )
 
-    val viewModel: MeasurementViewModel = viewModel(
-        factory = AppViewModelFactory(repository = repository)
+    val measurementViewModel: MeasurementViewModel = viewModel(
+        factory = MeasurementViewModelFactory(repository = repository)
+    )
+    val insulinViewModel: InsulinViewModel = viewModel(
+        factory = InsulinViewModelFactory(repository = repository)
     )
 
     Scaffold(
@@ -75,11 +80,13 @@ fun SokerihiiriApp(
             }
             composable(route = Routes.Measurement.name) {
                 MeasurementScreen(
-                    measurementViewModel = viewModel,
+                    measurementViewModel = measurementViewModel,
                 )
             }
             composable(route = Routes.Insulin.name) {
-                InsulinScreen()
+                InsulinScreen(
+                    insulinViewModel = insulinViewModel
+                )
             }
             composable(route = Routes.Meal.name) {
                 MealScreen()
