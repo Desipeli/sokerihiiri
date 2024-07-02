@@ -86,7 +86,7 @@ data class BloodSugarMeasurementState(
     val minutesFromMeal: Int = 0,
 )
 
-class AppViewModelFactory(private val repository: SokerihiiriRepository) : ViewModelProvider.Factory {
+class MeasurementViewModelFactory(private val repository: SokerihiiriRepository) : ViewModelProvider.Factory {
     override fun <T: ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MeasurementViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
