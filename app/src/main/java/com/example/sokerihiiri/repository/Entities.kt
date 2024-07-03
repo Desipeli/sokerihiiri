@@ -18,7 +18,7 @@ class BloodSugarMeasurement(
 class InsulinInjection(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "timestamp") val timestamp: Long,
-    @ColumnInfo(name = "dose") val dose: Float
+    @ColumnInfo(name = "dose") val dose: Int
 )
 
 @Entity(tableName = "meals")

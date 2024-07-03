@@ -28,7 +28,6 @@ fun AppDatePickerDialog(
 ) {
     val datePickerState = rememberDatePickerState(initialSelectedDateMillis = initialState)
 
-
     DatePickerDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = {

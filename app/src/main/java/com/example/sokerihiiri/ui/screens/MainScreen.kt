@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import com.example.sokerihiiri.Routes
+import com.example.sokerihiiri.Screens
 
 @Composable
 fun MainScreen(
@@ -20,17 +20,17 @@ fun MainScreen(
         .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center){
-        Button(onClick = { navController.navigate(Routes.Measurement.name) }) {
-            Text(text = Routes.Measurement.title)
+        Button(onClick = { navController.navigate(Screens.Measurement.route) }) {
+            Text(text = Screens.Measurement.title)
         }
-        Button(onClick = { navController.navigate(Routes.Insulin.name) }) {
-            Text(text = Routes.Insulin.title)
+        Button(onClick = { navController.navigate(Screens.Insulin.route) }) {
+            Text(text = Screens.Insulin.title)
         }
-        Button(onClick = { navController.navigate(Routes.Meal.name) }) {
-            Text(text = Routes.Meal.title)
+        Button(onClick = { navController.navigate(Screens.Meal.route) }) {
+            Text(text = Screens.Meal.title)
         }
-        Button(onClick = { navController.navigate(Routes.Browse.name) }) {
-            Text(text = Routes.Browse.title)
+        Button(onClick = { navController.navigate(Screens.Browse.route) }) {
+            Text(text = Screens.Browse.title)
         }
     }
 }

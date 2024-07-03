@@ -15,7 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import com.example.sokerihiiri.Routes
+import com.example.sokerihiiri.Screens
 
 @Composable
 fun BottomBar(navController: NavController) {
@@ -29,12 +29,12 @@ fun BottomBar(navController: NavController) {
                         imageVector = Icons.Filled.ArrowBack,
                         contentDescription = "")
                 }
-                IconButton(onClick = { navController.navigate(Routes.Main.name) }) {
+                IconButton(onClick = { navController.navigate(Screens.Main.route) }) {
                     Icon(
                         imageVector = Icons.Filled.Home,
                         contentDescription = "")
                 }
-                IconButton(onClick = { navController.navigate(Routes.Settings.name) }) {
+                IconButton(onClick = { navController.navigate(Screens.Settings.route) }) {
                     Icon(
                         imageVector = Icons.Filled.Settings,
                         contentDescription = "")

@@ -20,7 +20,7 @@ class InsulinViewModel(
     var uiState: InsulinUiState by mutableStateOf(InsulinUiState())
         private set
 
-    fun setDose(dose: Float) {
+    fun setDose(dose: Int) {
         uiState = uiState.copy(dose = dose)
     }
 
@@ -54,7 +54,7 @@ class InsulinViewModel(
 }
 
 data class InsulinUiState(
-    val dose: Float = 0.0f,
+    val dose: Int = 0,
     val date: Long = System.currentTimeMillis(),
     val hour: Int = LocalTime.now().hour,
     val minute: Int = LocalTime.now().minute,

@@ -40,9 +40,10 @@ fun InsulinScreen(
 
     fun handleDoseChange(newDose: String) {
         try {
-            insulinViewModel.setDose(newDose.toFloat())
+            insulinViewModel.setDose(newDose.toInt())
         } catch (e: Exception) {
             Log.e("InsulinScreen", "Failed to parse dose", e)
+            insulinViewModel.setDose(0)
         }
     }
 
@@ -54,7 +55,7 @@ fun InsulinScreen(
         ) {
             NumberTextField(
                 modifier = Modifier.fillMaxWidth(0.5f),
-                value = if (uiState.dose <= 0.0f) "" else uiState.dose.toString(),
+                value = if (uiState.dose <= 0) "" else uiState.dose.toString(),
                 onValueChange = {handleDoseChange(it)},
                 label = { Text("Insuliiniannos") })
             Spacer(modifier = Modifier.height(64.dp))
