@@ -7,11 +7,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.example.sokerihiiri.repository.SokerihiiriDatabase
@@ -30,6 +30,7 @@ import com.example.sokerihiiri.ui.screens.measurement.MeasurementScreen
 import com.example.sokerihiiri.ui.screens.SettingsScreen
 import com.example.sokerihiiri.ui.screens.browse.BrowseViewModel
 import com.example.sokerihiiri.ui.screens.browse.BrowseViewModelFactory
+import com.example.sokerihiiri.ui.screens.browse.injections.BrowseInjectionsScreen
 import com.example.sokerihiiri.ui.screens.browse.measurements.BrowseMeasurementsScreen
 
 sealed class Screens(val route: String, val title: String) {
@@ -40,6 +41,7 @@ sealed class Screens(val route: String, val title: String) {
     object Browse : Screens(route = "browse", title="Selaa") {
         object Main : Screens(route = "browse_main", title="Selaa")
         object Measurements : Screens(route = "browse_measurements", title="Mittaukset")
+        object Injections : Screens(route = "browse_injections", title="Insuliini")
     }
     object Settings : Screens(route = "settings", title="Asetukset")
 }
@@ -86,7 +88,9 @@ fun SokerihiiriApp(
         NavHost(
             navController = navController,
             startDestination = Screens.Main.route,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier
+                .padding(innerPadding)
+                .padding(start = 8.dp, end = 8.dp)
         ) {
 
             composable(route = Screens.Main.route) {
@@ -103,15 +107,20 @@ fun SokerihiiriApp(
                 composable(route = Screens.Browse.Measurements.route) {
                     BrowseMeasurementsScreen(browseViewModel = browseViewModel)
                 }
+                composable(route = Screens.Browse.Injections.route) {
+                    BrowseInjectionsScreen(browseViewModel = browseViewModel)
+                }
             }
             composable(route = Screens.Measurement.route) {
                 MeasurementScreen(
                     measurementViewModel = measurementViewModel,
+                    navController = navController
                 )
             }
             composable(route = Screens.Insulin.route) {
                 InsulinScreen(
-                    insulinViewModel = insulinViewModel
+                    insulinViewModel = insulinViewModel,
+                    navController = navController
                 )
             }
             composable(route = Screens.Meal.route) {
@@ -120,24 +129,6 @@ fun SokerihiiriApp(
             composable(route = Screens.Settings.route) {
                 SettingsScreen()
             }
-        }
-    }
-}
-
-@Composable
-fun BrowseNavHost(
-    navController: NavHostController,
-    browseViewModel: BrowseViewModel) {
-
-    NavHost(
-        navController = navController,
-        startDestination = BrowseRoutes.Main.name
-    ) {
-        composable(route = BrowseRoutes.Main.name) {
-            BrowseScreen(navController = navController)
-        }
-        composable(route = BrowseRoutes.Measurements.name) {
-            BrowseMeasurementsScreen(browseViewModel = browseViewModel)
         }
     }
 }

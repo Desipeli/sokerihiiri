@@ -18,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.sokerihiiri.ui.components.AppDatePickerDialog
 import com.example.sokerihiiri.ui.components.AppTimePickerDialog
 import com.example.sokerihiiri.ui.components.NumberTextField
@@ -29,6 +30,7 @@ import java.util.Locale
 @Composable
 fun InsulinScreen(
     insulinViewModel: InsulinViewModel,
+    navController: NavController,
     modifier: Modifier = Modifier,
 ) {
     val uiState = insulinViewModel.uiState
@@ -77,6 +79,7 @@ fun InsulinScreen(
             .align(Alignment.BottomEnd),
             onClick = {
                 insulinViewModel.saveInsulinInjection()
+                navController.navigateUp()
             }) {
             Text("Tallenna")
         }

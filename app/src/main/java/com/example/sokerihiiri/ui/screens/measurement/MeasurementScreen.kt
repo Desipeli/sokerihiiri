@@ -23,6 +23,7 @@ import java.util.Locale
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.sokerihiiri.ui.components.AppDatePickerDialog
 import com.example.sokerihiiri.ui.components.AppTimePickerDialog
 import com.example.sokerihiiri.ui.components.NumberTextField
@@ -31,6 +32,7 @@ import java.util.Date
 @Composable
 fun MeasurementScreen(
     measurementViewModel: MeasurementViewModel,
+    navController: NavController,
     modifier: Modifier = Modifier,
 ) {
 
@@ -132,6 +134,7 @@ fun MeasurementScreen(
             .align(Alignment.BottomEnd),
             onClick = {
                 measurementViewModel.saveBloodSugarMeasurement()
+                navController.navigateUp()
         }) {
             Text("Tallenna")
         }

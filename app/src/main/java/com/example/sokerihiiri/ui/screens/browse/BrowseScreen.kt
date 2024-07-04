@@ -26,8 +26,8 @@ fun BrowseScreen(
         }) {
             Text(text = "Mittaukset")
         }
-        TextButton(onClick = { /*TODO*/ }) {
-            Text(text = "Insuliiniannokset")
+        TextButton(onClick = { navController.navigate(Screens.Browse.Injections.route) }) {
+            Text(text = "Insuliini")
         }
     }
 }

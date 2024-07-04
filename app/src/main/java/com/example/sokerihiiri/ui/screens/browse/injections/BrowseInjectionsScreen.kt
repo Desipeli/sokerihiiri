@@ -1,4 +1,4 @@
-package com.example.sokerihiiri.ui.screens.browse.measurements
+package com.example.sokerihiiri.ui.screens.browse.injections
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,11 +18,11 @@ import com.example.sokerihiiri.ui.screens.browse.BrowseViewModel
 import com.example.sokerihiiri.utils.timestampToDateTimeString
 
 @Composable
-fun BrowseMeasurementsScreen(
+fun BrowseInjectionsScreen(
     browseViewModel: BrowseViewModel,
 ) {
 
-    val allMeasurements by browseViewModel.allMeasurements.observeAsState(emptyList())
+    val allInjections by browseViewModel.allInjections.observeAsState(emptyList())
 
     Column {
         Row(modifier = Modifier.fillMaxWidth(),
@@ -30,22 +30,22 @@ fun BrowseMeasurementsScreen(
             horizontalArrangement = Arrangement.SpaceBetween)
         {
             Text(text = "Pvm. ja aika")
-            Text(text = "Arvo")
-            Text(text = "Aterian jälkeen")
+            Text(text = "Annos")
 
         }
         Divider()
         LazyColumn {
-            items(allMeasurements) { measurement ->
+            items(allInjections) { injection ->
                 Row(modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = timestampToDateTimeString(measurement.timestamp), Modifier.weight(0.50f))
-                    Text(text = measurement.value.toString(), Modifier.weight(0.2f),textAlign = TextAlign.End)
-                    Text(text = measurement.minutesFromMeal.toString(), Modifier.weight(0.40f),textAlign = TextAlign.End)
+                    Text(text = timestampToDateTimeString(injection.timestamp))
+                    Text(text = injection.dose.toString(),textAlign = TextAlign.End)
                 }
             }
         }
     }
-
 }
+
+

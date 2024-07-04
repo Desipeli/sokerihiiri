@@ -49,6 +49,10 @@ class MeasurementViewModel(
         uiState = uiState.copy(value = value)
     }
 
+    private fun resetState() {
+        uiState = BloodSugarMeasurementState()
+    }
+
     fun saveBloodSugarMeasurement() {
         Log.d("AppViewModel", "saveBloodSugarMeasurement state: $uiState")
         try {
@@ -69,6 +73,7 @@ class MeasurementViewModel(
             viewModelScope.launch {
                 repository.insertBloodSugarMeasurement(bloodSugarMeasurement)
             }
+            resetState()
 
         } catch (e: Exception) {
             Log.d("AppViewModel", "saveBloodSugarMeasurement: ${e.message}")

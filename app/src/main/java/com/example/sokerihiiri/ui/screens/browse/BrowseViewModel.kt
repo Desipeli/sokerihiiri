@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import com.example.sokerihiiri.repository.BloodSugarMeasurement
+import com.example.sokerihiiri.repository.InsulinInjection
 import com.example.sokerihiiri.repository.SokerihiiriRepository
 
 class BrowseViewModel(
@@ -14,7 +15,8 @@ class BrowseViewModel(
     val allMeasurements: LiveData<List<BloodSugarMeasurement>> =
         repository.allBloodSugarMeasurements.asLiveData()
 
-
+    val allInjections: LiveData<List<InsulinInjection>> =
+        repository.allInsulinInjections.asLiveData()
 
 }
 

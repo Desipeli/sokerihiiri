@@ -32,6 +32,10 @@ class InsulinViewModel(
         uiState = uiState.copy(hour = hour, minute = minute)
     }
 
+    private fun resetState() {
+        uiState = InsulinUiState()
+    }
+
     fun saveInsulinInjection() {
         try {
             val dateTime = dateAndTimeToUTCLong(
@@ -47,6 +51,7 @@ class InsulinViewModel(
             viewModelScope.launch {
                 repository.insertInsulinInjection(insulinInjection)
             }
+            resetState()
         } catch (e: Exception) {
             Log.e("InsulinViewModel", "Error saving insulin injection", e)
         }
