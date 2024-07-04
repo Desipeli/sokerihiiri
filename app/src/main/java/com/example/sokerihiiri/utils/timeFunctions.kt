@@ -22,3 +22,9 @@ fun timestampToDateTimeString(timestamp: Long): String {
     val date = Date(timestamp)
     return dateFormat.format(date)
 }
+
+fun minutesToHoursAndMinutes(minutes: Int): Pair<Int, Int> {
+    val hours = minutes / 60
+    val remainingMinutes = minutes % 60
+    return Pair(hours, remainingMinutes)
+}
