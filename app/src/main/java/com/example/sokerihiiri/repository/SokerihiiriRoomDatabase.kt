@@ -16,7 +16,7 @@ import androidx.room.RoomDatabase
         InsulinInjection::class,
         Meal::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 public abstract class SokerihiiriDatabase : RoomDatabase() {
@@ -35,7 +35,9 @@ public abstract class SokerihiiriDatabase : RoomDatabase() {
                     context.applicationContext,
                     SokerihiiriDatabase::class.java,
                     "sokerihiiri_database"
-                ).build()
+                )
+                    .addMigrations(MIGRATION_1_2)
+                    .build()
                 INSTANCE = instance
                 instance
             }

@@ -1,4 +1,4 @@
-package com.example.sokerihiiri.ui.screens.measurement
+package com.example.sokerihiiri.ui.screens.meals
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
@@ -13,65 +13,68 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import java.text.SimpleDateFormat
-import java.util.Locale
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.min
 import androidx.navigation.NavController
 import com.example.sokerihiiri.ui.components.AppDatePickerDialog
 import com.example.sokerihiiri.ui.components.AppTimePickerDialog
 import com.example.sokerihiiri.ui.components.NumberTextField
+import com.example.sokerihiiri.ui.components.StyledTextField
+import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 @Composable
-fun MeasurementScreen(
-    measurementViewModel: MeasurementViewModel,
+fun MealScreen(
+    mealViewModel: MealViewModel,
     navController: NavController,
     modifier: Modifier = Modifier,
 ) {
-
-    // https://medium.com/@droidvikas/exploring-date-and-time-pickers-compose-bytes-120e75349797
-    // https://material.io/blog/material-3-compose-1-1
-
-    val uiState = measurementViewModel.uiState
+    val uiState = mealViewModel.uiState
 
     val dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
     var showDatePicker: MutableState<Boolean> = remember { mutableStateOf(false) }
     var showTimePicker: MutableState<Boolean> = remember { mutableStateOf(false) }
 
-    Log.d("MeasurementScreen", "uiState: $uiState")
-
-
-    fun handleValueChange(newValue: String) {
+    fun handleCalorieChange(value: String) {
         try {
-            measurementViewModel.setValue(newValue.toFloat())
-        } catch (e: NumberFormatException) {
-            Log.e("MeasurementScreen", "Invalid value: $newValue")
+            if (value.isEmpty()) {
+                mealViewModel.setCalories(0)
+            } else {
+                mealViewModel.setCalories(value.toInt())
+            }
+        } catch (e: Exception) {
+            Log.e("MealScreen", "Error setting calories", e)
         }
     }
 
-    fun handleHourChange(newValue: String) {
+    fun handleChangeCarbs(value: String) {
         try {
-            measurementViewModel.setHoursFromMeal(newValue.toInt())
-        } catch (e: NumberFormatException) {
-            Log.e("MeasurementScreen", "Invalid value: $newValue")
-            measurementViewModel.setHoursFromMeal(0)
+            if (value.isEmpty()) {
+                mealViewModel.setCarbs(0)
+            } else {
+                mealViewModel.setCarbs(value.toInt())
+            }
+        } catch (e: Exception) {
+            Log.e("MealScreen", "Error setting carbs", e)
         }
     }
 
-    fun handleMinutesChange(newValue: String) {
+    fun handleChangeComment(value: String) {
         try {
-            measurementViewModel.setMinutesFromMeal(newValue.toInt())
-        } catch (e: NumberFormatException) {
-            Log.e("MeasurementScreen", "Invalid value: $newValue")
-            measurementViewModel.setMinutesFromMeal(0)
+            mealViewModel.setComment(value)
+        } catch (e: Exception) {
+            Log.e("MealScreen", "Error setting comment", e)
         }
     }
 
@@ -84,16 +87,21 @@ fun MeasurementScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-
             NumberTextField(
                 modifier = Modifier
                     .fillMaxWidth(0.5f),
-                value = if (uiState.value <= 0.0f) "" else uiState.value.toString(),
-                onValueChange = { handleValueChange(it) },
-                label = { Text("Verensokeri mmol/l ") })
-
+                value = if (uiState.calories == 0) "" else uiState.calories.toString(),
+                onValueChange = { handleCalorieChange(it) },
+                label = { Text(text = "Kcal")}
+            )
+            NumberTextField(
+                modifier = Modifier
+                    .fillMaxWidth(0.5f),
+                value = if (uiState.carbs == 0) "" else uiState.carbs.toString(),
+                onValueChange = { handleChangeCarbs(it) },
+                label = { Text(text = "Hiilihydraatit")}
+            )
             Spacer(modifier = Modifier.height(64.dp))
-
             TextButton(onClick = { showTimePicker.value = true }) {
                 Text(
                     text = String.format(
@@ -107,37 +115,17 @@ fun MeasurementScreen(
             TextButton(onClick = { showDatePicker.value = true }) {
                 Text(dateFormatter.format(Date(uiState.date)))
             }
-            
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("Aterian jälkeen")
-                Checkbox(checked = uiState.afterMeal, onCheckedChange = {
-                    measurementViewModel.setAfterMeal(it)
-                } )
-            }
-
-
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                NumberTextField(modifier = Modifier
-                    .width(64.dp),
-                    value = if (uiState.minutesFromMeal < 60) "" else (uiState.minutesFromMeal / 60).toString(),
-                    onValueChange = { handleHourChange(it) },
-                    label = {Text("h")},
-                    enabled = uiState.afterMeal)
-                Spacer(modifier = Modifier.width(8.dp))
-                NumberTextField(modifier = Modifier
-                    .width(64.dp),
-                    value = if (uiState.minutesFromMeal % 60 == 0) "" else (uiState.minutesFromMeal % 60).toString(),
-                    onValueChange = { handleMinutesChange(it) },
-                    label = {Text("min")},
-                    enabled = uiState.afterMeal)
-            }
+            StyledTextField(
+                value = uiState.comment,
+                onValueChange = {handleChangeComment(it)},
+                label = {Text("Kommentti")})
         }
         TextButton(modifier = Modifier
             .align(Alignment.BottomEnd),
             onClick = {
-                measurementViewModel.saveBloodSugarMeasurement()
+                mealViewModel.saveMeal()
                 navController.navigateUp()
-        }) {
+            }) {
             Text("Tallenna")
         }
     }
@@ -146,7 +134,7 @@ fun MeasurementScreen(
         AppDatePickerDialog(
             showState = showDatePicker,
             initialState = uiState.date,
-            onDateSelected = {measurementViewModel.setDate(it)} )
+            onDateSelected = { mealViewModel.setDate(it) } )
     }
 
     if (showTimePicker.value) {
@@ -155,7 +143,7 @@ fun MeasurementScreen(
             initialHour = uiState.hour,
             initialMinute = uiState.minute,
             onTimeSelected = { hour, minute ->
-                measurementViewModel.setTime(hour, minute)
+                mealViewModel.setTime(hour, minute)
             }
         )
     }

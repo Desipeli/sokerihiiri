@@ -1,0 +1,16 @@
+package com.example.sokerihiiri.repository
+
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
+
+val MIGRATION_1_2 = object : Migration(1, 2) {
+    // Muutetaan kalorit ja hiilarit kokonaisluvuiksi ja lisätään sarake kommentille.
+    override fun migrate(db: SupportSQLiteDatabase) {
+        // Luodaan väliaikainen taulu, johon kopioidaan vanhat tiedot.
+        // Lopuksi poistetaan vanha taulu ja uudelleennimetään uusi taulu
+        db.execSQL("CREATE TABLE meals_new (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, timestamp INTEGER NOT NULL, calories INTEGER NOT NULL, carbohydrates INTEGER NOT NULL, comment TEXT NOT NULL DEFAULT '')")
+        db.execSQL("INSERT INTO meals_new (id, timestamp, calories, carbohydrates, comment) SELECT id, timestamp, CAST(calories AS INTEGER), CAST(carbohydrates AS INTEGER), '' FROM meals")
+        db.execSQL("DROP TABLE meals")
+        db.execSQL("ALTER TABLE meals_new RENAME TO meals")
+    }
+}

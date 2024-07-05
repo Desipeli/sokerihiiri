@@ -25,13 +25,16 @@ import com.example.sokerihiiri.ui.screens.insulin.InsulinScreen
 import com.example.sokerihiiri.ui.screens.insulin.InsulinViewModel
 import com.example.sokerihiiri.ui.screens.insulin.InsulinViewModelFactory
 import com.example.sokerihiiri.ui.screens.MainScreen
-import com.example.sokerihiiri.ui.screens.MealScreen
+import com.example.sokerihiiri.ui.screens.meals.MealScreen
 import com.example.sokerihiiri.ui.screens.measurement.MeasurementScreen
 import com.example.sokerihiiri.ui.screens.SettingsScreen
 import com.example.sokerihiiri.ui.screens.browse.BrowseViewModel
 import com.example.sokerihiiri.ui.screens.browse.BrowseViewModelFactory
 import com.example.sokerihiiri.ui.screens.browse.injections.BrowseInjectionsScreen
+import com.example.sokerihiiri.ui.screens.browse.meals.BrowseMealsScreen
 import com.example.sokerihiiri.ui.screens.browse.measurements.BrowseMeasurementsScreen
+import com.example.sokerihiiri.ui.screens.meals.MealViewModel
+import com.example.sokerihiiri.ui.screens.meals.MealViewModelFactory
 
 sealed class Screens(val route: String, val title: String) {
     object Main : Screens(route = "main", title="Sokerihiiri")
@@ -42,6 +45,7 @@ sealed class Screens(val route: String, val title: String) {
         object Main : Screens(route = "browse_main", title="Selaa")
         object Measurements : Screens(route = "browse_measurements", title="Mittaukset")
         object Injections : Screens(route = "browse_injections", title="Insuliini")
+        object Meals: Screens(route = "browse_meals", title="Ateriat")
     }
     object Settings : Screens(route = "settings", title="Asetukset")
 }
@@ -74,6 +78,9 @@ fun SokerihiiriApp(
     )
     val browseViewModel: BrowseViewModel = viewModel(
         factory = BrowseViewModelFactory(repository = repository)
+    )
+    val mealViewModel: MealViewModel = viewModel(
+        factory = MealViewModelFactory(repository = repository)
     )
 
 
@@ -110,6 +117,9 @@ fun SokerihiiriApp(
                 composable(route = Screens.Browse.Injections.route) {
                     BrowseInjectionsScreen(browseViewModel = browseViewModel)
                 }
+                composable(route = Screens.Browse.Meals.route) {
+                    BrowseMealsScreen(browseViewModel = browseViewModel)
+                }
             }
             composable(route = Screens.Measurement.route) {
                 MeasurementScreen(
@@ -124,7 +134,10 @@ fun SokerihiiriApp(
                 )
             }
             composable(route = Screens.Meal.route) {
-                MealScreen()
+                MealScreen(
+                    mealViewModel = mealViewModel,
+                    navController = navController
+                )
             }
             composable(route = Screens.Settings.route) {
                 SettingsScreen()

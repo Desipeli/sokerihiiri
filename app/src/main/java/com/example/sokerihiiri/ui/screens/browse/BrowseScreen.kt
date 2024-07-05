@@ -24,10 +24,13 @@ fun BrowseScreen(
         TextButton(onClick = {
             navController.navigate(Screens.Browse.Measurements.route)
         }) {
-            Text(text = "Mittaukset")
+            Text(text = Screens.Browse.Measurements.title)
         }
         TextButton(onClick = { navController.navigate(Screens.Browse.Injections.route) }) {
-            Text(text = "Insuliini")
+            Text(text = Screens.Browse.Injections.title)
+        }
+        TextButton(onClick = { navController.navigate(Screens.Browse.Meals.route) }) {
+            Text(text = Screens.Browse.Meals.title)
         }
     }
 }

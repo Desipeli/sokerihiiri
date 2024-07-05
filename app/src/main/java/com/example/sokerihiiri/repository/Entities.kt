@@ -25,6 +25,7 @@ class InsulinInjection(
 class Meal(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "timestamp") val timestamp: Long,
-    @ColumnInfo(name = "calories") val calories: String,
-    @ColumnInfo(name = "carbohydrates") val carbohydrates: String,
+    @ColumnInfo(name = "calories") val calories: Int,
+    @ColumnInfo(name = "carbohydrates") val carbohydrates: Int,
+    @ColumnInfo(name = "comment") val comment: String,
 )
