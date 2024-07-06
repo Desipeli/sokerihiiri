@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -59,6 +60,7 @@ fun MeasurementScreen(
 
     var showDatePicker: MutableState<Boolean> = remember { mutableStateOf(false) }
     var showTimePicker: MutableState<Boolean> = remember { mutableStateOf(false) }
+    var showDeleteDialog: MutableState<Boolean> = remember { mutableStateOf(false) }
 
     Log.d("MeasurementScreen", "uiState: $uiState")
 
@@ -199,8 +201,7 @@ fun MeasurementScreen(
             TextButton(modifier = Modifier
                 .align(Alignment.BottomStart),
                 onClick = {
-                    measurementViewModel.deleteBloodSugarMeasurement(id)
-                    navController.navigateUp()
+                    showDeleteDialog.value = true
                 }) {
                 Text("Poista")
             }
@@ -221,6 +222,31 @@ fun MeasurementScreen(
                 initialMinute = uiState.minute,
                 onTimeSelected = { hour, minute ->
                     measurementViewModel.setTime(hour, minute)
+                }
+            )
+        }
+        if (showDeleteDialog.value && id != null) {
+            AlertDialog(
+                onDismissRequest = { showDeleteDialog.value = false },
+                title = { Text("Poista") },
+                text = { Text("Haluatko varmasti poistaa tiedot?") },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            measurementViewModel.deleteBloodSugarMeasurement(id)
+                            navController.navigateUp()
+                            showDeleteDialog.value = false
+                        }
+                    ) {
+                        Text("Poista")
+                    }
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = { showDeleteDialog.value = false }
+                    ) {
+                        Text("Peruuta")
+                    }
                 }
             )
         }
