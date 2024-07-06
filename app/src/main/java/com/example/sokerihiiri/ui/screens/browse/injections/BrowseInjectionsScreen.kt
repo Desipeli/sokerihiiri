@@ -1,5 +1,6 @@
 package com.example.sokerihiiri.ui.screens.browse.injections
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,12 +15,15 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.navigation.NavController
+import com.example.sokerihiiri.Screens
 import com.example.sokerihiiri.ui.screens.browse.BrowseViewModel
 import com.example.sokerihiiri.utils.timestampToDateTimeString
 
 @Composable
 fun BrowseInjectionsScreen(
     browseViewModel: BrowseViewModel,
+    navController: NavController
 ) {
 
     val allInjections by browseViewModel.allInjections.observeAsState(emptyList())
@@ -36,7 +40,10 @@ fun BrowseInjectionsScreen(
         Divider()
         LazyColumn {
             items(allInjections) { injection ->
-                Row(modifier = Modifier.fillMaxWidth(),
+                Row(modifier = Modifier.fillMaxWidth()
+                    .clickable {
+                        navController.navigate("${Screens.Browse.Injections.Injection.route}/${injection.id}")
+                    },
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {

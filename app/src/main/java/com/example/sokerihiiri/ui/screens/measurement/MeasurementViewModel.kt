@@ -127,10 +127,10 @@ class MeasurementViewModel(
         }
     }
 
-    fun deleteBloodSugarMeasurement(id: String) {
+    fun deleteBloodSugarMeasurement() {
         try {
             viewModelScope.launch {
-                repository.deleteBloodSugarMeasurementById(id.toInt())
+                repository.deleteBloodSugarMeasurementById(uiState.id!!)
             }
         } catch (e: Exception) {
             Log.d("MeasurementViewModel", "deleteBloodSugarMeasurement: ${e.message}")

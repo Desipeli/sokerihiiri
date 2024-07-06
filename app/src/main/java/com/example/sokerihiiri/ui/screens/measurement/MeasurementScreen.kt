@@ -31,6 +31,7 @@ import androidx.navigation.NavController
 import com.example.sokerihiiri.ui.components.AppDatePickerDialog
 import com.example.sokerihiiri.ui.components.AppTimePickerDialog
 import com.example.sokerihiiri.ui.components.NumberTextField
+import com.example.sokerihiiri.ui.components.ViewAndEdit
 import java.util.Date
 
 @Composable
@@ -40,11 +41,11 @@ fun MeasurementScreen(
     modifier: Modifier = Modifier,
     id: String? = null,
 ) {
-    var allowEdit by remember { mutableStateOf(false) }
+    var allowEdit: MutableState<Boolean> = remember { mutableStateOf(false) }
 
     LaunchedEffect(id) {
         try {
-            if (id == null) allowEdit = true
+            if (id == null) allowEdit.value = true
             measurementViewModel.getMeasurementFromId(id)
         } catch (e: Exception) {
             Log.e("MeasurementScreen", "Error getting measurement: $e")
@@ -60,7 +61,6 @@ fun MeasurementScreen(
 
     var showDatePicker: MutableState<Boolean> = remember { mutableStateOf(false) }
     var showTimePicker: MutableState<Boolean> = remember { mutableStateOf(false) }
-    var showDeleteDialog: MutableState<Boolean> = remember { mutableStateOf(false) }
 
     Log.d("MeasurementScreen", "uiState: $uiState")
 
@@ -91,11 +91,13 @@ fun MeasurementScreen(
         }
     }
 
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(bottom = 16.dp)
-    ) {
+    ViewAndEdit(
+        navController = navController,
+        id = id,
+        allowEdit = allowEdit,
+        save = { measurementViewModel.saveBloodSugarMeasurement() },
+        update = { measurementViewModel.updateBloodSugarMeasurement() },
+        delete = { measurementViewModel.deleteBloodSugarMeasurement() }) {
 
         Column(
             modifier = modifier.fillMaxSize(),
@@ -109,14 +111,14 @@ fun MeasurementScreen(
                 value = if (uiState.value <= 0.0f) "" else uiState.value.toString(),
                 onValueChange = { handleValueChange(it) },
                 label = { Text("Verensokeri mmol/l ") },
-                enabled = allowEdit
+                enabled = allowEdit.value
             )
 
             Spacer(modifier = Modifier.height(64.dp))
 
             TextButton(
                 onClick = { showTimePicker.value = true },
-                enabled = allowEdit
+                enabled = allowEdit.value
             ) {
                 Text(
                     text = String.format(
@@ -129,7 +131,7 @@ fun MeasurementScreen(
             }
             TextButton(
                 onClick = { showDatePicker.value = true },
-                enabled = allowEdit
+                enabled = allowEdit.value
             ) {
                 Text(dateFormatter.format(Date(uiState.date)))
             }
@@ -138,12 +140,12 @@ fun MeasurementScreen(
                 Text("Aterian jälkeen")
                 Checkbox(
                     checked = uiState.afterMeal,
-                    enabled = allowEdit,
+                    enabled = allowEdit.value,
                     onCheckedChange = {
                         measurementViewModel.setAfterMeal(it)
-                    })
+                    }
+                )
             }
-
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 NumberTextField(
@@ -152,7 +154,7 @@ fun MeasurementScreen(
                     value = if (uiState.minutesFromMeal < 60) "" else (uiState.minutesFromMeal / 60).toString(),
                     onValueChange = { handleHourChange(it) },
                     label = { Text("h") },
-                    enabled = allowEdit && uiState.afterMeal
+                    enabled = allowEdit.value && uiState.afterMeal
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 NumberTextField(
@@ -161,94 +163,27 @@ fun MeasurementScreen(
                     value = if (uiState.minutesFromMeal % 60 == 0) "" else (uiState.minutesFromMeal % 60).toString(),
                     onValueChange = { handleMinutesChange(it) },
                     label = { Text("min") },
-                    enabled = allowEdit && uiState.afterMeal
+                    enabled = allowEdit.value && uiState.afterMeal
                 )
             }
         }
-        if (allowEdit) {
-            if (id == null) {
-                TextButton(modifier = Modifier
-                    .align(Alignment.BottomEnd),
-                    enabled = allowEdit,
-                    onClick = {
-                        measurementViewModel.saveBloodSugarMeasurement()
-                        navController.navigateUp()
-                    }) {
-                    Text("Tallenna")
-                }
-            } else {
-                TextButton(modifier = Modifier
-                    .align(Alignment.BottomEnd),
-                    enabled = allowEdit,
-                    onClick = {
-                        measurementViewModel.updateBloodSugarMeasurement()
-                        navController.navigateUp()
-                    }) {
-                    Text("Tallenna muutokset")
-                }
+    }
+
+    if (showDatePicker.value) {
+        AppDatePickerDialog(
+            showState = showDatePicker,
+            initialState = uiState.date,
+            onDateSelected = { measurementViewModel.setDate(it) })
+    }
+
+    if (showTimePicker.value) {
+        AppTimePickerDialog(
+            showState = showTimePicker,
+            initialHour = uiState.hour,
+            initialMinute = uiState.minute,
+            onTimeSelected = { hour, minute ->
+                measurementViewModel.setTime(hour, minute)
             }
-        } else {
-            TextButton(modifier = Modifier
-                .align(Alignment.BottomEnd),
-                onClick = {
-                    allowEdit = true
-                }) {
-                Text("Muokkaa")
-            }
-        }
-
-        if (id != null) {
-            TextButton(modifier = Modifier
-                .align(Alignment.BottomStart),
-                onClick = {
-                    showDeleteDialog.value = true
-                }) {
-                Text("Poista")
-            }
-
-        }
-
-        if (showDatePicker.value) {
-            AppDatePickerDialog(
-                showState = showDatePicker,
-                initialState = uiState.date,
-                onDateSelected = { measurementViewModel.setDate(it) })
-        }
-
-        if (showTimePicker.value) {
-            AppTimePickerDialog(
-                showState = showTimePicker,
-                initialHour = uiState.hour,
-                initialMinute = uiState.minute,
-                onTimeSelected = { hour, minute ->
-                    measurementViewModel.setTime(hour, minute)
-                }
-            )
-        }
-        if (showDeleteDialog.value && id != null) {
-            AlertDialog(
-                onDismissRequest = { showDeleteDialog.value = false },
-                title = { Text("Poista") },
-                text = { Text("Haluatko varmasti poistaa tiedot?") },
-                confirmButton = {
-                    TextButton(
-                        onClick = {
-                            measurementViewModel.deleteBloodSugarMeasurement(id)
-                            navController.navigateUp()
-                            showDeleteDialog.value = false
-                        }
-                    ) {
-                        Text("Poista")
-                    }
-                },
-                dismissButton = {
-                    TextButton(
-                        onClick = { showDeleteDialog.value = false }
-                    ) {
-                        Text("Peruuta")
-                    }
-                }
-            )
-        }
+        )
     }
 }

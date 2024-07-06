@@ -47,7 +47,10 @@ sealed class Screens(val route: String, val title: String) {
             object Main : Screens(route = "browse_measurements_main", title="Mittaukset")
             object Measurement : Screens(route = "browse_measurements_measurement/{id}", title="Mittaus")
         }
-        object Injections : Screens(route = "browse_injections", title="Insuliini")
+        object Injections : Screens(route = "browse_injections", title="Insuliini") {
+            object Main : Screens(route = "browse_injections_main", title="Insuliini")
+            object Injection : Screens(route = "browse_injections_injection/{id}", title="Insuliini")
+        }
         object Meals: Screens(route = "browse_meals", title="Ateriat")
     }
     object Settings : Screens(route = "settings", title="Asetukset")
@@ -131,8 +134,23 @@ fun SokerihiiriApp(
                         )
                     }
                 }
-                composable(route = Screens.Browse.Injections.route) {
-                    BrowseInjectionsScreen(browseViewModel = browseViewModel)
+                navigation(
+                    route = Screens.Browse.Injections.route,
+                    startDestination = Screens.Browse.Injections.Main.route
+                ) {
+                    composable(route = Screens.Browse.Injections.Main.route) {
+                        BrowseInjectionsScreen(
+                            browseViewModel = browseViewModel,
+                            navController = navController
+                        )
+                    }
+                    composable(route = Screens.Browse.Injections.Injection.route + "/{id}") {
+                        InsulinScreen(
+                            insulinViewModel = insulinViewModel,
+                            navController = navController,
+                            id = it.arguments?.getString("id")
+                        )
+                    }
                 }
                 composable(route = Screens.Browse.Meals.route) {
                     BrowseMealsScreen(browseViewModel = browseViewModel)

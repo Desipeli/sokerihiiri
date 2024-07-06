@@ -38,8 +38,17 @@ interface InsulinInjectionDao {
     @Query("SELECT * FROM insulin_injections")
     fun getAll(): Flow<List<InsulinInjection>>
 
+    @Query("SELECT * FROM insulin_injections WHERE id = :id")
+    suspend fun getById(id: Int): InsulinInjection
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(injection: InsulinInjection)
+
+    @Update
+    suspend fun update(injection: InsulinInjection)
+
+    @Query("DELETE FROM insulin_injections WHERE id = :id")
+    suspend fun deleteById(id: Int)
 
     @Query("DELETE FROM insulin_injections")
     suspend fun deleteAll()

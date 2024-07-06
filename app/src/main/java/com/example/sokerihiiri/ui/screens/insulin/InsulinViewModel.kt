@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.sokerihiiri.repository.InsulinInjection
 import com.example.sokerihiiri.repository.SokerihiiriRepository
 import com.example.sokerihiiri.utils.dateAndTimeToUTCLong
+import com.example.sokerihiiri.utils.timestampToHoursAndMinutes
 import kotlinx.coroutines.launch
 import java.time.LocalTime
 
@@ -56,9 +57,60 @@ class InsulinViewModel(
             Log.e("InsulinViewModel", "Error saving insulin injection", e)
         }
     }
+
+    fun getInsulinInjectionById(id: String?) {
+        if (id.toString() == uiState.id.toString()) return
+        if (id == null) {
+            resetState()
+            return
+        }
+
+        viewModelScope.launch {
+            val insulinInjection = repository.getInsulinInjectionById(id.toInt())
+            val (hour, minute) = timestampToHoursAndMinutes(insulinInjection.timestamp)
+            uiState = InsulinUiState(
+                id = insulinInjection.id,
+                dose = insulinInjection.dose,
+                date = insulinInjection.timestamp,
+                hour = hour,
+                minute = minute
+            )
+        }
+    }
+
+    fun updateInsulinInjection() {
+        try {
+            val dateTime = dateAndTimeToUTCLong(
+                uiState.date,
+                uiState.hour,
+                uiState.minute
+            )
+            val insulinInjection = InsulinInjection(
+                id = uiState.id!!,
+                dose = uiState.dose,
+                timestamp = dateTime
+            )
+            viewModelScope.launch {
+                repository.updateInsulinInjection(insulinInjection)
+            }
+        } catch (e: Exception) {
+            Log.e("InsulinViewModel", "Error updating insulin injection", e)
+        }
+    }
+
+    fun deleteInsulinInjectionById() {
+        try {
+            viewModelScope.launch {
+                repository.deleteInsulinInjectionById(uiState.id!!)
+            }
+        } catch (e: Exception) {
+            Log.e("InsulinViewModel", "Error deleting insulin injection", e)
+        }
+    }
 }
 
 data class InsulinUiState(
+    val id: Int? = null,
     val dose: Int = 0,
     val date: Long = System.currentTimeMillis(),
     val hour: Int = LocalTime.now().hour,
