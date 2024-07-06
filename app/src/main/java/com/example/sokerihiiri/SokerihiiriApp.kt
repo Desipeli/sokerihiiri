@@ -43,7 +43,10 @@ sealed class Screens(val route: String, val title: String) {
     object Meal : Screens(route = "meal", title="Ateria")
     object Browse : Screens(route = "browse", title="Selaa") {
         object Main : Screens(route = "browse_main", title="Selaa")
-        object Measurements : Screens(route = "browse_measurements", title="Mittaukset")
+        object Measurements : Screens(route = "browse_measurements", title="Mittaukset") {
+            object Main : Screens(route = "browse_measurements_main", title="Mittaukset")
+            object Measurement : Screens(route = "browse_measurements_measurement/{id}", title="Mittaus")
+        }
         object Injections : Screens(route = "browse_injections", title="Insuliini")
         object Meals: Screens(route = "browse_meals", title="Ateriat")
     }
@@ -111,8 +114,22 @@ fun SokerihiiriApp(
                 composable(route = Screens.Browse.Main.route) {
                     BrowseScreen(navController = navController)
                 }
-                composable(route = Screens.Browse.Measurements.route) {
-                    BrowseMeasurementsScreen(browseViewModel = browseViewModel)
+                navigation(
+                    route = Screens.Browse.Measurements.route,
+                    startDestination = Screens.Browse.Measurements.Main.route
+                ) {
+                    composable(route = Screens.Browse.Measurements.Main.route) {
+                        BrowseMeasurementsScreen(
+                            browseViewModel = browseViewModel,
+                            navController = navController)
+                    }
+                    composable(route = Screens.Browse.Measurements.Measurement.route + "/{id}") {
+                        MeasurementScreen(
+                            measurementViewModel = measurementViewModel,
+                            navController = navController,
+                            id = it.arguments?.getString("id")
+                        )
+                    }
                 }
                 composable(route = Screens.Browse.Injections.route) {
                     BrowseInjectionsScreen(browseViewModel = browseViewModel)

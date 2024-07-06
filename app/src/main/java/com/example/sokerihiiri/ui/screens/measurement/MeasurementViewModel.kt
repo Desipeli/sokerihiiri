@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.sokerihiiri.repository.BloodSugarMeasurement
 import com.example.sokerihiiri.repository.SokerihiiriRepository
 import com.example.sokerihiiri.utils.dateAndTimeToUTCLong
+import com.example.sokerihiiri.utils.timestampToHoursAndMinutes
 import kotlinx.coroutines.launch
 import java.time.LocalTime
 
@@ -39,7 +40,7 @@ class MeasurementViewModel(
         var newMinutes = minutes
         if (newMinutes < 0 || minutes > 59) newMinutes = 0
         val hours = uiState.minutesFromMeal / 60 * 60
-        Log.d("AppViewModel", "Tunteja oli: $hours")
+        Log.d("MeasurementViewModel", "Tunteja oli: $hours")
         uiState = uiState.copy(minutesFromMeal = hours+newMinutes)
     }
     fun setAfterMeal(afterMeal: Boolean) {
@@ -54,7 +55,7 @@ class MeasurementViewModel(
     }
 
     fun saveBloodSugarMeasurement() {
-        Log.d("AppViewModel", "saveBloodSugarMeasurement state: $uiState")
+        Log.d("MeasurementViewModel", "saveBloodSugarMeasurement state: $uiState")
         try {
             val dateTime = dateAndTimeToUTCLong(
                 uiState.date,
@@ -62,7 +63,7 @@ class MeasurementViewModel(
                 uiState.minute
             )
 
-            Log.d("AppViewModel", "saveBloodSugarMeasurement dateTime: $dateTime")
+            Log.d("MeasurementViewModel", "saveBloodSugarMeasurement dateTime: $dateTime")
 
             val bloodSugarMeasurement = BloodSugarMeasurement(
                 value = uiState.value,
@@ -76,13 +77,69 @@ class MeasurementViewModel(
             resetState()
 
         } catch (e: Exception) {
-            Log.d("AppViewModel", "saveBloodSugarMeasurement: ${e.message}")
+            Log.d("MeasurementViewModel", "saveBloodSugarMeasurement: ${e.message}")
         }
+    }
 
+    fun updateBloodSugarMeasurement() {
+        Log.d("MeasurementViewModel", "updateBloodSugarMeasurement state: $uiState")
+        try {
+            val dateTime = dateAndTimeToUTCLong(
+                uiState.date,
+                uiState.hour,
+                uiState.minute
+            )
+            val bloodSugarMeasurement = BloodSugarMeasurement(
+                id = uiState.id!!,
+                value = uiState.value,
+                timestamp = dateTime,
+                afterMeal = uiState.afterMeal,
+                minutesFromMeal = uiState.minutesFromMeal)
+
+            viewModelScope.launch {
+                Log.d("MeasurementViewModel", "updateBloodSugarMeasurement: $bloodSugarMeasurement")
+                repository.updateBloodSugarMeasurement(bloodSugarMeasurement)
+            }
+            resetState()
+        } catch (e: Exception) {
+            Log.d("MeasurementViewModel", "updateBloodSugarMeasurement: ${e.message}")
+        }
+    }
+
+    fun getMeasurementFromId(id: String?) {
+        if (id.toString() == uiState.id.toString()) return
+        if (id == null) {
+            resetState()
+            return
+        }
+        viewModelScope.launch {
+            val measurement = repository.getBloodSugarMeasurementById(id.toInt())
+            val (hour, minute) = timestampToHoursAndMinutes(measurement.timestamp)
+            uiState = BloodSugarMeasurementState(
+                id = measurement.id,
+                value = measurement.value,
+                hour = hour,
+                minute = minute,
+                date = measurement.timestamp,
+                afterMeal = measurement.afterMeal,
+                minutesFromMeal = measurement.minutesFromMeal
+            )
+        }
+    }
+
+    fun deleteBloodSugarMeasurement(id: String) {
+        try {
+            viewModelScope.launch {
+                repository.deleteBloodSugarMeasurementById(id.toInt())
+            }
+        } catch (e: Exception) {
+            Log.d("MeasurementViewModel", "deleteBloodSugarMeasurement: ${e.message}")
+        }
     }
 }
 
 data class BloodSugarMeasurementState(
+    val id: Int? = null,
     val value: Float = 0.0f,
     val hour: Int = LocalTime.now().hour,
     val minute: Int = LocalTime.now().minute,

@@ -1,9 +1,13 @@
 package com.example.sokerihiiri.ui.screens.browse.measurements
 
+import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Divider
@@ -14,6 +18,9 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.example.sokerihiiri.Screens
 import com.example.sokerihiiri.ui.screens.browse.BrowseViewModel
 import com.example.sokerihiiri.utils.minutesToHoursAndMinutes
 import com.example.sokerihiiri.utils.timestampToDateTimeString
@@ -21,11 +28,10 @@ import com.example.sokerihiiri.utils.timestampToDateTimeString
 @Composable
 fun BrowseMeasurementsScreen(
     browseViewModel: BrowseViewModel,
+    navController: NavController,
 ) {
 
-    
     val allMeasurements by browseViewModel.allMeasurements.observeAsState(emptyList())
-    
 
     Column {
         Row(modifier = Modifier.fillMaxWidth(),
@@ -42,7 +48,11 @@ fun BrowseMeasurementsScreen(
         LazyColumn {
             items(allMeasurements) { measurement ->
                 val (hours, minutes) = minutesToHoursAndMinutes(measurement.minutesFromMeal)
-                Row(modifier = Modifier.fillMaxWidth(),
+                Row(modifier = Modifier.fillMaxWidth()
+                    .clickable {
+                        Log.d("Measurement", measurement.id.toString())
+                        navController.navigate("${Screens.Browse.Measurements.Measurement.route}/${measurement.id}")
+                    },
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(text = timestampToDateTimeString(measurement.timestamp), Modifier.weight(0.50f))
@@ -53,6 +63,7 @@ fun BrowseMeasurementsScreen(
                         Text(text = "", Modifier.weight(0.40f))
                     }
                 }
+                Spacer(modifier = Modifier.height(8.dp))
             }
         }
     }

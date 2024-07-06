@@ -1,5 +1,6 @@
 package com.example.sokerihiiri.utils
 
+import android.util.Log
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.LocalDateTime
@@ -27,4 +28,12 @@ fun minutesToHoursAndMinutes(minutes: Int): Pair<Int, Int> {
     val hours = minutes / 60
     val remainingMinutes = minutes % 60
     return Pair(hours, remainingMinutes)
+}
+
+fun timestampToHoursAndMinutes(timestamp: Long): Pair<Int, Int> {
+    val instant = Instant.ofEpochMilli(timestamp)
+    val dateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault())
+    val hours = dateTime.hour
+    val minutes = dateTime.minute
+    return Pair(hours, minutes)
 }

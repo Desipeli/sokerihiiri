@@ -24,6 +24,21 @@ class SokerihiiriRepository(
     }
 
     @WorkerThread
+    suspend fun getBloodSugarMeasurementById(id: Int): BloodSugarMeasurement {
+        return bloodSugarMeasurementDao.getById(id)
+    }
+
+    @WorkerThread
+    suspend fun updateBloodSugarMeasurement(bloodSugarMeasurement: BloodSugarMeasurement) {
+        bloodSugarMeasurementDao.update(bloodSugarMeasurement)
+    }
+
+    @WorkerThread
+    suspend fun deleteBloodSugarMeasurementById(id: Int) {
+        bloodSugarMeasurementDao.deleteById(id)
+    }
+
+    @WorkerThread
     suspend fun insertInsulinInjection(insulinInjection: InsulinInjection) {
         insulinInjectionDao.insert(insulinInjection)
     }
