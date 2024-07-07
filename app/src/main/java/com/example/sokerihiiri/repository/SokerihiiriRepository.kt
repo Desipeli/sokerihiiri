@@ -63,5 +63,18 @@ class SokerihiiriRepository(
         mealDao.insert(meal)
     }
 
+    @WorkerThread
+    suspend fun getMealById(id: String): Meal {
+        return mealDao.getById(id)
+    }
 
+    @WorkerThread
+    suspend fun updateMeal(meal: Meal) {
+        mealDao.update(meal)
+    }
+
+    @WorkerThread
+    suspend fun deleteMealById(id: Int) {
+        mealDao.deleteById(id)
+    }
 }

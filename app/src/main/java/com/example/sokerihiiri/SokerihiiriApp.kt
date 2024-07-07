@@ -51,7 +51,10 @@ sealed class Screens(val route: String, val title: String) {
             object Main : Screens(route = "browse_injections_main", title="Insuliini")
             object Injection : Screens(route = "browse_injections_injection/{id}", title="Insuliini")
         }
-        object Meals: Screens(route = "browse_meals", title="Ateriat")
+        object Meals: Screens(route = "browse_meals", title="Ateriat") {
+            object Main : Screens(route = "browse_meals_main", title="Ateriat")
+            object Meal : Screens(route = "browse_meals_meal/{id}", title="Ateria")
+        }
     }
     object Settings : Screens(route = "settings", title="Asetukset")
 }
@@ -124,7 +127,8 @@ fun SokerihiiriApp(
                     composable(route = Screens.Browse.Measurements.Main.route) {
                         BrowseMeasurementsScreen(
                             browseViewModel = browseViewModel,
-                            navController = navController)
+                            navController = navController
+                        )
                     }
                     composable(route = Screens.Browse.Measurements.Measurement.route + "/{id}") {
                         MeasurementScreen(
@@ -152,10 +156,26 @@ fun SokerihiiriApp(
                         )
                     }
                 }
-                composable(route = Screens.Browse.Meals.route) {
-                    BrowseMealsScreen(browseViewModel = browseViewModel)
+                navigation(
+                    route = Screens.Browse.Meals.route,
+                    startDestination = Screens.Browse.Meals.Main.route
+                ) {
+                    composable(route = Screens.Browse.Meals.Main.route) {
+                        BrowseMealsScreen(
+                            browseViewModel = browseViewModel,
+                            navController = navController
+                        )
+                    }
+                    composable(route = Screens.Browse.Meals.Meal.route + "/{id}") {
+                        MealScreen(
+                            mealViewModel = mealViewModel,
+                            navController = navController,
+                            id = it.arguments?.getString("id")
+                        )
+                    }
                 }
             }
+
             composable(route = Screens.Measurement.route) {
                 MeasurementScreen(
                     measurementViewModel = measurementViewModel,

@@ -2,33 +2,27 @@ package com.example.sokerihiiri.ui.screens.meals
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.min
 import androidx.navigation.NavController
 import com.example.sokerihiiri.ui.components.AppDatePickerDialog
 import com.example.sokerihiiri.ui.components.AppTimePickerDialog
 import com.example.sokerihiiri.ui.components.NumberTextField
 import com.example.sokerihiiri.ui.components.StyledTextField
+import com.example.sokerihiiri.ui.components.ViewAndEdit
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -38,11 +32,21 @@ fun MealScreen(
     mealViewModel: MealViewModel,
     navController: NavController,
     modifier: Modifier = Modifier,
+    id: String? = null
 ) {
+    var allowEdit: MutableState<Boolean> = remember { mutableStateOf(false) }
+
+    LaunchedEffect(id) {
+        try {
+            if (id == null) allowEdit.value = true
+            mealViewModel.getMealById(id)
+        } catch (e: Exception) {
+            Log.e("MealScreen", "Error getting meal", e)
+        }
+    }
+
     val uiState = mealViewModel.uiState
-
     val dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-
     var showDatePicker: MutableState<Boolean> = remember { mutableStateOf(false) }
     var showTimePicker: MutableState<Boolean> = remember { mutableStateOf(false) }
 
@@ -78,9 +82,13 @@ fun MealScreen(
         }
     }
 
-    Box(modifier = modifier
-        .fillMaxSize()
-        .padding(bottom = 16.dp)) {
+    ViewAndEdit(
+        navController = navController,
+        id = id,
+        allowEdit = allowEdit,
+        save = { mealViewModel.saveMeal() },
+        update = { mealViewModel.updateMeal() },
+        delete = { mealViewModel.deleteMealById() }) {
 
         Column(
             modifier = modifier.fillMaxSize(),
@@ -92,17 +100,19 @@ fun MealScreen(
                     .fillMaxWidth(0.5f),
                 value = if (uiState.calories == 0) "" else uiState.calories.toString(),
                 onValueChange = { handleCalorieChange(it) },
-                label = { Text(text = "Kcal")}
+                label = { Text(text = "Kcal")},
+                enabled = allowEdit.value
             )
             NumberTextField(
                 modifier = Modifier
                     .fillMaxWidth(0.5f),
-                value = if (uiState.carbs == 0) "" else uiState.carbs.toString(),
+                value = if (uiState.carbohydrates == 0) "" else uiState.carbohydrates.toString(),
                 onValueChange = { handleChangeCarbs(it) },
-                label = { Text(text = "Hiilihydraatit")}
+                label = { Text(text = "Hiilihydraatit")},
+                enabled = allowEdit.value
             )
             Spacer(modifier = Modifier.height(64.dp))
-            TextButton(onClick = { showTimePicker.value = true }) {
+            TextButton(onClick = { showTimePicker.value = true }, enabled = allowEdit.value) {
                 Text(
                     text = String.format(
                         Locale.getDefault(),
@@ -112,21 +122,14 @@ fun MealScreen(
                     )
                 )
             }
-            TextButton(onClick = { showDatePicker.value = true }) {
+            TextButton(onClick = { showDatePicker.value = true }, enabled = allowEdit.value) {
                 Text(dateFormatter.format(Date(uiState.date)))
             }
             StyledTextField(
                 value = uiState.comment,
                 onValueChange = {handleChangeComment(it)},
-                label = {Text("Kommentti")})
-        }
-        TextButton(modifier = Modifier
-            .align(Alignment.BottomEnd),
-            onClick = {
-                mealViewModel.saveMeal()
-                navController.navigateUp()
-            }) {
-            Text("Tallenna")
+                label = {Text("Kommentti")},
+                enabled = allowEdit.value)
         }
     }
 
