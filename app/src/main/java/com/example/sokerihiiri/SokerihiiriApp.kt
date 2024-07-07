@@ -20,6 +20,7 @@ import com.example.sokerihiiri.ui.components.BottomBar
 import com.example.sokerihiiri.ui.screens.measurement.MeasurementViewModel
 import com.example.sokerihiiri.ui.screens.measurement.MeasurementViewModelFactory
 import com.example.sokerihiiri.ui.components.TopBar
+import com.example.sokerihiiri.ui.navigation.browseNavigation
 import com.example.sokerihiiri.ui.screens.browse.BrowseScreen
 import com.example.sokerihiiri.ui.screens.insulin.InsulinScreen
 import com.example.sokerihiiri.ui.screens.insulin.InsulinViewModel
@@ -108,73 +109,16 @@ fun SokerihiiriApp(
                 .padding(innerPadding)
                 .padding(start = 8.dp, end = 8.dp)
         ) {
-
             composable(route = Screens.Main.route) {
                 MainScreen( navController = navController)
             }
-
-            navigation(
-                route = Screens.Browse.route,
-                startDestination = Screens.Browse.Main.route
-            ) {
-                composable(route = Screens.Browse.Main.route) {
-                    BrowseScreen(navController = navController)
-                }
-                navigation(
-                    route = Screens.Browse.Measurements.route,
-                    startDestination = Screens.Browse.Measurements.Main.route
-                ) {
-                    composable(route = Screens.Browse.Measurements.Main.route) {
-                        BrowseMeasurementsScreen(
-                            browseViewModel = browseViewModel,
-                            navController = navController
-                        )
-                    }
-                    composable(route = Screens.Browse.Measurements.Measurement.route + "/{id}") {
-                        MeasurementScreen(
-                            measurementViewModel = measurementViewModel,
-                            navController = navController,
-                            id = it.arguments?.getString("id")
-                        )
-                    }
-                }
-                navigation(
-                    route = Screens.Browse.Injections.route,
-                    startDestination = Screens.Browse.Injections.Main.route
-                ) {
-                    composable(route = Screens.Browse.Injections.Main.route) {
-                        BrowseInjectionsScreen(
-                            browseViewModel = browseViewModel,
-                            navController = navController
-                        )
-                    }
-                    composable(route = Screens.Browse.Injections.Injection.route + "/{id}") {
-                        InsulinScreen(
-                            insulinViewModel = insulinViewModel,
-                            navController = navController,
-                            id = it.arguments?.getString("id")
-                        )
-                    }
-                }
-                navigation(
-                    route = Screens.Browse.Meals.route,
-                    startDestination = Screens.Browse.Meals.Main.route
-                ) {
-                    composable(route = Screens.Browse.Meals.Main.route) {
-                        BrowseMealsScreen(
-                            browseViewModel = browseViewModel,
-                            navController = navController
-                        )
-                    }
-                    composable(route = Screens.Browse.Meals.Meal.route + "/{id}") {
-                        MealScreen(
-                            mealViewModel = mealViewModel,
-                            navController = navController,
-                            id = it.arguments?.getString("id")
-                        )
-                    }
-                }
-            }
+            browseNavigation(
+                navController = navController,
+                browseViewModel = browseViewModel,
+                measurementViewModel = measurementViewModel,
+                insulinViewModel = insulinViewModel,
+                mealViewModel = mealViewModel
+            )
 
             composable(route = Screens.Measurement.route) {
                 MeasurementScreen(
