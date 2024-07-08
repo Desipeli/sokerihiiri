@@ -12,7 +12,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.example.sokerihiiri.repository.SokerihiiriDatabase
 import com.example.sokerihiiri.repository.SokerihiiriRepository
@@ -20,45 +19,21 @@ import com.example.sokerihiiri.ui.components.BottomBar
 import com.example.sokerihiiri.ui.screens.measurement.MeasurementViewModel
 import com.example.sokerihiiri.ui.screens.measurement.MeasurementViewModelFactory
 import com.example.sokerihiiri.ui.components.TopBar
+import com.example.sokerihiiri.ui.navigation.Screens
 import com.example.sokerihiiri.ui.navigation.browseNavigation
-import com.example.sokerihiiri.ui.screens.browse.BrowseScreen
 import com.example.sokerihiiri.ui.screens.insulin.InsulinScreen
 import com.example.sokerihiiri.ui.screens.insulin.InsulinViewModel
 import com.example.sokerihiiri.ui.screens.insulin.InsulinViewModelFactory
 import com.example.sokerihiiri.ui.screens.MainScreen
-import com.example.sokerihiiri.ui.screens.meals.MealScreen
+import com.example.sokerihiiri.ui.screens.meal.MealScreen
 import com.example.sokerihiiri.ui.screens.measurement.MeasurementScreen
 import com.example.sokerihiiri.ui.screens.SettingsScreen
 import com.example.sokerihiiri.ui.screens.browse.BrowseViewModel
 import com.example.sokerihiiri.ui.screens.browse.BrowseViewModelFactory
-import com.example.sokerihiiri.ui.screens.browse.injections.BrowseInjectionsScreen
-import com.example.sokerihiiri.ui.screens.browse.meals.BrowseMealsScreen
-import com.example.sokerihiiri.ui.screens.browse.measurements.BrowseMeasurementsScreen
-import com.example.sokerihiiri.ui.screens.meals.MealViewModel
-import com.example.sokerihiiri.ui.screens.meals.MealViewModelFactory
+import com.example.sokerihiiri.ui.screens.meal.MealViewModel
+import com.example.sokerihiiri.ui.screens.meal.MealViewModelFactory
 
-sealed class Screens(val route: String, val title: String) {
-    object Main : Screens(route = "main", title="Sokerihiiri")
-    object Measurement : Screens(route = "measurement", title="Mittaus")
-    object Insulin : Screens(route = "insulin", title="Insuliini")
-    object Meal : Screens(route = "meal", title="Ateria")
-    object Browse : Screens(route = "browse", title="Selaa") {
-        object Main : Screens(route = "browse_main", title="Selaa")
-        object Measurements : Screens(route = "browse_measurements", title="Mittaukset") {
-            object Main : Screens(route = "browse_measurements_main", title="Mittaukset")
-            object Measurement : Screens(route = "browse_measurements_measurement/{id}", title="Mittaus")
-        }
-        object Injections : Screens(route = "browse_injections", title="Insuliini") {
-            object Main : Screens(route = "browse_injections_main", title="Insuliini")
-            object Injection : Screens(route = "browse_injections_injection/{id}", title="Insuliini")
-        }
-        object Meals: Screens(route = "browse_meals", title="Ateriat") {
-            object Main : Screens(route = "browse_meals_main", title="Ateriat")
-            object Meal : Screens(route = "browse_meals_meal/{id}", title="Ateria")
-        }
-    }
-    object Settings : Screens(route = "settings", title="Asetukset")
-}
+
 
 enum class BrowseRoutes(val title: String) {
     Main(title = "Selaa"),

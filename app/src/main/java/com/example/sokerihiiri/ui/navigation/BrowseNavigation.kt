@@ -4,15 +4,14 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import com.example.sokerihiiri.Screens
 import com.example.sokerihiiri.ui.screens.browse.BrowseScreen
 import com.example.sokerihiiri.ui.screens.browse.BrowseViewModel
 import com.example.sokerihiiri.ui.screens.browse.injections.BrowseInjectionsScreen
 import com.example.sokerihiiri.ui.screens.browse.meals.BrowseMealsScreen
 import com.example.sokerihiiri.ui.screens.browse.measurements.BrowseMeasurementsScreen
 import com.example.sokerihiiri.ui.screens.insulin.InsulinScreen
-import com.example.sokerihiiri.ui.screens.meals.MealScreen
-import com.example.sokerihiiri.ui.screens.meals.MealViewModel
+import com.example.sokerihiiri.ui.screens.meal.MealScreen
+import com.example.sokerihiiri.ui.screens.meal.MealViewModel
 import com.example.sokerihiiri.ui.screens.measurement.MeasurementScreen
 import com.example.sokerihiiri.ui.screens.measurement.MeasurementViewModel
 import com.example.sokerihiiri.ui.screens.insulin.InsulinViewModel

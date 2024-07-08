@@ -1,4 +1,4 @@
-package com.example.sokerihiiri.ui.screens.meals
+package com.example.sokerihiiri.ui.screens.meal
 
 import android.util.Log
 import androidx.compose.runtime.getValue

@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.sokerihiiri.Screens
+import com.example.sokerihiiri.ui.navigation.Screens
 import com.example.sokerihiiri.ui.screens.browse.BrowseViewModel
 import com.example.sokerihiiri.utils.minutesToHoursAndMinutes
 import com.example.sokerihiiri.utils.timestampToDateTimeString
