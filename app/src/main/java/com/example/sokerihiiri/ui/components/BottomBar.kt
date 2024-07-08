@@ -1,5 +1,6 @@
 package com.example.sokerihiiri.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,12 +12,17 @@ import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.sokerihiiri.ui.navigation.Screens
 
 @Composable
 fun BottomBar(navController: NavController) {
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = currentBackStackEntry?.destination?.route
+    Log.d("BottomBar", "Current route: $currentRoute")
     BottomAppBar(
         actions = {
             Row(modifier = Modifier.fillMaxWidth(),
@@ -32,13 +38,18 @@ fun BottomBar(navController: NavController) {
                         imageVector = Icons.Filled.Home,
                         contentDescription = "")
                 }
-                IconButton(onClick = { navController.navigate(Screens.Settings.route) }) {
+                IconButton(onClick = {
+                    val settingsRoute = when (currentRoute) {
+                        Screens.Measurement.route -> Screens.Settings.Measurement.route
+                        else -> Screens.Settings.Main.route
+                    }
+                    navController.navigate(settingsRoute)
+                }) {
                     Icon(
                         imageVector = Icons.Filled.Settings,
                         contentDescription = "")
                 }
             }
-
         }
     )
 }

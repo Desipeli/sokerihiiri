@@ -21,13 +21,13 @@ import com.example.sokerihiiri.ui.screens.measurement.MeasurementViewModelFactor
 import com.example.sokerihiiri.ui.components.TopBar
 import com.example.sokerihiiri.ui.navigation.Screens
 import com.example.sokerihiiri.ui.navigation.browseNavigation
+import com.example.sokerihiiri.ui.navigation.settingsNavigation
 import com.example.sokerihiiri.ui.screens.insulin.InsulinScreen
 import com.example.sokerihiiri.ui.screens.insulin.InsulinViewModel
 import com.example.sokerihiiri.ui.screens.insulin.InsulinViewModelFactory
 import com.example.sokerihiiri.ui.screens.MainScreen
 import com.example.sokerihiiri.ui.screens.meal.MealScreen
 import com.example.sokerihiiri.ui.screens.measurement.MeasurementScreen
-import com.example.sokerihiiri.ui.screens.SettingsScreen
 import com.example.sokerihiiri.ui.screens.browse.BrowseViewModel
 import com.example.sokerihiiri.ui.screens.browse.BrowseViewModelFactory
 import com.example.sokerihiiri.ui.screens.meal.MealViewModel
@@ -94,7 +94,9 @@ fun SokerihiiriApp(
                 insulinViewModel = insulinViewModel,
                 mealViewModel = mealViewModel
             )
-
+            settingsNavigation(
+                navController
+            )
             composable(route = Screens.Measurement.route) {
                 MeasurementScreen(
                     measurementViewModel = measurementViewModel,
@@ -112,9 +114,6 @@ fun SokerihiiriApp(
                     mealViewModel = mealViewModel,
                     navController = navController
                 )
-            }
-            composable(route = Screens.Settings.route) {
-                SettingsScreen()
             }
         }
     }
