@@ -14,6 +14,8 @@ import com.example.sokerihiiri.utils.timestampToHoursAndMinutes
 import kotlinx.coroutines.launch
 import java.time.LocalTime
 
+class InvalidCaloriesException(message: String) : Exception(message)
+class InvalidCarbohydratesException(message: String) : Exception(message)
 class MealViewModel(
     private val repository: SokerihiiriRepository
 ) : ViewModel() {
@@ -21,11 +23,11 @@ class MealViewModel(
         private set
 
     fun setCalories(calories: Int) {
-        uiState = uiState.copy(calories = calories)
+        uiState = uiState.copy(calories = calories, caloriesError = null)
     }
 
     fun setCarbs(carbs: Int) {
-        uiState = uiState.copy(carbohydrates = carbs)
+        uiState = uiState.copy(carbohydrates = carbs, carbohydratesError = null)
     }
 
     fun setComment(comment: String) {
@@ -46,6 +48,7 @@ class MealViewModel(
 
     fun saveMeal() {
         try {
+            validateFields()
             val dateTime = dateAndTimeToUTCLong(
                 uiState.date,
                 uiState.hour,
@@ -61,7 +64,14 @@ class MealViewModel(
                 repository.insertMeal(meal)
             }
             resetState()
-        } catch (e: Exception) {
+        } catch (e: InvalidCaloriesException) {
+            uiState = uiState.copy(caloriesError = e.message)
+            throw e
+        } catch (e: InvalidCarbohydratesException) {
+            uiState = uiState.copy(carbohydratesError = e.message)
+            throw e
+        }
+        catch (e: Exception) {
             Log.e("MealViewModel", "Error saving meal", e)
         }
     }
@@ -91,6 +101,7 @@ class MealViewModel(
     fun updateMeal() {
         Log.d("MealViewModel", "Updating meal")
         try {
+            validateFields()
             val dateTime = dateAndTimeToUTCLong(
                 uiState.date,
                 uiState.hour,
@@ -108,6 +119,12 @@ class MealViewModel(
                 Log.d("MealViewModel", "Meal: $meal")
                 repository.updateMeal(meal)
             }
+        } catch (e: InvalidCaloriesException) {
+            uiState = uiState.copy(caloriesError = e.message)
+            throw e
+        } catch (e: InvalidCarbohydratesException) {
+            uiState = uiState.copy(carbohydratesError = e.message)
+            throw e
         } catch (e: Exception) {
             Log.e("MealViewModel", "Error updating meal", e)
         }
@@ -122,6 +139,15 @@ class MealViewModel(
             Log.e("MealViewModel", "Error deleting meal", e)
         }
     }
+
+    private fun validateFields() {
+        if (uiState.calories <= 0) {
+            throw InvalidCaloriesException("Kcal oltava suurempi kuin 0")
+        }
+        if (uiState.carbohydrates <= 0) {
+            throw InvalidCarbohydratesException("Hiilarien oltava suurempi kuin 0")
+        }
+    }
 }
 
 data class UiState (
@@ -132,6 +158,8 @@ data class UiState (
     val minute: Int = LocalTime.now().minute,
     val date: Long = System.currentTimeMillis(),
     val comment: String = "",
+    val caloriesError: String? = null,
+    val carbohydratesError: String? = null
 )
 
 class MealViewModelFactory(private val repository: SokerihiiriRepository) : ViewModelProvider.Factory {

@@ -101,16 +101,21 @@ fun MealScreen(
                 value = if (uiState.calories == 0) "" else uiState.calories.toString(),
                 onValueChange = { handleCalorieChange(it) },
                 label = { Text(text = "Kcal")},
-                enabled = allowEdit.value
+                enabled = allowEdit.value,
+                isError = uiState.caloriesError != null
             )
+            Text(text = uiState.caloriesError ?: "")
             NumberTextField(
                 modifier = Modifier
                     .fillMaxWidth(0.5f),
                 value = if (uiState.carbohydrates == 0) "" else uiState.carbohydrates.toString(),
                 onValueChange = { handleChangeCarbs(it) },
                 label = { Text(text = "Hiilihydraatit")},
-                enabled = allowEdit.value
+                enabled = allowEdit.value,
+                isError = uiState.carbohydratesError != null
             )
+            Text(text = uiState.carbohydratesError ?: "")
+
             Spacer(modifier = Modifier.height(64.dp))
             TextButton(onClick = { showTimePicker.value = true }, enabled = allowEdit.value) {
                 Text(
