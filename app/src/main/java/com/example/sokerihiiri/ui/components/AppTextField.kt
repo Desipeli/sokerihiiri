@@ -30,7 +30,8 @@ fun StyledTextField(
             defaultKeyboardAction(ImeAction.Done)
         }
     ),
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    isError: Boolean = false
 ) {
     TextField(
         modifier = modifier,
@@ -40,7 +41,8 @@ fun StyledTextField(
         colors = colors,
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
-        enabled = enabled
+        enabled = enabled,
+        isError = isError
     )
 }
 
@@ -59,7 +61,8 @@ fun NumberTextField(
             defaultKeyboardAction(ImeAction.Done)
         }
     ),
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    isError: Boolean = false
 ) {
     StyledTextField(
         modifier = modifier,
@@ -68,6 +71,7 @@ fun NumberTextField(
         label = label,
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
-        enabled = enabled
+        enabled = enabled,
+        isError = isError
     )
 }

@@ -75,7 +75,9 @@ fun InsulinScreen(
                 value = if (uiState.dose <= 0) "" else uiState.dose.toString(),
                 onValueChange = {handleDoseChange(it)},
                 label = { Text("Insuliiniannos") },
-                enabled = allowEdit.value)
+                enabled = allowEdit.value,
+                isError = uiState.doseError != null)
+            uiState.doseError?.let { Text(text = it) }
             Spacer(modifier = Modifier.height(64.dp))
             TextButton(onClick = { showTimePicker.value = true }, enabled = allowEdit.value) {
                 Text(

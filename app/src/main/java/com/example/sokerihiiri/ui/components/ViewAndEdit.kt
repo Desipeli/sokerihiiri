@@ -1,5 +1,6 @@
 package com.example.sokerihiiri.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -43,8 +44,12 @@ fun ViewAndEdit(
                     .align(Alignment.BottomEnd),
                     enabled = allowEdit.value,
                     onClick = {
-                        save()
-                        navController.navigateUp()
+                        try {
+                            save()
+                            navController.navigateUp()
+                        } catch (e: Exception) {
+                            Log.e("ViewAndEdit", e.message ?: "Unknown error")
+                        }
                     }) {
                     Text("Tallenna")
                 }
@@ -53,8 +58,13 @@ fun ViewAndEdit(
                     .align(Alignment.BottomEnd),
                     enabled = allowEdit.value,
                     onClick = {
-                        update()
-                        navController.navigateUp()
+                        try {
+                            update()
+                            navController.navigateUp()
+                        } catch (e: Exception) {
+                            Log.e("ViewAndEdit", e.message ?: "Unknown error")
+                        }
+
                     }) {
                     Text("Tallenna muutokset")
                 }
