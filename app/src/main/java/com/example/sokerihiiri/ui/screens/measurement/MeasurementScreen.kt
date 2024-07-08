@@ -111,7 +111,8 @@ fun MeasurementScreen(
                 value = if (uiState.value <= 0.0f) "" else uiState.value.toString(),
                 onValueChange = { handleValueChange(it) },
                 label = { Text("Verensokeri mmol/l ") },
-                enabled = allowEdit.value
+                enabled = allowEdit.value,
+                isError = uiState.valueError != null
             )
 
             Spacer(modifier = Modifier.height(64.dp))

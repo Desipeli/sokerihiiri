@@ -14,6 +14,7 @@ import com.example.sokerihiiri.utils.timestampToHoursAndMinutes
 import kotlinx.coroutines.launch
 import java.time.LocalTime
 
+class InvalidValueException(message: String) : Exception(message)
 
 class MeasurementViewModel(
     private val repository: SokerihiiriRepository
@@ -47,7 +48,7 @@ class MeasurementViewModel(
         uiState = uiState.copy(afterMeal = afterMeal)
     }
     fun setValue(value: Float) {
-        uiState = uiState.copy(value = value)
+        uiState = uiState.copy(value = value, valueError = null)
     }
 
     private fun resetState() {
@@ -57,6 +58,7 @@ class MeasurementViewModel(
     fun saveBloodSugarMeasurement() {
         Log.d("MeasurementViewModel", "saveBloodSugarMeasurement state: $uiState")
         try {
+            validateFields()
             val dateTime = dateAndTimeToUTCLong(
                 uiState.date,
                 uiState.hour,
@@ -76,7 +78,11 @@ class MeasurementViewModel(
             }
             resetState()
 
-        } catch (e: Exception) {
+        } catch (e: InvalidValueException) {
+            uiState = uiState.copy(valueError = e.message)
+            throw e
+        }
+        catch (e: Exception) {
             Log.d("MeasurementViewModel", "saveBloodSugarMeasurement: ${e.message}")
         }
     }
@@ -84,6 +90,7 @@ class MeasurementViewModel(
     fun updateBloodSugarMeasurement() {
         Log.d("MeasurementViewModel", "updateBloodSugarMeasurement state: $uiState")
         try {
+            validateFields()
             val dateTime = dateAndTimeToUTCLong(
                 uiState.date,
                 uiState.hour,
@@ -101,7 +108,11 @@ class MeasurementViewModel(
                 repository.updateBloodSugarMeasurement(bloodSugarMeasurement)
             }
             resetState()
-        } catch (e: Exception) {
+        } catch (e: InvalidValueException) {
+            uiState = uiState.copy(valueError = e.message)
+            throw e
+        }
+        catch (e: Exception) {
             Log.d("MeasurementViewModel", "updateBloodSugarMeasurement: ${e.message}")
         }
     }
@@ -136,6 +147,12 @@ class MeasurementViewModel(
             Log.d("MeasurementViewModel", "deleteBloodSugarMeasurement: ${e.message}")
         }
     }
+
+    private fun validateFields() {
+        if (uiState.value <= 0.0f) {
+            throw InvalidValueException("Verensokeriarvon on oltava suurempi kuin 0")
+        }
+    }
 }
 
 data class BloodSugarMeasurementState(
@@ -146,6 +163,7 @@ data class BloodSugarMeasurementState(
     val date: Long = System.currentTimeMillis(),
     val afterMeal: Boolean = false,
     val minutesFromMeal: Int = 0,
+    val valueError: String? = null
 )
 
 class MeasurementViewModelFactory(private val repository: SokerihiiriRepository) : ViewModelProvider.Factory {
