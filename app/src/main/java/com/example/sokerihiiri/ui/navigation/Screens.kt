@@ -23,6 +23,7 @@ sealed class Screens(val route: String, val title: String) {
     object Settings : Screens(route = "settings", title="Asetukset") {
         object Main : Screens(route = "settings_main", title="Asetukset")
         object Defaults : Screens(route = "settings_defaults", title="Oletusarvot")
+        object ControlData : Screens(route = "settings_control_data", title="Tiedot")
 
     }
 }

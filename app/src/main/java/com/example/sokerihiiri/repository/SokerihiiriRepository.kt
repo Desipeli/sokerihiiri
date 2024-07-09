@@ -40,6 +40,11 @@ class SokerihiiriRepository @Inject constructor(
     }
 
     @WorkerThread
+    suspend fun deleteAllBloodSugarMeasurements() {
+        bloodSugarMeasurementDao.deleteAll()
+    }
+
+    @WorkerThread
     suspend fun insertInsulinInjection(insulinInjection: InsulinInjection) {
         insulinInjectionDao.insert(insulinInjection)
     }
@@ -60,6 +65,11 @@ class SokerihiiriRepository @Inject constructor(
     }
 
     @WorkerThread
+    suspend fun deleteAllInsulinInjections() {
+        insulinInjectionDao.deleteAll()
+    }
+
+    @WorkerThread
     suspend fun insertMeal(meal: Meal) {
         mealDao.insert(meal)
     }
@@ -77,5 +87,10 @@ class SokerihiiriRepository @Inject constructor(
     @WorkerThread
     suspend fun deleteMealById(id: Int) {
         mealDao.deleteById(id)
+    }
+
+    @WorkerThread
+    suspend fun deleteAllMeals() {
+        mealDao.deleteAll()
     }
 }

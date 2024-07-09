@@ -14,6 +14,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.sokerihiiri.ui.components.NumberTextField
 import com.example.sokerihiiri.ui.components.SettingsBase
+import com.example.sokerihiiri.ui.navigation.Screens
 
 @Composable
 fun SettingsDefaultsScreen(
@@ -48,12 +49,13 @@ fun SettingsDefaultsScreen(
     }
 
     fun saveSettings() {
-        settingsViewModel.saveSettings()
+        settingsViewModel.saveDefaultsSettings()
     }
 
     SettingsBase(
         navController = navController,
-        save = { saveSettings() }) {
+        save = { saveSettings() },
+        parentScreen = Screens.Settings.Main) {
         Text("Oletusarvot", style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.height(32.dp))
         Text("Verensokeri", style = MaterialTheme.typography.headlineSmall)

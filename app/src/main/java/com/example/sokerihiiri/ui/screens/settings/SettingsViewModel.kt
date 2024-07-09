@@ -7,13 +7,15 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sokerihiiri.repository.DataStoreManager
+import com.example.sokerihiiri.repository.SokerihiiriRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val dataStoreManager: DataStoreManager
+    private val dataStoreManager: DataStoreManager,
+    private val repository: SokerihiiriRepository
 ) : ViewModel() {
 
     var uiState: UiState by mutableStateOf(UiState())
@@ -81,10 +83,40 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun saveSettings() {
+    fun saveDefaultsSettings() {
         saveDefaultInsulinDose()
         saveDefaultHoursAfterMeal()
         saveDefaultMinutesAfterMeal()
+    }
+
+    fun deleteAllMeasurements() {
+        viewModelScope.launch {
+            repository.deleteAllBloodSugarMeasurements()
+        }
+    }
+
+    fun deleteAllInsulinInjections() {
+        viewModelScope.launch {
+            repository.deleteAllInsulinInjections()
+        }
+    }
+
+    fun deleteAllMeals() {
+        viewModelScope.launch {
+            repository.deleteAllMeals()
+        }
+    }
+
+    fun deleteAllRoomData() {
+        viewModelScope.launch {
+            repository.deleteAllMeals()
+        }
+        viewModelScope.launch {
+            repository.deleteAllBloodSugarMeasurements()
+        }
+        viewModelScope.launch {
+            repository.deleteAllInsulinInjections()
+        }
     }
 }
 

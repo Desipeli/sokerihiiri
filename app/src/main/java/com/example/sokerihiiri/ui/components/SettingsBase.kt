@@ -13,12 +13,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.sokerihiiri.ui.navigation.Screens
 
 @Composable
 fun SettingsBase(
     modifier: Modifier = Modifier,
     navController: NavController,
-    save: () -> Unit,
+    save: (() -> Unit)? = null,
+    parentScreen: Screens? = null,
     content: @Composable () -> Unit
 ) {
     Box(
@@ -26,22 +28,34 @@ fun SettingsBase(
             .fillMaxSize()
             .padding(bottom = 16.dp)
     ) {
-        Column(modifier = Modifier.fillMaxSize(),
+        Column(
+            modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally) {
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             content()
         }
-        TextButton(modifier = Modifier
-            .align(Alignment.BottomEnd),
-            onClick = {
-                try {
-                    save()
-                } catch (e: Exception) {
-                    Log.e("SettingsBase", "save failed", e)
-                }
-            }) {
-            Text("Tallenna")
+        if (save != null) {
+            TextButton(modifier = Modifier
+                .align(Alignment.BottomEnd),
+                onClick = {
+                    try {
+                        save()
+                    } catch (e: Exception) {
+                        Log.e("SettingsBase", "save failed", e)
+                    }
+                }) {
+                Text("Tallenna")
+            }
+        }
+        if (parentScreen != null) {
+            TextButton(modifier = Modifier
+                .align(Alignment.BottomStart),
+                onClick = {
+                    navController.navigate(parentScreen.route)
+                }) {
+                Text(text = parentScreen.title)
+            }
         }
     }
-
 }
