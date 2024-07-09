@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.sokerihiiri.repository.DataStoreManager
 import com.example.sokerihiiri.repository.InsulinInjection
 import com.example.sokerihiiri.repository.SokerihiiriRepository
 import com.example.sokerihiiri.utils.dateAndTimeToUTCLong
@@ -20,12 +21,20 @@ class InvalidDoseException(message: String) : Exception(message)
 
 @HiltViewModel
 class InsulinViewModel @Inject constructor(
-    private val repository: SokerihiiriRepository
+    private val repository: SokerihiiriRepository,
+    private val dataStoreManager: DataStoreManager
 ): ViewModel() {
 
     var uiState: InsulinUiState by mutableStateOf(InsulinUiState())
         private set
 
+    init {
+        viewModelScope.launch {
+            dataStoreManager.getDefaultInsulinDose().collect {
+                setDose(it)
+            }
+        }
+    }
     fun setDose(dose: Int) {
         uiState = uiState.copy(dose = dose, doseError = null)
     }
@@ -141,14 +150,3 @@ data class InsulinUiState(
     val minute: Int = LocalTime.now().minute,
     val doseError: String? = null
     )
-
-//class InsulinViewModelFactory(private val repository: SokerihiiriRepository) : ViewModelProvider.Factory {
-//    override fun <T: ViewModel> create(modelClass: Class<T>): T {
-//        if (modelClass.isAssignableFrom(InsulinViewModel::class.java)) {
-//            @Suppress("UNCHECKED_CAST")
-//            return InsulinViewModel(repository) as T
-//        } else {
-//            throw IllegalArgumentException("Unknown ViewModel class")
-//        }
-//    }
-//}

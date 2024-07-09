@@ -2,16 +2,13 @@ package com.example.sokerihiiri.ui.screens.settings
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -23,12 +20,25 @@ fun SettingsDefaultsScreen(
     navController: NavController,
 ) {
     val settingsViewModel: SettingsViewModel = hiltViewModel()
-    val context = LocalContext.current
 
-    LaunchedEffect(Unit) {
-        settingsViewModel.getDefaultInsulinDose(context)
+    val uiState = settingsViewModel.uiState
+
+    fun handleInsulinDoseChange(value: String) {
+        try {
+            val newDose = value.toInt()
+            settingsViewModel.setDefaultInsulinDose(newDose)
+        } catch (e: NumberFormatException) {
+            settingsViewModel.setDefaultInsulinDose(0)
+        }
     }
-    SettingsBase(navController = navController) {
+
+    fun saveSettings() {
+        settingsViewModel.saveSettings()
+    }
+
+    SettingsBase(
+        navController = navController,
+        save = { saveSettings() }) {
         Text("Oletusarvot", style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.height(32.dp))
         Text("Verensokeri", style = MaterialTheme.typography.headlineSmall)
@@ -48,8 +58,9 @@ fun SettingsDefaultsScreen(
 
         Text("Insuliini", style = MaterialTheme.typography.headlineSmall)
         NumberTextField(
-            value = "0" ,
-            onValueChange = {},
+            modifier = Modifier.width(170.dp),
+            value = if (uiState.defaultInsulinDose <= 0) "" else uiState.defaultInsulinDose.toString(),
+            onValueChange = { handleInsulinDoseChange(it)},
             label = { Text("Insuliini") })
     }
 }

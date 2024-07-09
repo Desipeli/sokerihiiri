@@ -1,6 +1,6 @@
 package com.example.sokerihiiri.ui.screens.settings
 
-import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -12,25 +12,39 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingsViewModel @Inject constructor() : ViewModel() {
+class SettingsViewModel @Inject constructor(
+    private val dataStoreManager: DataStoreManager
+) : ViewModel() {
 
     var uiState: UiState by mutableStateOf(UiState())
         private set
 
-    fun getDefaultInsulinDose(context: Context) {
-        val defaultInsulinDose = DataStoreManager.getDefaultInsulinDose(context)
-//        uiState = uiState.copy(
-//            defaultInsulinDose = defaultInsulinDose
-//        )
+    init {
+        viewModelScope.launch {
+            dataStoreManager.getDefaultInsulinDose().collect {
+                uiState = uiState.copy(defaultInsulinDose = it)
+            }
+        }
     }
 
-    fun setDefaultInsulinDose(context: Context, value: Int) {
+    fun setDefaultInsulinDose(dose: Int) {
+        uiState = uiState.copy(defaultInsulinDose = dose)
+    }
+    private fun saveDefaultInsulinDose() {
         viewModelScope.launch {
-            DataStoreManager.setDefaultInsulinDose(context, value)
+            try {
+                dataStoreManager.setDefaultInsulinDose(uiState.defaultInsulinDose)
+            } catch (e: Exception) {
+                Log.e("SettingsViewModel", "Error saving default insulin dose", e)
+            }
         }
+    }
+
+    fun saveSettings() {
+        saveDefaultInsulinDose()
     }
 }
 
-data class UiState (
+data class UiState(
     val defaultInsulinDose: Int = 0
 )
