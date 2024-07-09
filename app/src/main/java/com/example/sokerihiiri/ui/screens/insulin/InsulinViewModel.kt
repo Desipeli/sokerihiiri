@@ -11,12 +11,15 @@ import com.example.sokerihiiri.repository.InsulinInjection
 import com.example.sokerihiiri.repository.SokerihiiriRepository
 import com.example.sokerihiiri.utils.dateAndTimeToUTCLong
 import com.example.sokerihiiri.utils.timestampToHoursAndMinutes
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalTime
+import javax.inject.Inject
 
 class InvalidDoseException(message: String) : Exception(message)
 
-class InsulinViewModel(
+@HiltViewModel
+class InsulinViewModel @Inject constructor(
     private val repository: SokerihiiriRepository
 ): ViewModel() {
 
@@ -139,13 +142,13 @@ data class InsulinUiState(
     val doseError: String? = null
     )
 
-class InsulinViewModelFactory(private val repository: SokerihiiriRepository) : ViewModelProvider.Factory {
-    override fun <T: ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(InsulinViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return InsulinViewModel(repository) as T
-        } else {
-            throw IllegalArgumentException("Unknown ViewModel class")
-        }
-    }
-}
+//class InsulinViewModelFactory(private val repository: SokerihiiriRepository) : ViewModelProvider.Factory {
+//    override fun <T: ViewModel> create(modelClass: Class<T>): T {
+//        if (modelClass.isAssignableFrom(InsulinViewModel::class.java)) {
+//            @Suppress("UNCHECKED_CAST")
+//            return InsulinViewModel(repository) as T
+//        } else {
+//            throw IllegalArgumentException("Unknown ViewModel class")
+//        }
+//    }
+//}

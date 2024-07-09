@@ -16,6 +16,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.sokerihiiri.ui.navigation.Screens
 import com.example.sokerihiiri.ui.screens.browse.BrowseViewModel
@@ -23,10 +24,9 @@ import com.example.sokerihiiri.utils.timestampToDateTimeString
 
 @Composable
 fun BrowseMealsScreen(
-    browseViewModel: BrowseViewModel,
     navController: NavController
 ) {
-
+    val browseViewModel: BrowseViewModel = hiltViewModel()
     val allMeals by browseViewModel.allMeals.observeAsState(emptyList())
 
     Column {
@@ -41,7 +41,8 @@ fun BrowseMealsScreen(
         Divider()
         LazyColumn {
             items(allMeals) { meal ->
-                Row(modifier = Modifier.fillMaxWidth()
+                Row(modifier = Modifier
+                    .fillMaxWidth()
                     .clickable {
                         navController.navigate("${Screens.Browse.Meals.Meal.route}/${meal.id}")
                     },

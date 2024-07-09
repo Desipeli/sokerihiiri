@@ -2,14 +2,16 @@ package com.example.sokerihiiri.ui.screens.browse
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import com.example.sokerihiiri.repository.BloodSugarMeasurement
 import com.example.sokerihiiri.repository.InsulinInjection
 import com.example.sokerihiiri.repository.Meal
 import com.example.sokerihiiri.repository.SokerihiiriRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class BrowseViewModel(
+@HiltViewModel
+class BrowseViewModel @Inject constructor(
     private val repository: SokerihiiriRepository
 ) : ViewModel() {
 
@@ -22,14 +24,4 @@ class BrowseViewModel(
     val allMeals: LiveData<List<Meal>> =
         repository.allMeals.asLiveData()
 
-}
-
-class BrowseViewModelFactory(private val repository: SokerihiiriRepository) : ViewModelProvider.Factory {
-    override fun <T: ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(BrowseViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return BrowseViewModel(repository) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
-    }
 }

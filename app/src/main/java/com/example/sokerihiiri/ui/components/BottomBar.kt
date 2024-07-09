@@ -40,7 +40,9 @@ fun BottomBar(navController: NavController) {
                 }
                 IconButton(onClick = {
                     val settingsRoute = when (currentRoute) {
-                        Screens.Measurement.route -> Screens.Settings.Measurement.route
+                        Screens.Measurement.route -> Screens.Settings.Defaults.route
+                        Screens.Insulin.route -> Screens.Settings.Defaults.route
+                        Screens.Meal.route -> Screens.Settings.Defaults.route
                         else -> Screens.Settings.Main.route
                     }
                     navController.navigate(settingsRoute)

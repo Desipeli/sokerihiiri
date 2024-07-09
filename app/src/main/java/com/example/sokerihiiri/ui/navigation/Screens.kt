@@ -22,8 +22,7 @@ sealed class Screens(val route: String, val title: String) {
     }
     object Settings : Screens(route = "settings", title="Asetukset") {
         object Main : Screens(route = "settings_main", title="Asetukset")
-        object Insulin : Screens(route = "settings_insulin", title="Insuliini")
-        object Meal : Screens(route = "settings_meal", title="Ateria")
-        object Measurement : Screens(route = "settings_measurement", title="Mittaus")
+        object Defaults : Screens(route = "settings_defaults", title="Oletusarvot")
+
     }
 }

@@ -11,12 +11,16 @@ import com.example.sokerihiiri.repository.Meal
 import com.example.sokerihiiri.repository.SokerihiiriRepository
 import com.example.sokerihiiri.utils.dateAndTimeToUTCLong
 import com.example.sokerihiiri.utils.timestampToHoursAndMinutes
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalTime
+import javax.inject.Inject
 
 class InvalidCaloriesException(message: String) : Exception(message)
 class InvalidCarbohydratesException(message: String) : Exception(message)
-class MealViewModel(
+
+@HiltViewModel
+class MealViewModel @Inject constructor(
     private val repository: SokerihiiriRepository
 ) : ViewModel() {
     var uiState by mutableStateOf(UiState())

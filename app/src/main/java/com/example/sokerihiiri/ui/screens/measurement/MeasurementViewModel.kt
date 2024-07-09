@@ -11,12 +11,15 @@ import com.example.sokerihiiri.repository.BloodSugarMeasurement
 import com.example.sokerihiiri.repository.SokerihiiriRepository
 import com.example.sokerihiiri.utils.dateAndTimeToUTCLong
 import com.example.sokerihiiri.utils.timestampToHoursAndMinutes
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalTime
+import javax.inject.Inject
 
 class InvalidValueException(message: String) : Exception(message)
 
-class MeasurementViewModel(
+@HiltViewModel
+class MeasurementViewModel @Inject constructor (
     private val repository: SokerihiiriRepository
 ) : ViewModel() {
     var uiState: BloodSugarMeasurementState by
@@ -165,14 +168,14 @@ data class BloodSugarMeasurementState(
     val minutesFromMeal: Int = 0,
     val valueError: String? = null
 )
-
-class MeasurementViewModelFactory(private val repository: SokerihiiriRepository) : ViewModelProvider.Factory {
-    override fun <T: ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(MeasurementViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return MeasurementViewModel(repository) as T
-        } else {
-            throw IllegalArgumentException("Unknown ViewModel class")
-        }
-    }
-}
+//
+//class MeasurementViewModelFactory(private val repository: SokerihiiriRepository) : ViewModelProvider.Factory {
+//    override fun <T: ViewModel> create(modelClass: Class<T>): T {
+//        if (modelClass.isAssignableFrom(MeasurementViewModel::class.java)) {
+//            @Suppress("UNCHECKED_CAST")
+//            return MeasurementViewModel(repository) as T
+//        } else {
+//            throw IllegalArgumentException("Unknown ViewModel class")
+//        }
+//    }
+//}

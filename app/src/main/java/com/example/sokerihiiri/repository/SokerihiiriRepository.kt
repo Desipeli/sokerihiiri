@@ -2,8 +2,9 @@ package com.example.sokerihiiri.repository
 
 import androidx.annotation.WorkerThread
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class SokerihiiriRepository(
+class SokerihiiriRepository @Inject constructor(
     private val bloodSugarMeasurementDao: BloodSugarMeasurementDao,
     private val insulinInjectionDao: InsulinInjectionDao,
     private val mealDao: MealDao
