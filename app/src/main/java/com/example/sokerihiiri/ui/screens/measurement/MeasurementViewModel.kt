@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.sokerihiiri.repository.BloodSugarMeasurement
+import com.example.sokerihiiri.repository.DataStoreManager
 import com.example.sokerihiiri.repository.SokerihiiriRepository
 import com.example.sokerihiiri.utils.dateAndTimeToUTCLong
 import com.example.sokerihiiri.utils.timestampToHoursAndMinutes
@@ -20,7 +21,8 @@ class InvalidValueException(message: String) : Exception(message)
 
 @HiltViewModel
 class MeasurementViewModel @Inject constructor (
-    private val repository: SokerihiiriRepository
+    private val repository: SokerihiiriRepository,
+    private val dataStoreManager: DataStoreManager
 ) : ViewModel() {
     var uiState: BloodSugarMeasurementState by
         mutableStateOf(BloodSugarMeasurementState())
@@ -49,6 +51,20 @@ class MeasurementViewModel @Inject constructor (
     }
     fun setAfterMeal(afterMeal: Boolean) {
         uiState = uiState.copy(afterMeal = afterMeal)
+        if (afterMeal) {
+            viewModelScope.launch {
+                dataStoreManager.getDefaultHoursAfterMeal().collect {
+                    setHoursFromMeal(it)
+                }
+            }
+            viewModelScope.launch {
+                dataStoreManager.getDefaultMinutesAfterMeal().collect {
+                    setMinutesFromMeal(it)
+                }
+            }
+        } else {
+            uiState = uiState.copy(minutesFromMeal = 0)
+        }
     }
     fun setValue(value: Float) {
         uiState = uiState.copy(value = value, valueError = null)
@@ -168,14 +184,3 @@ data class BloodSugarMeasurementState(
     val minutesFromMeal: Int = 0,
     val valueError: String? = null
 )
-//
-//class MeasurementViewModelFactory(private val repository: SokerihiiriRepository) : ViewModelProvider.Factory {
-//    override fun <T: ViewModel> create(modelClass: Class<T>): T {
-//        if (modelClass.isAssignableFrom(MeasurementViewModel::class.java)) {
-//            @Suppress("UNCHECKED_CAST")
-//            return MeasurementViewModel(repository) as T
-//        } else {
-//            throw IllegalArgumentException("Unknown ViewModel class")
-//        }
-//    }
-//}

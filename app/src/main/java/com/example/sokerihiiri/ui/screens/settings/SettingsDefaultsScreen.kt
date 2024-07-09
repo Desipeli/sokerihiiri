@@ -25,10 +25,25 @@ fun SettingsDefaultsScreen(
 
     fun handleInsulinDoseChange(value: String) {
         try {
-            val newDose = value.toInt()
-            settingsViewModel.setDefaultInsulinDose(newDose)
+            settingsViewModel.setDefaultInsulinDose(value.toInt())
         } catch (e: NumberFormatException) {
             settingsViewModel.setDefaultInsulinDose(0)
+        }
+    }
+
+    fun handleHoursAfterMealChange(value: String) {
+        try {
+            settingsViewModel.setDefaultHoursAfterMeal(value.toInt())
+        } catch (e: NumberFormatException) {
+            settingsViewModel.setDefaultHoursAfterMeal(0)
+        }
+    }
+
+    fun handleMinutesAfterMealChange(value: String) {
+        try {
+            settingsViewModel.setDefaultMinutesAfterMeal(value.toInt())
+        } catch (e: NumberFormatException) {
+            settingsViewModel.setDefaultMinutesAfterMeal(0)
         }
     }
 
@@ -42,17 +57,18 @@ fun SettingsDefaultsScreen(
         Text("Oletusarvot", style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.height(32.dp))
         Text("Verensokeri", style = MaterialTheme.typography.headlineSmall)
+        Text(text = "Aterian jälkeen")
         Row(verticalAlignment = Alignment.CenterVertically) {
             NumberTextField(
                 modifier = Modifier.width(82.dp),
-                value = "0",
-                onValueChange = {} ,
+                value = if (uiState.defaultHoursAfterMeal <= 0) "" else uiState.defaultHoursAfterMeal.toString(),
+                onValueChange = { handleHoursAfterMealChange(it) } ,
                 label = { Text(text = "h") })
             Spacer(modifier = Modifier.width(16.dp))
             NumberTextField(
                 modifier = Modifier.width(82.dp),
-                value = "0",
-                onValueChange = {} ,
+                value = if (uiState.defaultMinutesAfterMeal <= 0) "" else uiState.defaultMinutesAfterMeal.toString(),
+                onValueChange = { handleMinutesAfterMealChange(it) } ,
                 label = { Text(text = "min") })
         }
 
