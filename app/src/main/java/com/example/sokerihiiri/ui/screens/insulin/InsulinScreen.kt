@@ -22,6 +22,7 @@ import androidx.navigation.NavController
 import com.example.sokerihiiri.ui.components.AppDatePickerDialog
 import com.example.sokerihiiri.ui.components.AppTimePickerDialog
 import com.example.sokerihiiri.ui.components.NumberTextField
+import com.example.sokerihiiri.ui.components.StyledTextButton
 import com.example.sokerihiiri.ui.components.ViewAndEdit
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -80,19 +81,22 @@ fun InsulinScreen(
                 isError = uiState.doseError != null)
             uiState.doseError?.let { Text(text = it) }
             Spacer(modifier = Modifier.height(64.dp))
-            TextButton(onClick = { showTimePicker.value = true }, enabled = allowEdit.value) {
-                Text(
-                    text = String.format(
-                        Locale.getDefault(),
-                        "%02d:%02d",
-                        uiState.hour,
-                        uiState.minute
-                    )
+            StyledTextButton(
+                onClick = { showTimePicker.value = true },
+                enabled = allowEdit.value,
+                text = String.format(
+                    Locale.getDefault(),
+                    "%02d:%02d",
+                    uiState.hour,
+                    uiState.minute
                 )
-            }
-            TextButton(onClick = { showDatePicker.value = true }, enabled = allowEdit.value) {
-                Text(dateFormatter.format(Date(uiState.date)))
-            }
+            )
+            StyledTextButton(
+                onClick = { showDatePicker.value = true },
+                enabled = allowEdit.value,
+                text = dateFormatter.format(Date(uiState.date)
+                )
+            )
         }
     }
 
