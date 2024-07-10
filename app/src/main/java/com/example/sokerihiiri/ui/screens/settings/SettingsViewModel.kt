@@ -1,9 +1,9 @@
 package com.example.sokerihiiri.ui.screens.settings
 
 import android.content.Context
-import android.os.Environment
+import android.os.Build
 import android.util.Log
-import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -12,7 +12,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.sokerihiiri.repository.DataStoreManager
 import com.example.sokerihiiri.repository.SokerihiiriRepository
 import com.example.sokerihiiri.utils.writeInsulinInjectionsToDownloadsCSVLegacy
+import com.example.sokerihiiri.utils.writeInsulinInjectionsToDownloadsCSVModern
 import com.example.sokerihiiri.utils.writeMealsToDownloadsCSVLegacy
+import com.example.sokerihiiri.utils.writeMealsToDownloadsCSVModern
+import com.example.sokerihiiri.utils.writeMeasurementsToDownloadsCSVModern
 import com.example.sokerihiiri.utils.writeMeasurementsToDownloadsCSVLegacy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -28,38 +31,66 @@ class SettingsViewModel @Inject constructor(
         private set
 
     fun writeCSVLegacy(context: Context) {
-        try {
-            viewModelScope.launch {
-                try {
-                    writeMeasurementsToDownloadsCSVLegacy(
-                        measurementsFlow = repository.allBloodSugarMeasurements,
-                    )
-                } catch (e: Exception) {
-                    Log.e("SettingsViewModel", "Error writing measurements to CSV legacy", e)
-                }
+        viewModelScope.launch {
+            try {
+                writeMeasurementsToDownloadsCSVLegacy(
+                    measurementsFlow = repository.allBloodSugarMeasurements,
+                )
+            } catch (e: Exception) {
+                Log.e("SettingsViewModel", "Error writing measurements to CSV legacy", e)
             }
-            viewModelScope.launch {
-                try {
-                    writeInsulinInjectionsToDownloadsCSVLegacy(
-                        insulinInjectionsFlow = repository.allInsulinInjections
-                    )
-                } catch (e: Exception) {
-                    Log.e("SettingsViewModel", "Error writing insulin injections to CSV legacy", e)
-                }
+        }
+        viewModelScope.launch {
+            try {
+                writeInsulinInjectionsToDownloadsCSVLegacy(
+                    insulinInjectionsFlow = repository.allInsulinInjections
+                )
+            } catch (e: Exception) {
+                Log.e("SettingsViewModel", "Error writing insulin injections to CSV legacy", e)
             }
-            viewModelScope.launch {
-                try {
-                    writeMealsToDownloadsCSVLegacy(
-                        mealsFlow = repository.allMeals
-                    )
-                } catch (e: Exception) {
-                    Log.e("SettingsViewModel", "Error writing meals to CSV legacy", e)
-                }
+        }
+        viewModelScope.launch {
+            try {
+                writeMealsToDownloadsCSVLegacy(
+                    mealsFlow = repository.allMeals
+                )
+            } catch (e: Exception) {
+                Log.e("SettingsViewModel", "Error writing meals to CSV legacy", e)
             }
-            Toast.makeText(context, "Tiedot tallennettu ${Environment.DIRECTORY_DOWNLOADS} hakemistoon", Toast.LENGTH_SHORT).show()
-        } catch (e: Exception) {
-            Log.e("SettingsViewModel", "Error writing CSV legacy", e)
-            Toast.makeText(context, "Tietojen tallennus ei onnistunut", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    fun writeCSVModern(context: Context) {
+        viewModelScope.launch {
+            try {
+                writeMeasurementsToDownloadsCSVModern(
+                    context,
+                    measurementsFlow = repository.allBloodSugarMeasurements
+                )
+            } catch (e: Exception) {
+                Log.e("SettingsViewModel", "Error writing measurements to CSV modern", e)
+            }
+        }
+        viewModelScope.launch {
+            try {
+                writeInsulinInjectionsToDownloadsCSVModern(
+                    context,
+                    insulinInjectionsFlow = repository.allInsulinInjections
+                )
+            } catch (e: Exception) {
+                Log.e("SettingsViewModel", "Error writing measurements to CSV modern", e)
+            }
+        }
+        viewModelScope.launch {
+            try {
+                writeMealsToDownloadsCSVModern(
+                    context,
+                    mealsFlow = repository.allMeals
+                )
+            } catch (e: Exception) {
+                Log.e("SettingsViewModel", "Error writing measurements to CSV modern", e)
+            }
         }
     }
 

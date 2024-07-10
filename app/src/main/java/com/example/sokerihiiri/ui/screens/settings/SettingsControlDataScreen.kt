@@ -60,7 +60,7 @@ fun SettingsControlDataScreen(
     fun handleWriteCSV() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-
+            settingsViewModel.writeCSVModern(context)
         } else {
             // Kysyttävä lupaa jos api level 28 tai alle.
             if (writePermissionState.status.isGranted) {
