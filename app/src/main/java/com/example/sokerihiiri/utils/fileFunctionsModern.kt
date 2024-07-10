@@ -38,7 +38,7 @@ suspend fun writeMeasurementsToDownloadsCSVModern(
                         OutputStreamWriter(outputStream).use { writer ->
                             writer.appendLine("date,value,minutes_from_meal") // Header
                             measurements.forEach { measurement ->
-                                writer.appendLine("${measurement.timestamp},${measurement.value},${measurement.minutesFromMeal}")
+                                writer.appendLine("${longToUtcTimestamp(measurement.timestamp)},${measurement.value},${measurement.minutesFromMeal}")
                             }
                         }
                     }
@@ -73,7 +73,7 @@ suspend fun writeInsulinInjectionsToDownloadsCSVModern(
                         OutputStreamWriter(outputStream).use { writer ->
                             writer.appendLine("date,dose") // Header
                             insulinInjections.forEach { insulinInjection ->
-                                writer.appendLine("${insulinInjection.timestamp},${insulinInjection.dose}")
+                                writer.appendLine("${longToUtcTimestamp(insulinInjection.timestamp)},${insulinInjection.dose}")
                             }
                         }
                     }
@@ -108,7 +108,7 @@ suspend fun writeMealsToDownloadsCSVModern(
                         OutputStreamWriter(outputStream).use { writer ->
                             writer.appendLine("date, calories, carbohydrates, comment") // Header
                             meals.forEach { meal ->
-                                writer.appendLine("${meal.timestamp},${meal.calories},${meal.carbohydrates},${meal.comment}")
+                                writer.appendLine("${longToUtcTimestamp(meal.timestamp)},${meal.calories},${meal.carbohydrates},${meal.comment}")
                             }
                         }
                     }

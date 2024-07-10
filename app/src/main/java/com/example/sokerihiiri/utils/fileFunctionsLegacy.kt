@@ -25,7 +25,7 @@ suspend fun writeMeasurementsToDownloadsCSVLegacy(
                         writer.appendLine("date,value,minutes_from_meal")
                         measurements.forEach { measurement ->
                             writer.appendLine(
-                                "${measurement.timestamp},${measurement.value},${measurement.minutesFromMeal}"
+                                "${longToUtcTimestamp(measurement.timestamp)},${measurement.value},${measurement.minutesFromMeal}"
                             )
                         }
                     }
@@ -51,7 +51,7 @@ suspend fun writeInsulinInjectionsToDownloadsCSVLegacy(
                         writer.appendLine("date,dose")
                         insulinInjections.forEach { insulinInjection ->
                             writer.appendLine(
-                                "${insulinInjection.timestamp},${insulinInjection.dose}"
+                                "${longToUtcTimestamp(insulinInjection.timestamp)},${insulinInjection.dose}"
                             )
                         }
                     }
@@ -78,7 +78,7 @@ suspend fun writeMealsToDownloadsCSVLegacy(
                         writer.appendLine("date,calories,carbohydrates,comment")
                         meals.forEach { meal ->
                             writer.appendLine(
-                                "${meal.timestamp},${meal.calories},${meal.carbohydrates},${meal.comment}"
+                                "${longToUtcTimestamp(meal.timestamp)},${meal.calories},${meal.carbohydrates},${meal.comment}"
                             )
                         }
                     }

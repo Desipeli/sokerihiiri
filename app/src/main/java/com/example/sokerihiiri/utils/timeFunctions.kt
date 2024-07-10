@@ -7,6 +7,7 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 
 fun dateAndTimeToUTCLong(date: Long, hours: Int, minutes: Int): Long {
     // Poimitaan päivämäärä date:sta ja yhdistettän se ajan kanssa.
@@ -36,4 +37,10 @@ fun timestampToHoursAndMinutes(timestamp: Long): Pair<Int, Int> {
     val hours = dateTime.hour
     val minutes = dateTime.minute
     return Pair(hours, minutes)
+}
+
+fun longToUtcTimestamp(timeInMillis: Long): String {
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
+    dateFormat.timeZone = TimeZone.getTimeZone("UTC")
+    return dateFormat.format(Date(timeInMillis))
 }
