@@ -80,6 +80,9 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:2.49")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
+    //Permissions
+    implementation("com.google.accompanist:accompanist-permissions:0.35.1-alpha")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

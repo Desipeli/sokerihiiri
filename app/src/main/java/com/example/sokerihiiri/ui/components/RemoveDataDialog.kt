@@ -68,14 +68,14 @@ fun RemoveDataDialog(
                     }
                 }
             ) {
-                Text(text = "Confirm")
+                Text(text = "OK")
             }
         },
         dismissButton = {
             TextButton(
                 onClick = onDismiss
             ) {
-                Text(text = "Cancel")
+                Text(text = "Peruuta")
             }
         }
     )

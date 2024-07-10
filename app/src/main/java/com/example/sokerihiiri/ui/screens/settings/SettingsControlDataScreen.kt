@@ -1,5 +1,7 @@
 package com.example.sokerihiiri.ui.screens.settings
 
+import android.os.Build
+import android.util.Log
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -7,18 +9,29 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.sokerihiiri.ui.components.RemoveDataDialog
 import com.example.sokerihiiri.ui.components.SettingsBase
 import com.example.sokerihiiri.ui.navigation.Screens
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
 
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun SettingsControlDataScreen(
     navController: NavController,
 ) {
+    val context = LocalContext.current
     val settingsViewModel: SettingsViewModel = hiltViewModel()
+    val writePermissionState = rememberPermissionState(
+        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+    )
+
     var showRemoveAllRoomDataDialog by remember { mutableStateOf(false) }
     var showRemoveMeasurementsDialog by remember { mutableStateOf(false) }
     var showRemoveInsulinInjectionsDialog by remember { mutableStateOf(false) }
@@ -44,10 +57,34 @@ fun SettingsControlDataScreen(
         showRemoveMealsDialog = false
     }
 
+    fun handleWriteCSV() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+
+        } else {
+            // Kysyttävä lupaa jos api level 28 tai alle.
+            if (writePermissionState.status.isGranted) {
+                Log.d("SettingsControlDataScreen", "handleWriteCSV: Permission granted")
+                settingsViewModel.writeCSVLegacy(context)
+            } else {
+                writePermissionState.launchPermissionRequest()
+                if (writePermissionState.status.shouldShowRationale) {
+                    Log.d("SettingsControlDataScreen", "handleWriteCSV: Permission denied, show rationale")
+                } else {
+                    Log.d("SettingsControlDataScreen", "handleWriteCSV: Permission denied")
+                }
+            }
+        }
+
+    }
+
     SettingsBase(
         navController = navController,
         parentScreen = Screens.Settings.Main,
     ) {
+        Button(onClick = { handleWriteCSV() }) {
+            Text(text = "Tallenna tiedot csv-tiedostoihin.")
+        }
         Button(onClick = {
             showRemoveAllRoomDataDialog = true
         }) {
