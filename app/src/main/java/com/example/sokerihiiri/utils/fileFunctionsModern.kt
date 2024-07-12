@@ -36,9 +36,15 @@ suspend fun writeMeasurementsToDownloadsCSVModern(
                 measurementsFlow.collect { measurements ->
                     resolver.openOutputStream(fileUri)?.use { outputStream ->
                         OutputStreamWriter(outputStream).use { writer ->
-                            writer.appendLine("date,value,minutes_from_meal") // Header
+                            writer.appendLine("Sep=${CSV_SEPARATOR}")
+                            writer.appendLine("date${CSV_SEPARATOR}" +
+                                    "value${CSV_SEPARATOR}" +
+                                    "time_from_meal")
                             measurements.forEach { measurement ->
-                                writer.appendLine("${longToUtcTimestamp(measurement.timestamp)},${measurement.value},${measurement.minutesFromMeal}")
+                                val (hoursFromMeal, minutesFromMeal) = minutesToHoursAndMinutes(measurement.minutesFromMeal)
+                                writer.appendLine("${longToLocalDateTimeStringWithTimezone(measurement.timestamp)}${CSV_SEPARATOR}" +
+                                        "${measurement.value}${CSV_SEPARATOR}" +
+                                        "${hoursFromMeal}:${minutesFromMeal}")
                             }
                         }
                     }
@@ -71,9 +77,12 @@ suspend fun writeInsulinInjectionsToDownloadsCSVModern(
                 insulinInjectionsFlow.collect { insulinInjections ->
                     resolver.openOutputStream(fileUri)?.use { outputStream ->
                         OutputStreamWriter(outputStream).use { writer ->
-                            writer.appendLine("date,dose") // Header
+                            writer.appendLine("Sep=${CSV_SEPARATOR}")
+                            writer.appendLine("date${CSV_SEPARATOR}" +
+                                    "dose")
                             insulinInjections.forEach { insulinInjection ->
-                                writer.appendLine("${longToUtcTimestamp(insulinInjection.timestamp)},${insulinInjection.dose}")
+                                writer.appendLine("${longToLocalDateTimeStringWithTimezone(insulinInjection.timestamp)}${CSV_SEPARATOR}" +
+                                        "${insulinInjection.dose}")
                             }
                         }
                     }
@@ -106,9 +115,16 @@ suspend fun writeMealsToDownloadsCSVModern(
                 mealsFlow.collect { meals ->
                     resolver.openOutputStream(fileUri)?.use { outputStream ->
                         OutputStreamWriter(outputStream).use { writer ->
-                            writer.appendLine("date, calories, carbohydrates, comment") // Header
+                            writer.appendLine("Sep=${CSV_SEPARATOR}")
+                            writer.appendLine("date${CSV_SEPARATOR}" +
+                                    "calories${CSV_SEPARATOR}" +
+                                    "carbohydrates${CSV_SEPARATOR}" +
+                                    "comment")
                             meals.forEach { meal ->
-                                writer.appendLine("${longToUtcTimestamp(meal.timestamp)},${meal.calories},${meal.carbohydrates},${meal.comment}")
+                                writer.appendLine("${longToLocalDateTimeStringWithTimezone(meal.timestamp)}${CSV_SEPARATOR}" +
+                                        "${meal.calories}${CSV_SEPARATOR}" +
+                                        "${meal.carbohydrates}${CSV_SEPARATOR}" +
+                                        meal.comment)
                             }
                         }
                     }

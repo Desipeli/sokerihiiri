@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
@@ -43,4 +44,11 @@ fun longToUtcTimestamp(timeInMillis: Long): String {
     val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
     dateFormat.timeZone = TimeZone.getTimeZone("UTC")
     return dateFormat.format(Date(timeInMillis))
+}
+
+fun longToLocalDateTimeStringWithTimezone(timeInMillis: Long): String {
+    val instant = Instant.ofEpochMilli(timeInMillis)
+    val zoneId = ZoneId.systemDefault()
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX").withZone(zoneId)
+    return formatter.format(instant)
 }

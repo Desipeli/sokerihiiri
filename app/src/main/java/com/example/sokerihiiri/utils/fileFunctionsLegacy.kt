@@ -1,6 +1,5 @@
 package com.example.sokerihiiri.utils
 
-import android.content.Context
 import android.os.Environment
 import android.util.Log
 import com.example.sokerihiiri.repository.BloodSugarMeasurement
@@ -23,15 +22,15 @@ suspend fun writeMeasurementsToDownloadsCSVLegacy(
                 Log.d("writeCSVToDownloads", "measurements: $measurements")
                 withContext(Dispatchers.IO) {
                     FileWriter(measurementsFile).use { writer ->
-                        writer.appendLine("Sep=${CSV_DELIMITER}")
-                        writer.appendLine("date${CSV_DELIMITER}" +
-                                "value${CSV_DELIMITER}" +
+                        writer.appendLine("Sep=${CSV_SEPARATOR}")
+                        writer.appendLine("date${CSV_SEPARATOR}" +
+                                "value${CSV_SEPARATOR}" +
                                 "time_from_meal")
                         measurements.forEach { measurement ->
                             val (hoursFromMeal, minutesFromMeal) = minutesToHoursAndMinutes(measurement.minutesFromMeal)
                             writer.appendLine(
-                                "${longToUtcTimestamp(measurement.timestamp)}${CSV_DELIMITER}" +
-                                        "${floatToCommaString(measurement.value)}${CSV_DELIMITER}" +
+                                "${longToLocalDateTimeStringWithTimezone(measurement.timestamp)}${CSV_SEPARATOR}" +
+                                        "${floatToCommaString(measurement.value)}${CSV_SEPARATOR}" +
                                         "${hoursFromMeal}:${minutesFromMeal}"
                             )
                         }
@@ -55,12 +54,12 @@ suspend fun writeInsulinInjectionsToDownloadsCSVLegacy(
                 Log.d("writeCSVToDownloads", "insulin: $insulinInjectionsFlow")
                 withContext(Dispatchers.IO) {
                     FileWriter(insulinInjectionsFile).use { writer ->
-                        writer.appendLine("Sep=${CSV_DELIMITER}")
-                        writer.appendLine("date${CSV_DELIMITER}" +
+                        writer.appendLine("Sep=${CSV_SEPARATOR}")
+                        writer.appendLine("date${CSV_SEPARATOR}" +
                                 "dose")
                         insulinInjections.forEach { insulinInjection ->
                             writer.appendLine(
-                                "${longToUtcTimestamp(insulinInjection.timestamp)}${CSV_DELIMITER}" +
+                                "${longToLocalDateTimeStringWithTimezone(insulinInjection.timestamp)}${CSV_SEPARATOR}" +
                                         "${insulinInjection.dose}"
                             )
                         }
@@ -85,16 +84,16 @@ suspend fun writeMealsToDownloadsCSVLegacy(
                 Log.d("writeCSVToDownloads", "meals: $mealsFlow")
                 withContext(Dispatchers.IO) {
                     FileWriter(mealsFile).use { writer ->
-                        writer.appendLine("Sep=${CSV_DELIMITER}")
-                        writer.appendLine("date${CSV_DELIMITER}" +
-                                "calories${CSV_DELIMITER}" +
-                                "carbohydrates${CSV_DELIMITER}" +
+                        writer.appendLine("Sep=${CSV_SEPARATOR}")
+                        writer.appendLine("date${CSV_SEPARATOR}" +
+                                "calories${CSV_SEPARATOR}" +
+                                "carbohydrates${CSV_SEPARATOR}" +
                                 "comment")
                         meals.forEach { meal ->
                             writer.appendLine(
-                                "${longToUtcTimestamp(meal.timestamp)}${CSV_DELIMITER}" +
-                                        "${meal.calories}${CSV_DELIMITER}" +
-                                        "${meal.carbohydrates}${CSV_DELIMITER}" +
+                                "${longToLocalDateTimeStringWithTimezone(meal.timestamp)}${CSV_SEPARATOR}" +
+                                        "${meal.calories}${CSV_SEPARATOR}" +
+                                        "${meal.carbohydrates}${CSV_SEPARATOR}" +
                                         meal.comment
                             )
                         }
