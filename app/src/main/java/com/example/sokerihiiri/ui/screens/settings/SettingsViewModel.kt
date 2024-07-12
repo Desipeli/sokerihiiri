@@ -1,9 +1,11 @@
 package com.example.sokerihiiri.ui.screens.settings
 
 import android.content.Context
-import android.os.Build
+import android.content.Intent
+import android.net.Uri
+import android.provider.DocumentsContract
 import android.util.Log
-import androidx.annotation.RequiresApi
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -11,14 +13,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sokerihiiri.repository.DataStoreManager
 import com.example.sokerihiiri.repository.SokerihiiriRepository
-import com.example.sokerihiiri.utils.writeInsulinInjectionsToDownloadsCSVLegacy
-import com.example.sokerihiiri.utils.writeInsulinInjectionsToDownloadsCSVModern
-import com.example.sokerihiiri.utils.writeMealsToDownloadsCSVLegacy
-import com.example.sokerihiiri.utils.writeMealsToDownloadsCSVModern
-import com.example.sokerihiiri.utils.writeMeasurementsToDownloadsCSVModern
-import com.example.sokerihiiri.utils.writeMeasurementsToDownloadsCSVLegacy
+import com.example.sokerihiiri.utils.writeInsulinInjectionsToDownloadsCSV
+import com.example.sokerihiiri.utils.writeMealsToDownloadsCSV
+import com.example.sokerihiiri.utils.writeMeasurementsToDownloadsCSV
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,71 +32,86 @@ class SettingsViewModel @Inject constructor(
     var uiState: UiState by mutableStateOf(UiState())
         private set
 
-    fun writeCSVLegacy(context: Context) {
-        viewModelScope.launch {
-            try {
-                writeMeasurementsToDownloadsCSVLegacy(
-                    measurementsFlow = repository.allBloodSugarMeasurements,
-                )
-            } catch (e: Exception) {
-                Log.e("SettingsViewModel", "Error writing measurements to CSV legacy", e)
-            }
-        }
-        viewModelScope.launch {
-            try {
-                writeInsulinInjectionsToDownloadsCSVLegacy(
-                    insulinInjectionsFlow = repository.allInsulinInjections
-                )
-            } catch (e: Exception) {
-                Log.e("SettingsViewModel", "Error writing insulin injections to CSV legacy", e)
-            }
-        }
-        viewModelScope.launch {
-            try {
-                writeMealsToDownloadsCSVLegacy(
-                    mealsFlow = repository.allMeals
-                )
-            } catch (e: Exception) {
-                Log.e("SettingsViewModel", "Error writing meals to CSV legacy", e)
-            }
-        }
+    fun startWriteToCSV(context: Context, dirUri: Uri, snackbarHostState: SnackbarHostState) {
+        context.contentResolver.takePersistableUriPermission(
+            dirUri,
+            Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+        )
+        val documentUri = DocumentsContract.buildDocumentUriUsingTree(
+            dirUri,
+            DocumentsContract.getTreeDocumentId(dirUri)
+        )
+
+        val measurementsFileUri = DocumentsContract.createDocument(
+            context.contentResolver, documentUri, "text/csv", "measurements.csv"
+        )
+        val insulinInjectionsFileUri = DocumentsContract.createDocument(
+            context.contentResolver, documentUri, "text/csv", "insulin_injections.csv"
+        )
+        val mealsFileUri = DocumentsContract.createDocument(
+            context.contentResolver, documentUri, "text/csv", "meals.csv"
+        )
+
+        writeCSV(context, measurementsFileUri, insulinInjectionsFileUri, mealsFileUri, snackbarHostState)
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
-    fun writeCSVModern(context: Context) {
+    private fun writeCSV(
+        context: Context,
+        measurementsFileUri: Uri?,
+        insulinInjectionsFileUri: Uri?,
+        mealsFileUri: Uri?,
+        snackbarHostState: SnackbarHostState) {
+
         viewModelScope.launch {
             try {
-                writeMeasurementsToDownloadsCSVModern(
-                    context,
-                    measurementsFlow = repository.allBloodSugarMeasurements
-                )
+                    val measurements = repository.getAllBloodSugarMeasurementsAsList()
+                    val insulinInjections = repository.getAllInsulinInjectionsAsList()
+                    val meals = repository.getAllMealsAsList()
+
+                    val deferredMeasurements = async {
+                        measurementsFileUri?.let { fileUri ->
+                            writeMeasurementsToDownloadsCSV(
+                                context = context,
+                                measurements = measurements,
+                                fileUri = fileUri
+                            )
+                        }
+                    }
+                    val deferredInsulinInjections = async {
+                        insulinInjectionsFileUri?.let { fileUri ->
+                            writeInsulinInjectionsToDownloadsCSV(
+                                context = context,
+                                insulinInjections = insulinInjections,
+                                fileUri = fileUri
+                            )
+                        }
+                    }
+                    val deferredMeals = async {
+                        mealsFileUri?.let { fileUri ->
+                            writeMealsToDownloadsCSV(
+                                context = context,
+                                meals = meals,
+                                fileUri = fileUri
+                            )
+                        }
+                    }
+                    deferredMeasurements.await()
+                    deferredInsulinInjections.await()
+                    deferredMeals.await()
+                    withContext(Dispatchers.Main) {
+                        snackbarHostState.showSnackbar("Tiedostot tallennettu")
+                    }
             } catch (e: Exception) {
-                Log.e("SettingsViewModel", "Error writing measurements to CSV modern", e)
-            }
-        }
-        viewModelScope.launch {
-            try {
-                writeInsulinInjectionsToDownloadsCSVModern(
-                    context,
-                    insulinInjectionsFlow = repository.allInsulinInjections
-                )
-            } catch (e: Exception) {
-                Log.e("SettingsViewModel", "Error writing measurements to CSV modern", e)
-            }
-        }
-        viewModelScope.launch {
-            try {
-                writeMealsToDownloadsCSVModern(
-                    context,
-                    mealsFlow = repository.allMeals
-                )
-            } catch (e: Exception) {
-                Log.e("SettingsViewModel", "Error writing measurements to CSV modern", e)
+                Log.e("SettingsViewModel", "Error writing CSV", e)
+                withContext(Dispatchers.Main) {
+                    snackbarHostState.showSnackbar("Virhe")
+                }
             }
         }
     }
 
     init {
+        Log.d("SettingsViewModel", "init")
         viewModelScope.launch {
             dataStoreManager.getDefaultInsulinDose().collect { dose ->
                 uiState = uiState.copy(defaultInsulinDose = dose)

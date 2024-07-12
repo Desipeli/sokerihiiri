@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.Button
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,13 +29,20 @@ import com.google.accompanist.permissions.shouldShowRationale
 @Composable
 fun SettingsControlDataScreen(
     navController: NavController,
+    snackbarHostState: SnackbarHostState
 ) {
     val context = LocalContext.current
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()) {uri: Uri? ->
-        Log.d("SettingsControlDataScreen", "SettingsControlDataScreen: $uri")
-    }
     val settingsViewModel: SettingsViewModel = hiltViewModel()
+
+    val writeCSVDirLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocumentTree())
+    {  uri: Uri? ->
+        if (uri != null) {
+            Log.d("SettingsControlDataScreen", "SettingsControlDataScreen: $uri")
+            settingsViewModel.startWriteToCSV(context, uri, snackbarHostState)
+
+        }
+    }
     val writePermissionState = rememberPermissionState(
         android.Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
@@ -67,15 +75,14 @@ fun SettingsControlDataScreen(
         showRemoveMealsDialog = false
     }
 
-    fun handleWriteCSV() {
-
+    fun handleWriteCSVButton() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            settingsViewModel.writeCSVModern(context)
+            writeCSVDirLauncher.launch(null)
         } else {
             // Kysyttävä lupaa jos api level 28 tai alle.
             if (writePermissionState.status.isGranted) {
                 Log.d("SettingsControlDataScreen", "handleWriteCSV: Permission granted")
-                settingsViewModel.writeCSVLegacy(context)
+                writeCSVDirLauncher.launch(null)
             } else {
                 writePermissionState.launchPermissionRequest()
                 if (writePermissionState.status.shouldShowRationale) {
@@ -85,28 +92,17 @@ fun SettingsControlDataScreen(
                 }
             }
         }
-
     }
 
     fun handleLoadMeasurementsFromCSV() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-             launcher.launch("*/*")
-        } else {
-            // Kysyttävä lupaa jos api level 28 tai alle.
-            if (readPermissionState.status.isGranted) {
-                Log.d("SettingsControlDataScreen", "handleLoadMeasurementsFromCSV: Permission granted")
-                launcher.launch("*/*")
-            } else {
-                readPermissionState.launchPermissionRequest()
-            }
-        }
+
     }
 
     SettingsBase(
         navController = navController,
         parentScreen = Screens.Settings.Main,
     ) {
-        Button(onClick = { handleWriteCSV() }) {
+        Button(onClick = { handleWriteCSVButton() }) {
             Text(text = "Tallenna tiedot csv-tiedostoihin")
         }
         Button(onClick = {handleLoadMeasurementsFromCSV()}) {

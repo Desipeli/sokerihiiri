@@ -2,6 +2,7 @@ package com.example.sokerihiiri.ui.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -13,7 +14,7 @@ import com.example.sokerihiiri.ui.screens.meal.MealScreen
 import com.example.sokerihiiri.ui.screens.measurement.MeasurementScreen
 
 @Composable
-fun AppNavHost(navController: NavHostController, innerPadding: PaddingValues) {
+fun AppNavHost(navController: NavHostController, snackbarHostState: SnackbarHostState, innerPadding: PaddingValues) {
     // Navigointi https://developer.android.com/codelabs/basic-android-kotlin-compose-navigation#1
     // https://nameisjayant.medium.com/nested-navigation-in-jetpack-compose-597ecdc6eebb
     NavHost(
@@ -31,6 +32,7 @@ fun AppNavHost(navController: NavHostController, innerPadding: PaddingValues) {
         )
         settingsNavigation(
             navController,
+            snackbarHostState,
         )
         composable(route = Screens.Measurement.route) {
             MeasurementScreen(

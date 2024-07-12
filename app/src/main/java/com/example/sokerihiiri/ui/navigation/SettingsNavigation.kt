@@ -1,5 +1,6 @@
 package com.example.sokerihiiri.ui.navigation
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -10,6 +11,7 @@ import com.example.sokerihiiri.ui.screens.settings.SettingsScreen
 
 fun NavGraphBuilder.settingsNavigation(
     navController: NavController,
+    snackbarHostState: SnackbarHostState
 ) {
     navigation(
         route = Screens.Settings.route,
@@ -25,7 +27,8 @@ fun NavGraphBuilder.settingsNavigation(
         }
         composable(Screens.Settings.ControlData.route) {
             SettingsControlDataScreen(
-                navController = navController)
+                navController = navController,
+                snackbarHostState = snackbarHostState)
         }
     }
 }

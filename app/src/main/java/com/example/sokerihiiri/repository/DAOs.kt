@@ -17,6 +17,9 @@ interface BloodSugarMeasurementDao {
     @Query("SELECT * FROM blood_sugar_measurements")
     fun getAll(): Flow<List<BloodSugarMeasurement>>
 
+    @Query("SELECT * FROM blood_sugar_measurements")
+    suspend fun getAllAsList(): List<BloodSugarMeasurement>
+
     @Query("SELECT * FROM blood_sugar_measurements WHERE id = :id")
     suspend fun getById(id: Int): BloodSugarMeasurement
 
@@ -38,6 +41,9 @@ interface InsulinInjectionDao {
     @Query("SELECT * FROM insulin_injections")
     fun getAll(): Flow<List<InsulinInjection>>
 
+    @Query("SELECT * FROM insulin_injections")
+    suspend fun getAllAsList(): List<InsulinInjection>
+
     @Query("SELECT * FROM insulin_injections WHERE id = :id")
     suspend fun getById(id: Int): InsulinInjection
 
@@ -58,6 +64,9 @@ interface InsulinInjectionDao {
 interface MealDao {
     @Query("SELECT * FROM meals")
     fun getAll(): Flow<List<Meal>>
+
+    @Query("SELECT * FROM meals")
+    suspend fun getAllAsList(): List<Meal>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(meal: Meal)
