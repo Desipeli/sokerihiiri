@@ -1,7 +1,10 @@
 package com.example.sokerihiiri.ui.screens.settings
 
+import android.net.Uri
 import android.os.Build
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,9 +30,16 @@ fun SettingsControlDataScreen(
     navController: NavController,
 ) {
     val context = LocalContext.current
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()) {uri: Uri? ->
+        Log.d("SettingsControlDataScreen", "SettingsControlDataScreen: $uri")
+    }
     val settingsViewModel: SettingsViewModel = hiltViewModel()
     val writePermissionState = rememberPermissionState(
         android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+    )
+    val readPermissionState = rememberPermissionState(
+        android.Manifest.permission.READ_EXTERNAL_STORAGE
     )
 
     var showRemoveAllRoomDataDialog by remember { mutableStateOf(false) }
@@ -78,12 +88,29 @@ fun SettingsControlDataScreen(
 
     }
 
+    fun handleLoadMeasurementsFromCSV() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+             launcher.launch("*/*")
+        } else {
+            // Kysyttävä lupaa jos api level 28 tai alle.
+            if (readPermissionState.status.isGranted) {
+                Log.d("SettingsControlDataScreen", "handleLoadMeasurementsFromCSV: Permission granted")
+                launcher.launch("*/*")
+            } else {
+                readPermissionState.launchPermissionRequest()
+            }
+        }
+    }
+
     SettingsBase(
         navController = navController,
         parentScreen = Screens.Settings.Main,
     ) {
         Button(onClick = { handleWriteCSV() }) {
-            Text(text = "Tallenna tiedot csv-tiedostoihin.")
+            Text(text = "Tallenna tiedot csv-tiedostoihin")
+        }
+        Button(onClick = {handleLoadMeasurementsFromCSV()}) {
+            Text(text = "Lataa mittaustiedot tiedostosta")
         }
         Button(onClick = {
             showRemoveAllRoomDataDialog = true
