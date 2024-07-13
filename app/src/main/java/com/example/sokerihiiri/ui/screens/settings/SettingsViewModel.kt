@@ -262,33 +262,51 @@ class SettingsViewModel @Inject constructor(
         saveDefaultMinutesAfterMeal()
     }
 
-    fun deleteAllMeasurements() {
+    fun deleteAllMeasurements(snackbarHostState: SnackbarHostState) {
         viewModelScope.launch {
-            repository.deleteAllBloodSugarMeasurements()
+            try {
+                repository.deleteAllBloodSugarMeasurements()
+                snackbarHostState.showSnackbar("Mittaustiedot poistettu")
+            } catch (e: Exception) {
+                Log.e("SettingsViewModel", "Error deleting all measurements", e)
+                snackbarHostState.showSnackbar("Virhe")
+            }
         }
     }
 
-    fun deleteAllInsulinInjections() {
+    fun deleteAllInsulinInjections(snackbarHostState: SnackbarHostState) {
         viewModelScope.launch {
-            repository.deleteAllInsulinInjections()
+            try {
+                repository.deleteAllInsulinInjections()
+                snackbarHostState.showSnackbar("Insuliinitiedot poistettu")
+            } catch (e: Exception) {
+                Log.e("SettingsViewModel", "Error deleting all insulin injections", e)
+                snackbarHostState.showSnackbar("Virhe")
+            }
         }
     }
 
-    fun deleteAllMeals() {
+    fun deleteAllMeals(snackbarHostState: SnackbarHostState) {
         viewModelScope.launch {
-            repository.deleteAllMeals()
+            try {
+                repository.deleteAllMeals()
+                snackbarHostState.showSnackbar("Ateriatiedot poistettu")
+            } catch (e: Exception) {
+                Log.e("SettingsViewModel", "Error deleting all meals", e)
+                snackbarHostState.showSnackbar("Virhe")
+            }
         }
     }
 
-    fun deleteAllRoomData() {
+    fun deleteAllRoomData(snackbarHostState: SnackbarHostState) {
         viewModelScope.launch {
-            repository.deleteAllMeals()
+            deleteAllMeals(snackbarHostState)
         }
         viewModelScope.launch {
-            repository.deleteAllBloodSugarMeasurements()
+            deleteAllMeasurements(snackbarHostState)
         }
         viewModelScope.launch {
-            repository.deleteAllInsulinInjections()
+            deleteAllInsulinInjections(snackbarHostState)
         }
     }
 }
