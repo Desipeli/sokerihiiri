@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,6 +20,7 @@ import com.example.sokerihiiri.ui.navigation.Screens
 @Composable
 fun SettingsDefaultsScreen(
     navController: NavController,
+    snackbarHostState: SnackbarHostState
 ) {
     val settingsViewModel: SettingsViewModel = hiltViewModel()
 
@@ -49,7 +51,7 @@ fun SettingsDefaultsScreen(
     }
 
     fun saveSettings() {
-        settingsViewModel.saveDefaultsSettings()
+        settingsViewModel.saveDefaultsSettings(snackbarHostState)
     }
 
     SettingsBase(

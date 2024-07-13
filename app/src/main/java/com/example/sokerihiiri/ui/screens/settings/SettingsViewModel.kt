@@ -229,40 +229,42 @@ class SettingsViewModel @Inject constructor(
         uiState = uiState.copy(defaultMinutesAfterMeal = minutes)
     }
 
-    private fun saveDefaultInsulinDose() {
-        viewModelScope.launch {
-            try {
-                dataStoreManager.setDefaultInsulinDose(uiState.defaultInsulinDose)
-            } catch (e: Exception) {
-                Log.e("SettingsViewModel", "Error saving default insulin dose", e)
-            }
+    private suspend fun saveDefaultInsulinDose() {
+        try {
+            dataStoreManager.setDefaultInsulinDose(uiState.defaultInsulinDose)
+        } catch (e: Exception) {
+            throw e
         }
     }
 
-    private fun saveDefaultHoursAfterMeal() {
-        viewModelScope.launch {
-            try {
-                dataStoreManager.setDefaultHoursAfterMeal(uiState.defaultHoursAfterMeal)
-            } catch (e: Exception) {
-                Log.e("SettingsViewModel", "Error saving default hours after meal", e)
-            }
+    private suspend fun saveDefaultHoursAfterMeal() {
+        try {
+            dataStoreManager.setDefaultHoursAfterMeal(uiState.defaultHoursAfterMeal)
+        } catch (e: Exception) {
+            throw e
         }
     }
 
-    private fun saveDefaultMinutesAfterMeal() {
-        viewModelScope.launch {
-            try {
-                dataStoreManager.setDefaultMinutesAfterMeal(uiState.defaultMinutesAfterMeal)
-            } catch (e: Exception) {
-                Log.e("SettingsViewModel", "Error saving default minutes after meal", e)
-            }
+    private suspend fun saveDefaultMinutesAfterMeal() {
+        try {
+            dataStoreManager.setDefaultMinutesAfterMeal(uiState.defaultMinutesAfterMeal)
+        } catch (e: Exception) {
+            Log.e("SettingsViewModel", "Error saving default minutes after meal", e)
+            throw e
         }
     }
 
-    fun saveDefaultsSettings() {
-        saveDefaultInsulinDose()
-        saveDefaultHoursAfterMeal()
-        saveDefaultMinutesAfterMeal()
+    fun saveDefaultsSettings(snackbarHostState: SnackbarHostState) {
+        viewModelScope.launch {
+            try {
+                saveDefaultInsulinDose()
+                saveDefaultHoursAfterMeal()
+                saveDefaultMinutesAfterMeal()
+                snackbarHostState.showSnackbar("Asetukset tallennettu")
+            } catch (e: Exception) {
+                snackbarHostState.showSnackbar("Virhe")
+            }
+        }
     }
 
     fun deleteAllMeasurements(snackbarHostState: SnackbarHostState) {

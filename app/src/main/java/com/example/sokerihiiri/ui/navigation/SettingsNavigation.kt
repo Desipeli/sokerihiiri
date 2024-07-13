@@ -23,6 +23,7 @@ fun NavGraphBuilder.settingsNavigation(
         composable(Screens.Settings.Defaults.route) {
             SettingsDefaultsScreen(
                 navController = navController,
+                snackbarHostState = snackbarHostState
             )
         }
         composable(Screens.Settings.ControlData.route) {
