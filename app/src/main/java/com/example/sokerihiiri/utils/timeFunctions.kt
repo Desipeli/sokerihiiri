@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
@@ -51,4 +52,11 @@ fun longToLocalDateTimeStringWithTimezone(timeInMillis: Long): String {
     val zoneId = ZoneId.systemDefault()
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX").withZone(zoneId)
     return formatter.format(instant)
+}
+
+fun localDateTimeStringWithTimezoneToLong(dateTimeString: String): Long {
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX")
+    val zonedDateTime = ZonedDateTime.parse(dateTimeString, formatter)
+    val instant = zonedDateTime.toInstant()
+    return instant.toEpochMilli()
 }

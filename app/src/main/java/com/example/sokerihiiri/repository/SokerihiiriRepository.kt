@@ -30,6 +30,11 @@ class SokerihiiriRepository @Inject constructor(
     }
 
     @WorkerThread
+    suspend fun insertManyBloodSugarMeasurements(bloodSugarMeasurements: List<BloodSugarMeasurement>) {
+        bloodSugarMeasurementDao.insertMany(bloodSugarMeasurements)
+    }
+
+    @WorkerThread
     suspend fun getBloodSugarMeasurementById(id: Int): BloodSugarMeasurement {
         return bloodSugarMeasurementDao.getById(id)
     }
@@ -60,6 +65,11 @@ class SokerihiiriRepository @Inject constructor(
     }
 
     @WorkerThread
+    suspend fun insertManyInsulinInjections(insulinInjections: List<InsulinInjection>) {
+        insulinInjectionDao.insertMany(insulinInjections)
+    }
+
+    @WorkerThread
     suspend fun updateInsulinInjection(insulinInjection: InsulinInjection) {
         insulinInjectionDao.update(insulinInjection)
     }
@@ -87,6 +97,11 @@ class SokerihiiriRepository @Inject constructor(
     @WorkerThread
     suspend fun insertMeal(meal: Meal) {
         mealDao.insert(meal)
+    }
+
+    @WorkerThread
+    suspend fun insertManyMeals(meals: List<Meal>) {
+        mealDao.insertMany(meals)
     }
 
     @WorkerThread

@@ -13,6 +13,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sokerihiiri.repository.DataStoreManager
 import com.example.sokerihiiri.repository.SokerihiiriRepository
+import com.example.sokerihiiri.utils.FileType
+import com.example.sokerihiiri.utils.determineFileContent
+import com.example.sokerihiiri.utils.readInsulinInjectionsFromCSV
+import com.example.sokerihiiri.utils.readMealsFromCSV
+import com.example.sokerihiiri.utils.readMeasurementsFromCSV
 import com.example.sokerihiiri.utils.writeInsulinInjectionsToDownloadsCSV
 import com.example.sokerihiiri.utils.writeMealsToDownloadsCSV
 import com.example.sokerihiiri.utils.writeMeasurementsToDownloadsCSV
@@ -107,6 +112,84 @@ class SettingsViewModel @Inject constructor(
                     snackbarHostState.showSnackbar("Virhe")
                 }
             }
+        }
+    }
+
+    fun setLoadingFileName(fileName: String) {
+        uiState = uiState.copy(loadingFileName = fileName)
+    }
+
+    fun setLoadingFileUri(uri: Uri) {
+        uiState = uiState.copy(loadingFileUri = uri)
+    }
+    fun checkFileContent(context: Context, uri: Uri, snackbarHostState: SnackbarHostState) {
+        viewModelScope.launch {
+            val fileType = determineFileContent(context, uri)
+            when (fileType) {
+                FileType.MEASUREMENTS -> {
+                    uiState = uiState.copy(loadingFileReplaceWarning = "Haluatko varmasti korvata sovelluksessa olevat mittaustulokset tiedoston ${uiState.loadingFileName} sisällöllä?")
+                    uiState = uiState.copy(loadingFileType = FileType.MEASUREMENTS)
+                }
+                FileType.INSULIN -> {
+                    uiState = uiState.copy(loadingFileReplaceWarning = "Haluatko varmasti korvata sovelluksessa olevat insuliinitiedot tiedoston ${uiState.loadingFileName} sisällöllä?")
+                    uiState = uiState.copy(loadingFileType = FileType.INSULIN)
+                }
+                FileType.MEALS -> {
+                    uiState = uiState.copy(loadingFileReplaceWarning = "Haluatko varmasti korvata sovelluksessa olevat ateriatiedot tiedoston ${uiState.loadingFileName} sisällöllä?")
+                    uiState = uiState.copy(loadingFileType = FileType.MEALS)
+                }
+                else -> {
+                    uiState = uiState.copy(loadingFileReplaceWarning = "")
+                    uiState = uiState.copy(loadingFileType = null)
+                    snackbarHostState.showSnackbar("Virhe. Tarkista, että tiedosto sisältää pakolliset rivit.")
+                }
+            }
+        }
+
+    }
+
+    fun readFileContent(context: Context, snackbarHostState: SnackbarHostState) {
+        val uri = uiState.loadingFileUri
+        if (uri == null) {
+            Log.e("SettingsViewModel", "No file selected")
+            return
+        }
+        viewModelScope.launch {
+            try {
+                when (uiState.loadingFileType) {
+                    FileType.MEASUREMENTS -> {
+                        val measurements = readMeasurementsFromCSV(context, uri)
+                        val deleteJob = async(Dispatchers.IO) {
+                            repository.deleteAllBloodSugarMeasurements()
+                        }
+                        deleteJob.await()
+                        repository.insertManyBloodSugarMeasurements(measurements)
+                    }
+                    FileType.INSULIN -> {
+                        val insulinInjections = readInsulinInjectionsFromCSV(context, uri)
+                        val deleteJob = async(Dispatchers.IO) {
+                            repository.deleteAllInsulinInjections()
+                        }
+                        deleteJob.await()
+                        repository.insertManyInsulinInjections(insulinInjections)
+                    }
+                    FileType.MEALS -> {
+                        val meals = readMealsFromCSV(context, uri)
+                        val deleteJob = async(Dispatchers.IO) {
+                            repository.deleteAllMeals()
+                        }
+                        deleteJob.await()
+                        repository.insertManyMeals(meals)
+                    }
+                    else -> {
+                        snackbarHostState.showSnackbar("Virhe")
+                    }
+                }
+                snackbarHostState.showSnackbar("Valmis")
+            } catch (e: Exception) {
+                snackbarHostState.showSnackbar("Virhe")
+            }
+
         }
     }
 
@@ -213,5 +296,9 @@ class SettingsViewModel @Inject constructor(
 data class UiState(
     val defaultInsulinDose: Int = 0,
     val defaultHoursAfterMeal: Int = 0,
-    val defaultMinutesAfterMeal: Int = 0
+    val defaultMinutesAfterMeal: Int = 0,
+    val loadingFileUri: Uri? = null,
+    val loadingFileName: String? = "",
+    val loadingFileType: FileType? = null,
+    val loadingFileReplaceWarning: String = ""
 )

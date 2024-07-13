@@ -26,6 +26,9 @@ interface BloodSugarMeasurementDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(measurement: BloodSugarMeasurement)
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertMany(measurements: List<BloodSugarMeasurement>)
+
     @Update
     suspend fun update(measurement: BloodSugarMeasurement)
 
@@ -50,6 +53,9 @@ interface InsulinInjectionDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(injection: InsulinInjection)
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertMany(injections: List<InsulinInjection>)
+
     @Update
     suspend fun update(injection: InsulinInjection)
 
@@ -70,6 +76,9 @@ interface MealDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(meal: Meal)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertMany(meals: List<Meal>)
 
     @Query("DELETE FROM meals")
     suspend fun deleteAll()

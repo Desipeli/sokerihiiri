@@ -18,7 +18,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 
 @Composable
-fun RemoveDataDialog(
+fun SeriousConfirmDialog(
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
     title: String = "",
@@ -61,7 +61,7 @@ fun RemoveDataDialog(
                         try {
                             onConfirm()
                         } catch (e: Exception) {
-                            Log.e("RemoveDataDialog", "Error removing data: ${e.message}")
+                            Log.e("RemoveDataDialog", "${e.message}")
                         }
                     } else {
                         isError = true

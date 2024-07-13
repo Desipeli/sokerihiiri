@@ -58,6 +58,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.documentfile)
 
     //Room
     val room_version = "2.6.1"

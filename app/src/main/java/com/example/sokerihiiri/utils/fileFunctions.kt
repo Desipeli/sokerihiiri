@@ -6,17 +6,21 @@ import android.util.Log
 import com.example.sokerihiiri.repository.BloodSugarMeasurement
 import com.example.sokerihiiri.repository.InsulinInjection
 import com.example.sokerihiiri.repository.Meal
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.io.BufferedReader
+import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 suspend fun writeMeasurementsToDownloadsCSV(
     context: Context,
     measurements: List<BloodSugarMeasurement>?,
     fileUri: Uri,
-) {
+) = withContext(Dispatchers.IO) {
     try {
         context.contentResolver.openOutputStream(fileUri)?.use { outputStream ->
             OutputStreamWriter(outputStream).use { writer ->
                 writer.appendLine("Sep=${CSV_SEPARATOR}")
+                writer.appendLine("#measurements")
                 writer.appendLine("date${CSV_SEPARATOR}" +
                         "value${CSV_SEPARATOR}" +
                         "time_from_meal")
@@ -42,11 +46,12 @@ suspend fun writeInsulinInjectionsToDownloadsCSV(
     context: Context,
     insulinInjections: List<InsulinInjection>?,
     fileUri: Uri,
-) {
+)  = withContext(Dispatchers.IO) {
     try {
         context.contentResolver.openOutputStream(fileUri)?.use { outputStream ->
             OutputStreamWriter(outputStream).use { writer ->
                 writer.appendLine("Sep=${CSV_SEPARATOR}")
+                writer.appendLine("#insulin")
                 writer.appendLine(
                     "date${CSV_SEPARATOR}" +
                             "dose"
@@ -71,11 +76,12 @@ suspend fun writeMealsToDownloadsCSV(
     context: Context,
     meals: List<Meal>?,
     fileUri: Uri,
-) {
+)  = withContext(Dispatchers.IO) {
     try {
         context.contentResolver.openOutputStream(fileUri)?.use { outputStream ->
             OutputStreamWriter(outputStream).use { writer ->
                 writer.appendLine("Sep=${CSV_SEPARATOR}")
+                writer.appendLine("#meals")
                 writer.appendLine(
                     "date${CSV_SEPARATOR}" +
                             "calories${CSV_SEPARATOR}" +
@@ -99,3 +105,164 @@ suspend fun writeMealsToDownloadsCSV(
         throw e
     }
 }
+
+enum class FileType {
+    MEASUREMENTS,
+    INSULIN,
+    MEALS
+}
+suspend fun determineFileContent(context: Context, uri: Uri): FileType?  =
+    withContext(Dispatchers.IO) {
+    try {
+        var type: FileType? = null
+        var i = 0
+        context.contentResolver.openInputStream(uri)?.use { inputStream ->
+            BufferedReader(InputStreamReader(inputStream)).use { reader ->
+                reader.forEachLine { line ->
+                    when (i) {
+                        0 -> {
+                            if (!line.startsWith("Sep=") || line.length <= 4) {
+                                throw Exception("Invalid CSV file format")
+                            }
+                        }
+                        1 -> {
+                            when (line.trim()) {
+                                "#measurements" -> {
+                                    type = FileType.MEASUREMENTS
+                                }
+                                "#insulin" -> {
+                                    type = FileType.INSULIN
+                                }
+                                "#meals" -> {
+                                    type = FileType.MEALS
+                                }
+                            }
+                        }
+                        else -> {
+                            return@forEachLine
+                        }
+                    }
+                    i++
+                }
+            }
+        }
+        type
+    } catch (e: Exception) {
+        Log.e("readFile", "Error reading file", e)
+        throw e
+    }
+}
+
+suspend fun readMeasurementsFromCSV(context: Context, uri: Uri):
+        List<BloodSugarMeasurement> =
+    withContext(Dispatchers.IO) {
+    var i = 0
+    var separator = CSV_SEPARATOR
+    val measurements = mutableListOf<BloodSugarMeasurement>()
+    context.contentResolver.openInputStream(uri)?.use { inputStream ->
+        BufferedReader(InputStreamReader(inputStream)).use { reader ->
+            reader.forEachLine { line ->
+                when (i) {
+                    0 -> if (line.startsWith("Sep=") || line.length > 4) {
+                        separator = line[4]
+                        Log.d("readMeasurementsFromCSV", "Separator: $separator")
+                    }
+                    1,2 -> {
+                        Log.d("readMeasurementsFromCSV", "Skipping header lines")
+                    }
+                    else -> {
+                        val fields = line.split(separator)
+                        if (fields.size < 2) {
+                            throw Exception("$i")
+                        }
+                        var minutesFromMeal = 0
+                        if (fields.size >= 3) {
+                            minutesFromMeal = fields[2].split(":")[1].toInt()
+                            minutesFromMeal += fields[2].split(":")[0].toInt() * 60
+                        }
+                        val measurement = BloodSugarMeasurement(
+                            timestamp = localDateTimeStringWithTimezoneToLong(fields[0]),
+                            value = commaStringToFloat(fields[1]),
+                            minutesFromMeal = minutesFromMeal,
+                            afterMeal = minutesFromMeal > 0
+                        )
+                        measurements.add(measurement)
+                    }
+                }
+                i++
+            }
+        }
+    }
+    measurements
+}
+
+suspend fun readInsulinInjectionsFromCSV(context: Context, uri: Uri):
+        List<InsulinInjection> =
+    withContext(Dispatchers.IO) {
+        var i = 0
+        var separator = CSV_SEPARATOR
+        val insulinInjections = mutableListOf<InsulinInjection>()
+        context.contentResolver.openInputStream(uri)?.use { inputStream ->
+            BufferedReader(InputStreamReader(inputStream)).use { reader ->
+                reader.forEachLine { line ->
+                    when (i) {
+                        0 -> if (line.startsWith("Sep=") || line.length > 4) {
+                            separator = line[4]
+                        }
+                        1,2 -> {
+                        }
+                        else -> {
+                            val fields = line.split(separator)
+                            if (fields.size < 2) {
+                                throw Exception("$i")
+                            }
+
+                            val insulinInjection = InsulinInjection(
+                                timestamp = localDateTimeStringWithTimezoneToLong(fields[0]),
+                                dose = fields[1].toInt()
+                            )
+                            insulinInjections.add(insulinInjection)
+                        }
+                    }
+                    i++
+                }
+            }
+        }
+        insulinInjections
+    }
+
+suspend fun readMealsFromCSV(context: Context, uri: Uri):
+        List<Meal> =
+    withContext(Dispatchers.IO) {
+        var i = 0
+        var separator = CSV_SEPARATOR
+        val meals = mutableListOf<Meal>()
+        context.contentResolver.openInputStream(uri)?.use { inputStream ->
+            BufferedReader(InputStreamReader(inputStream)).use { reader ->
+                reader.forEachLine { line ->
+                    when (i) {
+                        0 -> if (line.startsWith("Sep=") || line.length > 4) {
+                            separator = line[4]
+                        }
+                        1,2 -> {
+                        }
+                        else -> {
+                            val fields = line.split(separator)
+                            if (fields.size < 4) {
+                                throw Exception("$i")
+                            }
+                            val meal = Meal(
+                                timestamp = localDateTimeStringWithTimezoneToLong(fields[0]),
+                                calories = fields[1].toInt(),
+                                carbohydrates = fields[2].toInt(),
+                                comment = fields[3]
+                            )
+                            meals.add(meal)
+                        }
+                    }
+                    i++
+                }
+            }
+        }
+        meals
+    }
