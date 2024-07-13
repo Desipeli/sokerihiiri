@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.sokerihiiri.repository.BloodSugarMeasurement
 import com.example.sokerihiiri.repository.DataStoreManager
 import com.example.sokerihiiri.repository.SokerihiiriRepository
+import com.example.sokerihiiri.utils.MAX_BLOOD_SUGAR_VALUE
 import com.example.sokerihiiri.utils.dateAndTimeToUTCLong
 import com.example.sokerihiiri.utils.timestampToHoursAndMinutes
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -67,7 +68,9 @@ class MeasurementViewModel @Inject constructor (
         }
     }
     fun setValue(value: Float) {
-        uiState = uiState.copy(value = value, valueError = null)
+        if (value <= MAX_BLOOD_SUGAR_VALUE) {
+            uiState = uiState.copy(value = value, valueError = null)
+        }
     }
 
     private fun resetState() {

@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.sokerihiiri.repository.DataStoreManager
 import com.example.sokerihiiri.repository.InsulinInjection
 import com.example.sokerihiiri.repository.SokerihiiriRepository
+import com.example.sokerihiiri.utils.MAX_INSULIN_DOSE
 import com.example.sokerihiiri.utils.dateAndTimeToUTCLong
 import com.example.sokerihiiri.utils.timestampToHoursAndMinutes
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,7 +37,9 @@ class InsulinViewModel @Inject constructor(
         }
     }
     fun setDose(dose: Int) {
-        uiState = uiState.copy(dose = dose, doseError = null)
+        if (dose <= MAX_INSULIN_DOSE) {
+            uiState = uiState.copy(dose = dose, doseError = null)
+        }
     }
 
     fun setDate(date: Long) {
