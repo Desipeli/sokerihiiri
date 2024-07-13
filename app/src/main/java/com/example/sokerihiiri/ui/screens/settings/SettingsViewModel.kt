@@ -14,6 +14,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.sokerihiiri.repository.DataStoreManager
 import com.example.sokerihiiri.repository.SokerihiiriRepository
 import com.example.sokerihiiri.utils.FileType
+import com.example.sokerihiiri.utils.MAX_INSULIN_DOSE
 import com.example.sokerihiiri.utils.determineFileContent
 import com.example.sokerihiiri.utils.readInsulinInjectionsFromCSV
 import com.example.sokerihiiri.utils.readMealsFromCSV
@@ -215,7 +216,9 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun setDefaultInsulinDose(dose: Int) {
-        uiState = uiState.copy(defaultInsulinDose = dose)
+        if (dose <= MAX_INSULIN_DOSE) {
+            uiState = uiState.copy(defaultInsulinDose = dose)
+        }
     }
 
     fun setDefaultHoursAfterMeal(hours: Int) {
