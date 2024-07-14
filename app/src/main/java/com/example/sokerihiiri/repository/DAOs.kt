@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface BloodSugarMeasurementDao {
-    @Query("SELECT * FROM blood_sugar_measurements")
+    @Query("SELECT * FROM blood_sugar_measurements ORDER BY timestamp DESC")
     fun getAll(): Flow<List<BloodSugarMeasurement>>
 
     @Query("SELECT * FROM blood_sugar_measurements")
@@ -41,7 +41,7 @@ interface BloodSugarMeasurementDao {
 
 @Dao
 interface InsulinInjectionDao {
-    @Query("SELECT * FROM insulin_injections")
+    @Query("SELECT * FROM insulin_injections ORDER BY timestamp DESC")
     fun getAll(): Flow<List<InsulinInjection>>
 
     @Query("SELECT * FROM insulin_injections")
@@ -68,7 +68,7 @@ interface InsulinInjectionDao {
 
 @Dao
 interface MealDao {
-    @Query("SELECT * FROM meals")
+    @Query("SELECT * FROM meals ORDER BY timestamp DESC")
     fun getAll(): Flow<List<Meal>>
 
     @Query("SELECT * FROM meals")
