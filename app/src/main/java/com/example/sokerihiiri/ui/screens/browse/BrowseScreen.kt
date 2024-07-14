@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
+import com.example.sokerihiiri.ui.components.StyledTextButton
 import com.example.sokerihiiri.ui.navigation.Screens
 
 @Composable
@@ -21,17 +22,13 @@ fun BrowseScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        TextButton(onClick = {
-            navController.navigate(Screens.Browse.Measurements.route)
-        }) {
-            Text(text = Screens.Browse.Measurements.title)
-        }
-        TextButton(onClick = { navController.navigate(Screens.Browse.Injections.route) }) {
-            Text(text = Screens.Browse.Injections.title)
-        }
-        TextButton(onClick = { navController.navigate(Screens.Browse.Meals.Main.route) }) {
-            Text(text = Screens.Browse.Meals.title)
-        }
+        StyledTextButton(onClick = {
+            navController.navigate(Screens.Browse.Measurements.route) },
+            content = Screens.Browse.Measurements.title)
+        StyledTextButton(onClick = { navController.navigate(Screens.Browse.Injections.route) },
+            content = Screens.Browse.Injections.title)
+        StyledTextButton(onClick = { navController.navigate(Screens.Browse.Meals.Main.route) },
+            content = Screens.Browse.Meals.title)
     }
 }
 
