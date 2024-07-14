@@ -152,6 +152,10 @@ class MealViewModel @Inject constructor(
             throw InvalidCarbohydratesException("Hiilarien oltava suurempi kuin 0")
         }
     }
+
+    fun setCanEdit(canEdit: Boolean) {
+        uiState = uiState.copy(canEdit = canEdit)
+    }
 }
 
 data class UiState (
@@ -163,16 +167,6 @@ data class UiState (
     val date: Long = System.currentTimeMillis(),
     val comment: String = "",
     val caloriesError: String? = null,
-    val carbohydratesError: String? = null
+    val carbohydratesError: String? = null,
+    val canEdit: Boolean = false
 )
-
-class MealViewModelFactory(private val repository: SokerihiiriRepository) : ViewModelProvider.Factory {
-    override fun <T: ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(MealViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return MealViewModel(repository) as T
-        } else {
-            throw IllegalArgumentException("Unknown ViewModel class")
-        }
-    }
-}

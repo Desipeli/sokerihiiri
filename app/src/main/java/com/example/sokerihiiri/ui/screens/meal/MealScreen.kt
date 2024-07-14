@@ -8,16 +8,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.sokerihiiri.ui.LocalMealViewModel
 import com.example.sokerihiiri.ui.components.AppDatePickerDialog
@@ -25,7 +22,6 @@ import com.example.sokerihiiri.ui.components.AppTimePickerDialog
 import com.example.sokerihiiri.ui.components.NumberTextField
 import com.example.sokerihiiri.ui.components.StyledTextButton
 import com.example.sokerihiiri.ui.components.StyledTextField
-import com.example.sokerihiiri.ui.components.ViewAndEdit
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -37,18 +33,15 @@ fun MealScreen(
     id: String? = null
 ) {
     val mealViewModel = LocalMealViewModel.current
-    var allowEdit: MutableState<Boolean> = remember { mutableStateOf(false) }
+    val uiState = mealViewModel.uiState
 
-    LaunchedEffect(id) {
-        try {
-            if (id == null) allowEdit.value = true
-            mealViewModel.getMealById(id)
-        } catch (e: Exception) {
-            Log.e("MealScreen", "Error getting meal", e)
-        }
+    try {
+        if (id == null) mealViewModel.setCanEdit(true)
+        mealViewModel.getMealById(id)
+    } catch (e: Exception) {
+        Log.e("MealScreen", "Error getting meal", e)
     }
 
-    val uiState = mealViewModel.uiState
     val dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     var showDatePicker: MutableState<Boolean> = remember { mutableStateOf(false) }
     var showTimePicker: MutableState<Boolean> = remember { mutableStateOf(false) }
@@ -84,65 +77,56 @@ fun MealScreen(
             Log.e("MealScreen", "Error setting comment", e)
         }
     }
+    Column(
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        NumberTextField(
+            modifier = Modifier
+                .fillMaxWidth(0.5f),
+            value = if (uiState.calories == 0) "" else uiState.calories.toString(),
+            onValueChange = { handleCalorieChange(it) },
+            label = { Text(text = "Kcal")},
+            enabled = uiState.canEdit,
+            isError = uiState.caloriesError != null
+        )
+        Text(text = uiState.caloriesError ?: "")
+        NumberTextField(
+            modifier = Modifier
+                .fillMaxWidth(0.5f),
+            value = if (uiState.carbohydrates == 0) "" else uiState.carbohydrates.toString(),
+            onValueChange = { handleChangeCarbs(it) },
+            label = { Text(text = "Hiilihydraatit")},
+            enabled = uiState.canEdit,
+            isError = uiState.carbohydratesError != null
+        )
+        Text(text = uiState.carbohydratesError ?: "")
 
-    ViewAndEdit(
-        navController = navController,
-        id = id,
-        allowEdit = allowEdit,
-        save = { mealViewModel.saveMeal() },
-        update = { mealViewModel.updateMeal() },
-        delete = { mealViewModel.deleteMealById() }) {
-
-        Column(
-            modifier = modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            NumberTextField(
-                modifier = Modifier
-                    .fillMaxWidth(0.5f),
-                value = if (uiState.calories == 0) "" else uiState.calories.toString(),
-                onValueChange = { handleCalorieChange(it) },
-                label = { Text(text = "Kcal")},
-                enabled = allowEdit.value,
-                isError = uiState.caloriesError != null
+        Spacer(modifier = Modifier.height(64.dp))
+        StyledTextButton(
+            onClick = { showTimePicker.value = true },
+            enabled = uiState.canEdit,
+            text = String.format(
+                Locale.getDefault(),
+                "%02d:%02d",
+                uiState.hour,
+                uiState.minute
             )
-            Text(text = uiState.caloriesError ?: "")
-            NumberTextField(
-                modifier = Modifier
-                    .fillMaxWidth(0.5f),
-                value = if (uiState.carbohydrates == 0) "" else uiState.carbohydrates.toString(),
-                onValueChange = { handleChangeCarbs(it) },
-                label = { Text(text = "Hiilihydraatit")},
-                enabled = allowEdit.value,
-                isError = uiState.carbohydratesError != null
+        )
+        StyledTextButton(
+            onClick = { showDatePicker.value = true },
+            enabled = uiState.canEdit,
+            text = dateFormatter.format(Date(uiState.date)
             )
-            Text(text = uiState.carbohydratesError ?: "")
-
-            Spacer(modifier = Modifier.height(64.dp))
-            StyledTextButton(
-                onClick = { showTimePicker.value = true },
-                enabled = allowEdit.value,
-                text = String.format(
-                    Locale.getDefault(),
-                    "%02d:%02d",
-                    uiState.hour,
-                    uiState.minute
-                )
-            )
-            StyledTextButton(
-                onClick = { showDatePicker.value = true },
-                enabled = allowEdit.value,
-                text = dateFormatter.format(Date(uiState.date)
-                )
-            )
-            StyledTextField(
-                value = uiState.comment,
-                onValueChange = {handleChangeComment(it)},
-                label = {Text("Kommentti")},
-                enabled = allowEdit.value)
-        }
+        )
+        StyledTextField(
+            value = uiState.comment,
+            onValueChange = {handleChangeComment(it)},
+            label = {Text("Kommentti")},
+            enabled = uiState.canEdit)
     }
+
 
     if (showDatePicker.value) {
         AppDatePickerDialog(

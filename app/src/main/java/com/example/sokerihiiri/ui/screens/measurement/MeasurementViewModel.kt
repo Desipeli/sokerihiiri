@@ -5,7 +5,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.sokerihiiri.repository.BloodSugarMeasurement
 import com.example.sokerihiiri.repository.DataStoreManager
@@ -14,7 +13,6 @@ import com.example.sokerihiiri.utils.MAX_BLOOD_SUGAR_VALUE
 import com.example.sokerihiiri.utils.dateAndTimeToUTCLong
 import com.example.sokerihiiri.utils.timestampToHoursAndMinutes
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.launch
 import java.time.LocalTime
 import javax.inject.Inject
@@ -79,7 +77,6 @@ class MeasurementViewModel @Inject constructor (
     }
 
     fun saveBloodSugarMeasurement() {
-        Log.d("MeasurementViewModel", "saveBloodSugarMeasurement state: $uiState")
         try {
             validateFields()
             val dateTime = dateAndTimeToUTCLong(
@@ -176,6 +173,10 @@ class MeasurementViewModel @Inject constructor (
             throw InvalidValueException("Verensokeriarvon on oltava suurempi kuin 0")
         }
     }
+
+    fun setCanEdit(canEdit: Boolean) {
+        uiState = uiState.copy(canEdit = canEdit)
+    }
 }
 
 data class BloodSugarMeasurementState(
@@ -186,5 +187,6 @@ data class BloodSugarMeasurementState(
     val date: Long = System.currentTimeMillis(),
     val afterMeal: Boolean = false,
     val minutesFromMeal: Int = 0,
-    val valueError: String? = null
+    val valueError: String? = null,
+    val canEdit: Boolean = false
 )

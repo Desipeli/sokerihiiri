@@ -58,7 +58,7 @@ fun AppContent(
     ) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
-            bottomBar = { BottomBar(navController) },
+            bottomBar = { BottomBar(navController, snackbarHostState) },
             topBar = {
                 TopBar(navController = navController)
             },

@@ -9,15 +9,15 @@ sealed class Screens(val route: String, val title: String) {
         object Main : Screens(route = "browse_main", title="Selaa")
         object Measurements : Screens(route = "browse_measurements", title="Mittaukset") {
             object Main : Screens(route = "browse_measurements_main", title="Mittaukset")
-            object Measurement : Screens(route = "browse_measurements_measurement/{id}", title="Mittaus")
+            object Measurement : Screens(route = "browse_measurements_measurement", title="Mittaus")
         }
         object Injections : Screens(route = "browse_injections", title="Insuliini") {
             object Main : Screens(route = "browse_injections_main", title="Insuliini")
-            object Injection : Screens(route = "browse_injections_injection/{id}", title="Insuliini")
+            object Injection : Screens(route = "browse_injections_injection", title="Insuliini")
         }
         object Meals: Screens(route = "browse_meals", title="Ateriat") {
             object Main : Screens(route = "browse_meals_main", title="Ateriat")
-            object Meal : Screens(route = "browse_meals_meal/{id}", title="Ateria")
+            object Meal : Screens(route = "browse_meals_meal", title="Ateria")
         }
     }
     object Settings : Screens(route = "settings", title="Asetukset") {

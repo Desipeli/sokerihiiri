@@ -30,11 +30,7 @@ class InsulinViewModel @Inject constructor(
         private set
 
     init {
-        viewModelScope.launch {
-            dataStoreManager.getDefaultInsulinDose().collect {
-                setDose(it)
-            }
-        }
+        resetState()
     }
     fun setDose(dose: Int) {
         if (dose <= MAX_INSULIN_DOSE) {
@@ -52,6 +48,11 @@ class InsulinViewModel @Inject constructor(
 
     private fun resetState() {
         uiState = InsulinUiState()
+        viewModelScope.launch {
+            dataStoreManager.getDefaultInsulinDose().collect {
+                setDose(it)
+            }
+        }
     }
 
     fun saveInsulinInjection() {
@@ -143,6 +144,10 @@ class InsulinViewModel @Inject constructor(
             throw InvalidDoseException("Annoksen oltava suurempi kuin 0")
         }
     }
+
+    fun setCanEdit(canEdit: Boolean) {
+        uiState = uiState.copy(canEdit = canEdit)
+    }
 }
 
 data class InsulinUiState(
@@ -151,5 +156,6 @@ data class InsulinUiState(
     val date: Long = System.currentTimeMillis(),
     val hour: Int = LocalTime.now().hour,
     val minute: Int = LocalTime.now().minute,
-    val doseError: String? = null
+    val doseError: String? = null,
+    val canEdit: Boolean = false
     )

@@ -19,8 +19,6 @@ import com.example.sokerihiiri.ui.navigation.Screens
 fun SettingsBase(
     modifier: Modifier = Modifier,
     navController: NavController,
-    save: (() -> Unit)? = null,
-    parentScreen: Screens? = null,
     content: @Composable () -> Unit
 ) {
     Box(
@@ -34,28 +32,6 @@ fun SettingsBase(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             content()
-        }
-        if (save != null) {
-            TextButton(modifier = Modifier
-                .align(Alignment.BottomEnd),
-                onClick = {
-                    try {
-                        save()
-                    } catch (e: Exception) {
-                        Log.e("SettingsBase", "save failed", e)
-                    }
-                }) {
-                Text("Tallenna")
-            }
-        }
-        if (parentScreen != null) {
-            TextButton(modifier = Modifier
-                .align(Alignment.BottomStart),
-                onClick = {
-                    navController.navigate(parentScreen.route)
-                }) {
-                Text(text = parentScreen.title)
-            }
         }
     }
 }

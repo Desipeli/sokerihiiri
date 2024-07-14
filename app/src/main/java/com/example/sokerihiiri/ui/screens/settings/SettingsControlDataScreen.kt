@@ -134,7 +134,6 @@ fun SettingsControlDataScreen(
 
     SettingsBase(
         navController = navController,
-        parentScreen = Screens.Settings.Main,
     ) {
         Button(onClick = { handleWriteCSVButton() }) {
             Text(text = "Tallenna tiedot csv-tiedostoihin")
