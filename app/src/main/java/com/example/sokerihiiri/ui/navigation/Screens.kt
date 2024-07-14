@@ -27,3 +27,17 @@ sealed class Screens(val route: String, val title: String) {
 
     }
 }
+
+val screenList = listOf(
+    Screens.Main,
+    Screens.Measurement,
+    Screens.Insulin,
+    Screens.Meal,
+    Screens.Browse.Main,
+    Screens.Browse.Measurements.Main,
+    Screens.Browse.Injections.Main,
+    Screens.Browse.Meals.Main,
+    Screens.Settings.Main,
+    Screens.Settings.Defaults,
+    Screens.Settings.ControlData
+)

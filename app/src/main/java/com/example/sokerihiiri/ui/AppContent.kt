@@ -26,9 +26,7 @@ fun AppContent(
         modifier = Modifier.fillMaxSize(),
         bottomBar = { BottomBar(navController) },
         topBar = {
-            TopBar(
-                title = { Text(text = "Sokerihiiri") }
-            )
+            TopBar(navController = navController)
         },
         snackbarHost = { SnackbarHost(snackbarHostState) }) { innerPadding ->
         AppNavHost(navController, snackbarHostState, innerPadding)
