@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.sokerihiiri.ui.LocalSettingsViewModel
 import com.example.sokerihiiri.ui.components.NumberTextField
 import com.example.sokerihiiri.ui.components.SettingsBase
 import com.example.sokerihiiri.ui.navigation.Screens
@@ -22,7 +23,7 @@ fun SettingsDefaultsScreen(
     navController: NavController,
     snackbarHostState: SnackbarHostState
 ) {
-    val settingsViewModel: SettingsViewModel = hiltViewModel()
+    val settingsViewModel = LocalSettingsViewModel.current
 
     val uiState = settingsViewModel.uiState
 

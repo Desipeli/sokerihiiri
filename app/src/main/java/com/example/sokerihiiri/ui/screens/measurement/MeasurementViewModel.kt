@@ -14,6 +14,7 @@ import com.example.sokerihiiri.utils.MAX_BLOOD_SUGAR_VALUE
 import com.example.sokerihiiri.utils.dateAndTimeToUTCLong
 import com.example.sokerihiiri.utils.timestampToHoursAndMinutes
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.launch
 import java.time.LocalTime
 import javax.inject.Inject

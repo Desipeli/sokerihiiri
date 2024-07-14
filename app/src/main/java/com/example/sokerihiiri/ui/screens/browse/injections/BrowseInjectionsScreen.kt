@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.sokerihiiri.ui.LocalBrowseViewModel
 import com.example.sokerihiiri.ui.navigation.Screens
 import com.example.sokerihiiri.ui.screens.browse.BrowseViewModel
 import com.example.sokerihiiri.utils.timestampToDateTimeString
@@ -26,7 +27,7 @@ fun BrowseInjectionsScreen(
     navController: NavController
 ) {
 
-    val browseViewModel: BrowseViewModel = hiltViewModel()
+    val browseViewModel = LocalBrowseViewModel.current
     val allInjections by browseViewModel.allInjections.observeAsState(emptyList())
 
     Column {

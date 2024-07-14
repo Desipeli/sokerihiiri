@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.sokerihiiri.ui.LocalMealViewModel
 import com.example.sokerihiiri.ui.components.AppDatePickerDialog
 import com.example.sokerihiiri.ui.components.AppTimePickerDialog
 import com.example.sokerihiiri.ui.components.NumberTextField
@@ -35,7 +36,7 @@ fun MealScreen(
     modifier: Modifier = Modifier,
     id: String? = null
 ) {
-    val mealViewModel: MealViewModel = hiltViewModel()
+    val mealViewModel = LocalMealViewModel.current
     var allowEdit: MutableState<Boolean> = remember { mutableStateOf(false) }
 
     LaunchedEffect(id) {

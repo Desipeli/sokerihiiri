@@ -24,6 +24,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.sokerihiiri.ui.LocalMeasurementViewModel
 import com.example.sokerihiiri.ui.components.AppDatePickerDialog
 import com.example.sokerihiiri.ui.components.AppTimePickerDialog
 import com.example.sokerihiiri.ui.components.NumberTextField
@@ -37,7 +38,7 @@ fun MeasurementScreen(
     modifier: Modifier = Modifier,
     id: String? = null,
 ) {
-    val measurementViewModel: MeasurementViewModel = hiltViewModel()
+    val measurementViewModel = LocalMeasurementViewModel.current
     var allowEdit: MutableState<Boolean> = remember { mutableStateOf(false) }
 
     LaunchedEffect(id) {
