@@ -17,7 +17,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.sokerihiiri.R
 import com.example.sokerihiiri.ui.navigation.Screens
 import com.example.sokerihiiri.ui.navigation.screenList
 import com.example.sokerihiiri.utils.baseRoute

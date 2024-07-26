@@ -155,6 +155,7 @@ fun EditActionButton(
     canEdit: Boolean,
     setCanEdit: (Boolean) -> Unit) {
     var expandend by remember { mutableStateOf(false) }
+    var confirmDialogState by remember { mutableStateOf(false) }
 
     Box {
         if (canEdit) {
@@ -191,10 +192,17 @@ fun EditActionButton(
             DropdownMenuItem(
                 text = { Text("Poista") },
                 onClick = {
-                    deleteAction()
+                    confirmDialogState = true
                 })
         }
     }
+    if (confirmDialogState) {
+        ConfirmDialog(
+            onDismiss = { confirmDialogState = false },
+            onConfirm = deleteAction
+        )
+    }
+
 }
 
 @Composable
