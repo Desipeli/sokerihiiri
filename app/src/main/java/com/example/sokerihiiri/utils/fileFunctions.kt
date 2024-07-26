@@ -23,14 +23,16 @@ suspend fun writeMeasurementsToDownloadsCSV(
                 writer.appendLine("#measurements")
                 writer.appendLine("date${CSV_SEPARATOR}" +
                         "value${CSV_SEPARATOR}" +
-                        "time_from_meal")
+                        "time_from_meal${CSV_SEPARATOR}" +
+                        "comment")
                 writer.flush()
                 measurements?.forEach { measurement ->
                     val (hoursFromMeal, minutesFromMeal) = minutesToHoursAndMinutes(measurement.minutesFromMeal)
                     writer.appendLine(
                         "${longToLocalDateTimeStringWithTimezone(measurement.timestamp)}${CSV_SEPARATOR}" +
                         "${floatToCommaString(measurement.value)}${CSV_SEPARATOR}" +
-                        "${hoursFromMeal}:${minutesFromMeal}"
+                        "${hoursFromMeal}:${minutesFromMeal}${CSV_SEPARATOR}" +
+                        measurement.comment
                     )
                     writer.flush()
                     }
@@ -54,13 +56,15 @@ suspend fun writeInsulinInjectionsToDownloadsCSV(
                 writer.appendLine("#insulin")
                 writer.appendLine(
                     "date${CSV_SEPARATOR}" +
-                            "dose"
+                            "dose${CSV_SEPARATOR}" +
+                            "comment"
                 )
                 writer.flush()
                 insulinInjections?.forEach { insulinInjection ->
                     writer.appendLine(
                         "${longToLocalDateTimeStringWithTimezone(insulinInjection.timestamp)}${CSV_SEPARATOR}" +
-                                "${insulinInjection.dose}"
+                                "${insulinInjection.dose}${CSV_SEPARATOR}" +
+                                insulinInjection.comment
                     )
                     writer.flush()
                 }
@@ -176,15 +180,21 @@ suspend fun readMeasurementsFromCSV(context: Context, uri: Uri):
                             throw Exception("$i")
                         }
                         var minutesFromMeal = 0
-                        if (fields.size >= 3) {
+                        if (fields.size == 3) {
                             minutesFromMeal = fields[2].split(":")[1].toInt()
                             minutesFromMeal += fields[2].split(":")[0].toInt() * 60
+                        }
+
+                        var comment = ""
+                        if (fields.size > 3) {
+                            comment = fields[3]
                         }
                         val measurement = BloodSugarMeasurement(
                             timestamp = localDateTimeStringWithTimezoneToLong(fields[0]),
                             value = commaStringToFloat(fields[1]),
                             minutesFromMeal = minutesFromMeal,
-                            afterMeal = minutesFromMeal > 0
+                            afterMeal = minutesFromMeal > 0,
+                            comment = comment
                         )
                         measurements.add(measurement)
                     }
@@ -217,9 +227,16 @@ suspend fun readInsulinInjectionsFromCSV(context: Context, uri: Uri):
                                 throw Exception("$i")
                             }
 
+                            var comment  = ""
+
+                            if (fields.size > 2) {
+                                comment = fields[2]
+                            }
+
                             val insulinInjection = InsulinInjection(
                                 timestamp = localDateTimeStringWithTimezoneToLong(fields[0]),
-                                dose = fields[1].toInt()
+                                dose = fields[1].toInt(),
+                                comment = comment
                             )
                             insulinInjections.add(insulinInjection)
                         }

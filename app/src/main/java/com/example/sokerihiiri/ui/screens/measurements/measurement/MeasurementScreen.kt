@@ -1,4 +1,4 @@
-package com.example.sokerihiiri.ui.screens.measurement
+package com.example.sokerihiiri.ui.screens.measurements.measurement
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,6 +27,7 @@ import com.example.sokerihiiri.ui.components.AppDatePickerDialog
 import com.example.sokerihiiri.ui.components.AppTimePickerDialog
 import com.example.sokerihiiri.ui.components.NumberTextField
 import com.example.sokerihiiri.ui.components.StyledTextButton
+import com.example.sokerihiiri.ui.components.StyledTextField
 
 @Composable
 fun MeasurementScreen(
@@ -153,6 +153,11 @@ fun MeasurementScreen(
                 enabled = uiState.canEdit && uiState.afterMeal
             )
         }
+        StyledTextField(
+            value = uiState.comment,
+            onValueChange = { measurementViewModel.setComment(it)},
+            enabled = uiState.canEdit,
+            label = { Text("Kommentti") })
     }
 
     if (showDatePicker.value) {

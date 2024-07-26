@@ -1,11 +1,10 @@
-package com.example.sokerihiiri.ui.screens.insulin
+package com.example.sokerihiiri.ui.screens.injections.insulin
 
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.sokerihiiri.repository.DataStoreManager
 import com.example.sokerihiiri.repository.InsulinInjection
@@ -46,6 +45,10 @@ class InsulinViewModel @Inject constructor(
         uiState = uiState.copy(hour = hour, minute = minute)
     }
 
+    fun setComment(comment: String) {
+        uiState = uiState.copy(comment = comment)
+    }
+
     fun resetState() {
         uiState = InsulinUiState()
         viewModelScope.launch {
@@ -66,7 +69,8 @@ class InsulinViewModel @Inject constructor(
             )
             val insulinInjection = InsulinInjection(
                 dose = uiState.dose,
-                timestamp = dateTime
+                timestamp = dateTime,
+                comment = uiState.comment
             )
 
             viewModelScope.launch {
@@ -98,7 +102,8 @@ class InsulinViewModel @Inject constructor(
                 dose = insulinInjection.dose,
                 date = insulinInjection.timestamp,
                 hour = hour,
-                minute = minute
+                minute = minute,
+                comment = insulinInjection.comment
             )
         }
     }
@@ -114,7 +119,8 @@ class InsulinViewModel @Inject constructor(
             val insulinInjection = InsulinInjection(
                 id = uiState.id!!,
                 dose = uiState.dose,
-                timestamp = dateTime
+                timestamp = dateTime,
+                comment = uiState.comment
             )
             viewModelScope.launch {
                 repository.updateInsulinInjection(insulinInjection)
@@ -157,6 +163,7 @@ data class InsulinUiState(
     val date: Long = System.currentTimeMillis(),
     val hour: Int = LocalTime.now().hour,
     val minute: Int = LocalTime.now().minute,
+    val comment: String = "",
     val doseError: String? = null,
     val canEdit: Boolean = false
     )

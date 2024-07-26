@@ -20,7 +20,9 @@ object DatabaseModule {
             context,
             SokerihiiriDatabase::class.java,
             "sokerihiiri_database"
-        ).build()
+        )
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+            .build()
     }
 
     @Provides

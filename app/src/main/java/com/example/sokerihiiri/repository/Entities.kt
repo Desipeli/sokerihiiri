@@ -11,14 +11,16 @@ class BloodSugarMeasurement(
     @ColumnInfo(name = "timestamp") val timestamp: Long,
     @ColumnInfo(name = "value") val value: Float,
     @ColumnInfo(name = "after_meal") val afterMeal: Boolean,
-    @ColumnInfo(name = "minutes_from_meal") val minutesFromMeal: Int
+    @ColumnInfo(name = "minutes_from_meal") val minutesFromMeal: Int,
+    @ColumnInfo(name = "comment") val comment: String
 )
 
 @Entity(tableName = "insulin_injections")
 class InsulinInjection(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "timestamp") val timestamp: Long,
-    @ColumnInfo(name = "dose") val dose: Int
+    @ColumnInfo(name = "dose") val dose: Int,
+    @ColumnInfo(name = "comment") val comment: String
 )
 
 @Entity(tableName = "meals")

@@ -14,3 +14,12 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
         db.execSQL("ALTER TABLE meals_new RENAME TO meals")
     }
 }
+
+val MIGRATION_2_3 = object : Migration(2, 3) {
+    // Lisätään kommenttisarake mittaus- ja insuliinitapahtumiin
+
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE blood_sugar_measurements ADD COLUMN comment TEXT NOT NULL DEFAULT ''")
+        db.execSQL("ALTER TABLE insulin_injections ADD COLUMN comment TEXT NOT NULL DEFAULT ''")
+    }
+}

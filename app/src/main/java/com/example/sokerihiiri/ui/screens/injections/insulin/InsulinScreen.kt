@@ -1,4 +1,4 @@
-package com.example.sokerihiiri.ui.screens.insulin
+package com.example.sokerihiiri.ui.screens.injections.insulin
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
@@ -16,12 +16,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.example.sokerihiiri.ui.LocalInsulinViewModel
 import com.example.sokerihiiri.ui.components.AppDatePickerDialog
 import com.example.sokerihiiri.ui.components.AppTimePickerDialog
 import com.example.sokerihiiri.ui.components.NumberTextField
 import com.example.sokerihiiri.ui.components.StyledTextButton
+import com.example.sokerihiiri.ui.components.StyledTextField
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -90,6 +90,11 @@ fun InsulinScreen(
                 text = dateFormatter.format(Date(uiState.date)
                 )
             )
+            StyledTextField(
+                value = uiState.comment,
+                onValueChange = { insulinViewModel.setComment(it)},
+                enabled = uiState.canEdit,
+                label = { Text("Kommentti") })
     }
 
     if (showDatePicker.value) {

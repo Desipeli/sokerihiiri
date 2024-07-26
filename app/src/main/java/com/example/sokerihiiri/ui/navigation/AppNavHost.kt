@@ -12,9 +12,9 @@ import com.example.sokerihiiri.ui.screens.MainScreen
 import com.example.sokerihiiri.ui.screens.browse.injections.BrowseInjectionsScreen
 import com.example.sokerihiiri.ui.screens.browse.meals.BrowseMealsScreen
 import com.example.sokerihiiri.ui.screens.browse.measurements.BrowseMeasurementsScreen
-import com.example.sokerihiiri.ui.screens.insulin.InsulinScreen
+import com.example.sokerihiiri.ui.screens.injections.insulin.InsulinScreen
 import com.example.sokerihiiri.ui.screens.meal.MealScreen
-import com.example.sokerihiiri.ui.screens.measurement.MeasurementScreen
+import com.example.sokerihiiri.ui.screens.measurements.measurement.MeasurementScreen
 
 @Composable
 fun AppNavHost(navController: NavHostController, snackbarHostState: SnackbarHostState, innerPadding: PaddingValues) {

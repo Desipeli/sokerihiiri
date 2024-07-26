@@ -16,9 +16,9 @@ import com.example.sokerihiiri.ui.components.BottomBar
 import com.example.sokerihiiri.ui.components.TopBar
 import com.example.sokerihiiri.ui.navigation.AppNavHost
 import com.example.sokerihiiri.ui.screens.BrowseViewModel
-import com.example.sokerihiiri.ui.screens.insulin.InsulinViewModel
-import com.example.sokerihiiri.ui.screens.meal.MealViewModel
-import com.example.sokerihiiri.ui.screens.measurement.MeasurementViewModel
+import com.example.sokerihiiri.ui.screens.injections.insulin.InsulinViewModel
+import com.example.sokerihiiri.ui.screens.meals.meal.MealViewModel
+import com.example.sokerihiiri.ui.screens.measurements.measurement.MeasurementViewModel
 import com.example.sokerihiiri.ui.screens.settings.SettingsViewModel
 
 val LocalMeasurementViewModel = staticCompositionLocalOf<MeasurementViewModel> {

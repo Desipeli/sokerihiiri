@@ -1,11 +1,10 @@
-package com.example.sokerihiiri.ui.screens.meal
+package com.example.sokerihiiri.ui.screens.meals.meal
 
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.sokerihiiri.repository.Meal
 import com.example.sokerihiiri.repository.SokerihiiriRepository

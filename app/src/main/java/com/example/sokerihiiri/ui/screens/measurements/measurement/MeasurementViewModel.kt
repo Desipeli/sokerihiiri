@@ -1,4 +1,4 @@
-package com.example.sokerihiiri.ui.screens.measurement
+package com.example.sokerihiiri.ui.screens.measurements.measurement
 
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -72,6 +72,10 @@ class MeasurementViewModel @Inject constructor (
         }
     }
 
+    fun setComment(comment: String) {
+        uiState = uiState.copy(comment = comment)
+    }
+
     fun resetState() {
         uiState = BloodSugarMeasurementState()
     }
@@ -91,7 +95,8 @@ class MeasurementViewModel @Inject constructor (
                 value = uiState.value,
                 timestamp = dateTime,
                 afterMeal = uiState.afterMeal,
-                minutesFromMeal = uiState.minutesFromMeal)
+                minutesFromMeal = uiState.minutesFromMeal,
+                comment = uiState.comment)
 
             viewModelScope.launch {
                 repository.insertBloodSugarMeasurement(bloodSugarMeasurement)
@@ -121,7 +126,8 @@ class MeasurementViewModel @Inject constructor (
                 value = uiState.value,
                 timestamp = dateTime,
                 afterMeal = uiState.afterMeal,
-                minutesFromMeal = uiState.minutesFromMeal)
+                minutesFromMeal = uiState.minutesFromMeal,
+                comment = uiState.comment)
 
             viewModelScope.launch {
                 Log.d("MeasurementViewModel", "updateBloodSugarMeasurement: $bloodSugarMeasurement")
@@ -153,7 +159,8 @@ class MeasurementViewModel @Inject constructor (
                 minute = minute,
                 date = measurement.timestamp,
                 afterMeal = measurement.afterMeal,
-                minutesFromMeal = measurement.minutesFromMeal
+                minutesFromMeal = measurement.minutesFromMeal,
+                comment = measurement.comment,
             )
         }
     }
@@ -187,6 +194,7 @@ data class BloodSugarMeasurementState(
     val date: Long = System.currentTimeMillis(),
     val afterMeal: Boolean = false,
     val minutesFromMeal: Int = 0,
+    val comment: String = "",
     val valueError: String? = null,
     val canEdit: Boolean = false
 )
