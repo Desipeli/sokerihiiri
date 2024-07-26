@@ -55,8 +55,8 @@ fun MeasurementScreen(
 
     val dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
-    var showDatePicker: MutableState<Boolean> = remember { mutableStateOf(false) }
-    var showTimePicker: MutableState<Boolean> = remember { mutableStateOf(false) }
+    val showDatePicker: MutableState<Boolean> = remember { mutableStateOf(false) }
+    val showTimePicker: MutableState<Boolean> = remember { mutableStateOf(false) }
 
     Log.d("MeasurementScreen", "uiState: $uiState")
 
