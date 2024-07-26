@@ -50,7 +50,6 @@ fun NavGraphBuilder.browseNavigation(
             }
             composable(route = Screens.Browse.Injections.Injection.route + "/{id}") {
                 InsulinScreen(
-                    navController = navController,
                     id = it.arguments?.getString("id")
                 )
             }

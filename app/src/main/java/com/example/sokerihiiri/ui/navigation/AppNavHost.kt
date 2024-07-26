@@ -40,9 +40,7 @@ fun AppNavHost(navController: NavHostController, snackbarHostState: SnackbarHost
             )
         }
         composable(route = Screens.Insulin.route) {
-            InsulinScreen(
-                navController = navController
-            )
+            InsulinScreen()
         }
         composable(route = Screens.Meal.route) {
             MealScreen(

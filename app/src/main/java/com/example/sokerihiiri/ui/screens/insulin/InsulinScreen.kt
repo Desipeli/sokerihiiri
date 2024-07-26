@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,23 +28,29 @@ import java.util.Locale
 
 @Composable
 fun InsulinScreen(
-    navController: NavController,
-    modifier: Modifier = Modifier,
     id: String? = null
 ) {
     val insulinViewModel = LocalInsulinViewModel.current
     val uiState = insulinViewModel.uiState
 
-    try {
-        if (id == null) insulinViewModel.setCanEdit(true)
-        insulinViewModel.getInsulinInjectionById(id)
-    } catch (e: Exception) {
-        Log.e("InsulinScreen", "Failed to get measurement", e)
+
+    LaunchedEffect(Unit) {
+        try {
+            if (id == null) {
+                insulinViewModel.resetState()
+                insulinViewModel.setCanEdit(true)
+            } else {
+                insulinViewModel.getInsulinInjectionById(id)
+            }
+        } catch (e: Exception) {
+            Log.e("InsulinScreen", "Failed to get measurement", e)
+        }
     }
 
+
     val dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-    var showDatePicker: MutableState<Boolean> = remember { mutableStateOf(false) }
-    var showTimePicker: MutableState<Boolean> = remember { mutableStateOf(false) }
+    val showDatePicker: MutableState<Boolean> = remember { mutableStateOf(false) }
+    val showTimePicker: MutableState<Boolean> = remember { mutableStateOf(false) }
 
     fun handleDoseChange(newDose: String) {
         try {

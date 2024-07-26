@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,11 +36,17 @@ fun MealScreen(
     val mealViewModel = LocalMealViewModel.current
     val uiState = mealViewModel.uiState
 
-    try {
-        if (id == null) mealViewModel.setCanEdit(true)
-        mealViewModel.getMealById(id)
-    } catch (e: Exception) {
-        Log.e("MealScreen", "Error getting meal", e)
+    LaunchedEffect(Unit) {
+        try {
+            if (id == null) {
+                mealViewModel.resetState()
+                mealViewModel.setCanEdit(true)
+            } else {
+                mealViewModel.getMealById(id)
+            }
+        } catch (e: Exception) {
+            Log.e("MealScreen", "Error getting meal", e)
+        }
     }
 
     val dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())

@@ -46,7 +46,7 @@ class InsulinViewModel @Inject constructor(
         uiState = uiState.copy(hour = hour, minute = minute)
     }
 
-    private fun resetState() {
+    fun resetState() {
         uiState = InsulinUiState()
         viewModelScope.launch {
             dataStoreManager.getDefaultInsulinDose().collect {
