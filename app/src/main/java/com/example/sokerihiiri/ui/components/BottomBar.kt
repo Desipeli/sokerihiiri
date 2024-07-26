@@ -26,15 +26,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.sokerihiiri.ui.LocalBrowseViewModel
 import com.example.sokerihiiri.ui.LocalInsulinViewModel
 import com.example.sokerihiiri.ui.LocalMealViewModel
 import com.example.sokerihiiri.ui.LocalMeasurementViewModel
 import com.example.sokerihiiri.ui.LocalSettingsViewModel
 import com.example.sokerihiiri.ui.navigation.Screens
-import com.example.sokerihiiri.ui.screens.insulin.InsulinViewModel
-import com.example.sokerihiiri.ui.screens.meal.MealViewModel
-import com.example.sokerihiiri.ui.screens.measurement.MeasurementViewModel
 import com.example.sokerihiiri.utils.baseRoute
 
 
@@ -138,7 +134,7 @@ fun BottomBar(
                         action = { settingsViewModel.saveDefaultsSettings(snackbarHostState) },
                     )
                     Screens.Settings.Notifications.route -> CreateNewActionButton(
-                        action = { settingsViewModel.saveInsulindDeadline(snackbarHostState)}
+                        action = { settingsViewModel.saveInsulinDeadline(snackbarHostState)}
                     )
                     else -> { IconButton(onClick = {}, enabled = false) {}
                     }

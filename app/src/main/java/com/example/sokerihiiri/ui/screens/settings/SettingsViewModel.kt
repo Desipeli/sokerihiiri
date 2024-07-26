@@ -11,11 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import com.example.sokerihiiri.notifications.InsulinRemainderWorker
 import com.example.sokerihiiri.notifications.cancelInsulinNotification
 import com.example.sokerihiiri.notifications.scheduleInsulinNotification
 import com.example.sokerihiiri.repository.DataStoreManager
@@ -34,8 +30,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.Calendar
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -241,28 +235,34 @@ class SettingsViewModel @Inject constructor(
         uiState = uiState.copy(defaultMinutesAfterMeal = minutes)
     }
 
-    private suspend fun saveDefaultInsulinDose() {
-        try {
-            dataStoreManager.setDefaultInsulinDose(uiState.defaultInsulinDose)
-        } catch (e: Exception) {
-            throw e
+    private fun saveDefaultInsulinDose() {
+        viewModelScope.launch {
+            try {
+                dataStoreManager.setDefaultInsulinDose(uiState.defaultInsulinDose)
+            } catch (e: Exception) {
+                throw e
+            }
         }
     }
 
-    private suspend fun saveDefaultHoursAfterMeal() {
-        try {
-            dataStoreManager.setDefaultHoursAfterMeal(uiState.defaultHoursAfterMeal)
-        } catch (e: Exception) {
-            throw e
+    private fun saveDefaultHoursAfterMeal() {
+        viewModelScope.launch {
+            try {
+                dataStoreManager.setDefaultHoursAfterMeal(uiState.defaultHoursAfterMeal)
+            } catch (e: Exception) {
+                throw e
+            }
         }
     }
 
-    private suspend fun saveDefaultMinutesAfterMeal() {
-        try {
-            dataStoreManager.setDefaultMinutesAfterMeal(uiState.defaultMinutesAfterMeal)
-        } catch (e: Exception) {
-            Log.e("SettingsViewModel", "Error saving default minutes after meal", e)
-            throw e
+    private fun saveDefaultMinutesAfterMeal() {
+        viewModelScope.launch {
+            try {
+                dataStoreManager.setDefaultMinutesAfterMeal(uiState.defaultMinutesAfterMeal)
+            } catch (e: Exception) {
+                Log.e("SettingsViewModel", "Error saving default minutes after meal", e)
+                throw e
+            }
         }
     }
 
@@ -348,7 +348,7 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun saveInsulindDeadline(snackbarHostState: SnackbarHostState) {
+    fun saveInsulinDeadline(snackbarHostState: SnackbarHostState) {
         viewModelScope.launch {
             try {
                 if (uiState.insulinNotification) {
@@ -359,7 +359,6 @@ class SettingsViewModel @Inject constructor(
                         workManager = workManager,
                         hours = uiState.insulinDeadlineHours,
                         minutes = uiState.insulinDeadlineMinutes)
-                    //testImmediateWorkerExecution()
                     snackbarHostState.showSnackbar("Ilmoitus käytössä")
                 } else {
                     cancelInsulinNotification(workManager)
