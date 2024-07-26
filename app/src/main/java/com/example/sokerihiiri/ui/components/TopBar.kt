@@ -1,6 +1,8 @@
 package com.example.sokerihiiri.ui.components
 
 import android.util.Log
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -11,8 +13,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.sokerihiiri.R
 import com.example.sokerihiiri.ui.navigation.Screens
 import com.example.sokerihiiri.ui.navigation.screenList
 import com.example.sokerihiiri.utils.baseRoute
@@ -36,6 +41,13 @@ fun TopBar(
     CenterAlignedTopAppBar(
         title = { Text(text = currentScreen?.title ?: "Sokerihiiri") },
         modifier = modifier,
+        navigationIcon = {
+            Image(
+                painter = painterResource(id = R.drawable.mouse),
+                contentDescription = "Logo",
+                modifier = Modifier.size(40.dp)
+            )
+        },
         actions = {
             IconButton(onClick = {
                 val settingsRoute = when (currentRoute) {
