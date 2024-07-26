@@ -11,6 +11,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import com.example.sokerihiiri.notifications.InsulinRemainderWorker
+import com.example.sokerihiiri.notifications.cancelInsulinNotification
+import com.example.sokerihiiri.notifications.scheduleInsulinNotification
 import com.example.sokerihiiri.repository.DataStoreManager
 import com.example.sokerihiiri.repository.SokerihiiriRepository
 import com.example.sokerihiiri.utils.FileType
@@ -27,12 +34,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Calendar
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val dataStoreManager: DataStoreManager,
-    private val repository: SokerihiiriRepository
+    private val repository: SokerihiiriRepository,
+    private val workManager: WorkManager
 ) : ViewModel() {
 
     var uiState: UiState by mutableStateOf(UiState())
@@ -213,6 +223,8 @@ class SettingsViewModel @Inject constructor(
                 uiState = uiState.copy(defaultMinutesAfterMeal = minutes)
             }
         }
+
+        getInsulinDeadline()
     }
 
     fun setDefaultInsulinDose(dose: Int) {
@@ -314,6 +326,55 @@ class SettingsViewModel @Inject constructor(
             deleteAllInsulinInjections(snackbarHostState)
         }
     }
+
+    fun setInsulinNotification(active: Boolean) {
+        uiState = uiState.copy(insulinNotification = active)
+    }
+
+    fun setInsulinDeadline(hours: Int, minutes: Int) {
+        uiState = uiState.copy(insulinDeadlineHours = hours, insulinDeadlineMinutes = minutes)
+    }
+
+    fun getInsulinDeadline() {
+        viewModelScope.launch {
+            dataStoreManager.getInsulinDeadlineHours().collect { hours ->
+                uiState = uiState.copy(insulinDeadlineHours = hours)
+            }
+        }
+        viewModelScope.launch {
+            dataStoreManager.getInsulinDeadlineMinutes().collect { minutes ->
+                uiState = uiState.copy(insulinDeadlineMinutes = minutes)
+            }
+        }
+    }
+
+    fun saveInsulindDeadline(snackbarHostState: SnackbarHostState) {
+        viewModelScope.launch {
+            try {
+                if (uiState.insulinNotification) {
+                    dataStoreManager.setInsulinDeadline(
+                        uiState.insulinDeadlineHours,
+                        uiState.insulinDeadlineMinutes)
+                    scheduleInsulinNotification(
+                        workManager = workManager,
+                        hours = uiState.insulinDeadlineHours,
+                        minutes = uiState.insulinDeadlineMinutes)
+                    //testImmediateWorkerExecution()
+                    snackbarHostState.showSnackbar("Ilmoitus käytössä")
+                } else {
+                    cancelInsulinNotification(workManager)
+                    snackbarHostState.showSnackbar("Ilmoitus poistettu")
+                }
+                dataStoreManager.setInsulinDeadlineEnabled(uiState.insulinNotification)
+
+            } catch (e: Exception) {
+                Log.e("SettingsViewModel", "Error saving insulin deadline", e)
+                snackbarHostState.showSnackbar("Virhe")
+            }
+        }
+    }
+
+
 }
 
 data class UiState(
@@ -323,5 +384,8 @@ data class UiState(
     val loadingFileUri: Uri? = null,
     val loadingFileName: String? = "",
     val loadingFileType: FileType? = null,
-    val loadingFileReplaceWarning: String = ""
+    val loadingFileReplaceWarning: String = "",
+    val insulinNotification: Boolean = false,
+    val insulinDeadlineHours: Int = 0,
+    val insulinDeadlineMinutes: Int = 0,
 )

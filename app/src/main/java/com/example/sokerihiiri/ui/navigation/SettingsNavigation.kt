@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.example.sokerihiiri.ui.screens.settings.SettingsControlDataScreen
 import com.example.sokerihiiri.ui.screens.settings.SettingsDefaultsScreen
+import com.example.sokerihiiri.ui.screens.settings.SettingsNotificationsScreen
 import com.example.sokerihiiri.ui.screens.settings.SettingsScreen
 
 fun NavGraphBuilder.settingsNavigation(
@@ -22,13 +23,15 @@ fun NavGraphBuilder.settingsNavigation(
         }
         composable(Screens.Settings.Defaults.route) {
             SettingsDefaultsScreen(
-                navController = navController,
                 snackbarHostState = snackbarHostState
             )
         }
         composable(Screens.Settings.ControlData.route) {
             SettingsControlDataScreen(
-                navController = navController,
+                snackbarHostState = snackbarHostState)
+        }
+        composable(Screens.Settings.Notifications.route) {
+            SettingsNotificationsScreen(
                 snackbarHostState = snackbarHostState)
         }
     }

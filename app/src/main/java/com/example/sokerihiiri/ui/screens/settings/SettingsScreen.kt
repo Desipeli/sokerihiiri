@@ -13,8 +13,7 @@ fun SettingsScreen(
     modifier: Modifier = Modifier,
     navController: NavController
 ) {
-    SettingsBase(
-        navController = navController) {
+    SettingsBase {
         Button(
             onClick = {
                 navController.navigate(Screens.Settings.Defaults.route) }) {
@@ -24,6 +23,11 @@ fun SettingsScreen(
             navController.navigate(Screens.Settings.ControlData.route)
         } ) {
             Text(text = Screens.Settings.ControlData.title)
+        }
+        Button(onClick = {
+            navController.navigate(Screens.Settings.Notifications.route)
+        }) {
+            Text(text = Screens.Settings.Notifications.title)
         }
     }
 }

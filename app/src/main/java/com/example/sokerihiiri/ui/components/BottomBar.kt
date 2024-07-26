@@ -137,6 +137,9 @@ fun BottomBar(
                     Screens.Settings.Defaults.route -> CreateNewActionButton(
                         action = { settingsViewModel.saveDefaultsSettings(snackbarHostState) },
                     )
+                    Screens.Settings.Notifications.route -> CreateNewActionButton(
+                        action = { settingsViewModel.saveInsulindDeadline(snackbarHostState)}
+                    )
                     else -> { IconButton(onClick = {}, enabled = false) {}
                     }
                 }

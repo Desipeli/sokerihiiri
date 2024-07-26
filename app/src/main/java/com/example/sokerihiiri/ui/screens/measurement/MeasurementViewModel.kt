@@ -72,7 +72,7 @@ class MeasurementViewModel @Inject constructor (
         }
     }
 
-    private fun resetState() {
+    fun resetState() {
         uiState = BloodSugarMeasurementState()
     }
 

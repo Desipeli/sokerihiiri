@@ -24,6 +24,7 @@ sealed class Screens(val route: String, val title: String) {
         object Main : Screens(route = "settings_main", title="Asetukset")
         object Defaults : Screens(route = "settings_defaults", title="Oletusarvot")
         object ControlData : Screens(route = "settings_control_data", title="Tiedot")
+        object Notifications: Screens(route = "settings_notifications", title="Ilmoitukset")
 
     }
 }
@@ -39,5 +40,6 @@ val screenList = listOf(
     Screens.Browse.Meals.Main,
     Screens.Settings.Main,
     Screens.Settings.Defaults,
-    Screens.Settings.ControlData
+    Screens.Settings.ControlData,
+    Screens.Settings.Notifications
 )

@@ -30,7 +30,6 @@ import com.google.accompanist.permissions.shouldShowRationale
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun SettingsControlDataScreen(
-    navController: NavController,
     snackbarHostState: SnackbarHostState
 ) {
     val context = LocalContext.current
@@ -132,9 +131,7 @@ fun SettingsControlDataScreen(
         }
     }
 
-    SettingsBase(
-        navController = navController,
-    ) {
+    SettingsBase {
         Button(onClick = { handleWriteCSVButton() }) {
             Text(text = "Tallenna tiedot csv-tiedostoihin")
         }

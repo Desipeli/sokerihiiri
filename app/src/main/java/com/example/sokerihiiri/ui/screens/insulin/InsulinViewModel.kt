@@ -71,6 +71,7 @@ class InsulinViewModel @Inject constructor(
 
             viewModelScope.launch {
                 repository.insertInsulinInjection(insulinInjection)
+                dataStoreManager.setLatestInsulinTimestamp(dateTime)
             }
             resetState()
         } catch (e: InvalidDoseException) {

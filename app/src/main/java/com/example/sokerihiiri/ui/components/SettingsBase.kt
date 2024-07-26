@@ -18,7 +18,6 @@ import com.example.sokerihiiri.ui.navigation.Screens
 @Composable
 fun SettingsBase(
     modifier: Modifier = Modifier,
-    navController: NavController,
     content: @Composable () -> Unit
 ) {
     Box(

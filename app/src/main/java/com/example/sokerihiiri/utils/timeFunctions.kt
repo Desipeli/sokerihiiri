@@ -7,6 +7,7 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
@@ -59,4 +60,14 @@ fun localDateTimeStringWithTimezoneToLong(dateTimeString: String): Long {
     val zonedDateTime = ZonedDateTime.parse(dateTimeString, formatter)
     val instant = zonedDateTime.toInstant()
     return instant.toEpochMilli()
+}
+
+fun isTimestampToday(timestamp: Long): Boolean {
+    val now = System.currentTimeMillis()
+    val nowCalendar = Calendar.getInstance().apply { timeInMillis = now }
+    val timestampCalendar = Calendar.getInstance().apply { timeInMillis = timestamp }
+
+    return (nowCalendar.get(Calendar.YEAR) == timestampCalendar.get(Calendar.YEAR) &&
+            nowCalendar.get(Calendar.MONTH) == timestampCalendar.get(Calendar.MONTH) &&
+            nowCalendar.get(Calendar.DAY_OF_MONTH) == timestampCalendar.get(Calendar.DAY_OF_MONTH))
 }

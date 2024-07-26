@@ -18,7 +18,6 @@ import com.example.sokerihiiri.ui.components.SettingsBase
 
 @Composable
 fun SettingsDefaultsScreen(
-    navController: NavController,
     snackbarHostState: SnackbarHostState
 ) {
     val settingsViewModel = LocalSettingsViewModel.current
@@ -49,10 +48,7 @@ fun SettingsDefaultsScreen(
         }
     }
 
-    SettingsBase(
-        navController = navController) {
-        Text("Oletusarvot", style = MaterialTheme.typography.headlineMedium)
-        Spacer(modifier = Modifier.height(32.dp))
+    SettingsBase {
         Text("Verensokeri", style = MaterialTheme.typography.headlineSmall)
         Text(text = "Aterian jälkeen")
         Row(verticalAlignment = Alignment.CenterVertically) {
