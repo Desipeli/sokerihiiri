@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
@@ -16,7 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.sokerihiiri.ui.components.BottomBar
 import com.example.sokerihiiri.ui.components.TopBar
 import com.example.sokerihiiri.ui.navigation.AppNavHost
-import com.example.sokerihiiri.ui.screens.browse.BrowseViewModel
+import com.example.sokerihiiri.ui.screens.BrowseViewModel
 import com.example.sokerihiiri.ui.screens.insulin.InsulinViewModel
 import com.example.sokerihiiri.ui.screens.meal.MealViewModel
 import com.example.sokerihiiri.ui.screens.measurement.MeasurementViewModel

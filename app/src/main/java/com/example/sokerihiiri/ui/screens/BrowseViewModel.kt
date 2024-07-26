@@ -1,4 +1,4 @@
-package com.example.sokerihiiri.ui.screens.browse
+package com.example.sokerihiiri.ui.screens
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -12,9 +12,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BrowseViewModel @Inject constructor(
-    private val repository: SokerihiiriRepository
+    repository: SokerihiiriRepository
 ) : ViewModel() {
-
     val allMeasurements: LiveData<List<BloodSugarMeasurement>> =
         repository.allBloodSugarMeasurements.asLiveData()
 
@@ -23,5 +22,4 @@ class BrowseViewModel @Inject constructor(
 
     val allMeals: LiveData<List<Meal>> =
         repository.allMeals.asLiveData()
-
 }

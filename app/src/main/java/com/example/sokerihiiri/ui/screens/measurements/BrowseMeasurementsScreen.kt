@@ -1,6 +1,5 @@
 package com.example.sokerihiiri.ui.screens.browse.measurements
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.sokerihiiri.ui.navigation.Screens
-import com.example.sokerihiiri.ui.screens.browse.BrowseViewModel
+import com.example.sokerihiiri.ui.screens.BrowseViewModel
 import com.example.sokerihiiri.utils.minutesToHoursAndMinutes
 import com.example.sokerihiiri.utils.timestampToDateTimeString
 
