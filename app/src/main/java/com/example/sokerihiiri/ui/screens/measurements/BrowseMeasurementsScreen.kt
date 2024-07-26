@@ -1,5 +1,6 @@
 package com.example.sokerihiiri.ui.screens.browse.measurements
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,10 +17,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.sokerihiiri.R
 import com.example.sokerihiiri.ui.navigation.Screens
 import com.example.sokerihiiri.ui.screens.BrowseViewModel
 import com.example.sokerihiiri.utils.minutesToHoursAndMinutes
@@ -76,6 +79,11 @@ fun BrowseMeasurementsScreen(
                         )
                     } else {
                         Text(text = "", Modifier.weight(0.40f))
+                    }
+                    if (measurement.comment != "") {
+                        Image(
+                            painter = painterResource(id = R.drawable.comment),
+                            contentDescription = "Kommentti")
                     }
                 }
                 Spacer(modifier = Modifier.height(8.dp))

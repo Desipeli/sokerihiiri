@@ -8,6 +8,8 @@ import com.example.sokerihiiri.R
 // https://www.freepik.com/icon/meal_3274099
 // https://www.freepik.com/icon/mouse_8277661
 
+// Kommentti https://www.freepik.com/icon/message_5356196
+
 
 
 sealed class Screens(val route: String, val title: String, val logo: Int? = null) {
