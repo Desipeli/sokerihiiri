@@ -16,11 +16,9 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.sokerihiiri.ui.LocalBrowseViewModel
 import com.example.sokerihiiri.ui.navigation.Screens
-import com.example.sokerihiiri.ui.screens.browse.BrowseViewModel
 import com.example.sokerihiiri.utils.timestampToDateTimeString
 
 @Composable
@@ -45,7 +43,7 @@ fun BrowseMealsScreen(
                 Row(modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
-                        navController.navigate("${Screens.Browse.Meals.Meal.route}/${meal.id}")
+                        navController.navigate("${Screens.Meals.EditMeal.route}/${meal.id}")
                     },
                     verticalAlignment = Alignment.CenterVertically,
                 ) {

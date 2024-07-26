@@ -22,13 +22,13 @@ fun BrowseScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        StyledTextButton(onClick = {
-            navController.navigate(Screens.Browse.Measurements.route) },
-            content = Screens.Browse.Measurements.title)
-        StyledTextButton(onClick = { navController.navigate(Screens.Browse.Injections.route) },
-            content = Screens.Browse.Injections.title)
-        StyledTextButton(onClick = { navController.navigate(Screens.Browse.Meals.Main.route) },
-            content = Screens.Browse.Meals.title)
+//        StyledTextButton(onClick = {
+//            navController.navigate(Screens.Browse.Measurements.route) },
+//            content = Screens.Browse.Measurements.title)
+//        StyledTextButton(onClick = { navController.navigate(Screens.Browse.Injections.route) },
+//            content = Screens.Browse.Injections.title)
+//        StyledTextButton(onClick = { navController.navigate(Screens.Browse.Meals.Main.route) },
+//            content = Screens.Browse.Meals.title)
     }
 }
 

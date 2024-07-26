@@ -9,6 +9,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.sokerihiiri.ui.screens.MainScreen
+import com.example.sokerihiiri.ui.screens.browse.injections.BrowseInjectionsScreen
+import com.example.sokerihiiri.ui.screens.browse.meals.BrowseMealsScreen
+import com.example.sokerihiiri.ui.screens.browse.measurements.BrowseMeasurementsScreen
 import com.example.sokerihiiri.ui.screens.insulin.InsulinScreen
 import com.example.sokerihiiri.ui.screens.meal.MealScreen
 import com.example.sokerihiiri.ui.screens.measurement.MeasurementScreen
@@ -23,29 +26,46 @@ fun AppNavHost(navController: NavHostController, snackbarHostState: SnackbarHost
         modifier = androidx.compose.ui.Modifier
             .padding(innerPadding)
             .padding(start = 8.dp, end = 8.dp)
-    ) {
+    )
+    {
         composable(route = Screens.Main.route) {
             MainScreen( navController = navController)
         }
-        browseNavigation(
-            navController = navController,
-        )
+        composable(route = Screens.Measurements.Main.route) {
+            BrowseMeasurementsScreen(navController = navController)
+        }
+        composable(route = Screens.Measurements.NewMeasurement.route) {
+            MeasurementScreen(navController = navController)
+        }
+        composable(route = Screens.Measurements.EditMeasurement.route + "/{id}") {
+            MeasurementScreen(
+                navController = navController,
+                id = it.arguments?.getString("id"))
+        }
+        composable(route = Screens.Injections.Main.route) {
+            BrowseInjectionsScreen(navController = navController)
+        }
+        composable(route = Screens.Injections.NewInjection.route) {
+            InsulinScreen()
+        }
+        composable(route = Screens.Injections.EditInjection.route + "/{id}") {
+            InsulinScreen(id = it.arguments?.getString("id"))
+        }
+        composable(route = Screens.Meals.Main.route) {
+            BrowseMealsScreen(navController = navController)
+        }
+        composable(route = Screens.Meals.NewMeal.route) {
+            MealScreen(navController = navController)
+        }
+        composable(route = Screens.Meals.EditMeal.route + "/{id}") {
+            MealScreen(
+                navController = navController,
+                id = it.arguments?.getString("id"))
+        }
+
         settingsNavigation(
             navController,
             snackbarHostState,
         )
-        composable(route = Screens.Measurement.route) {
-            MeasurementScreen(
-                navController = navController
-            )
-        }
-        composable(route = Screens.Insulin.route) {
-            InsulinScreen()
-        }
-        composable(route = Screens.Meal.route) {
-            MealScreen(
-                navController = navController
-            )
-        }
     }
 }

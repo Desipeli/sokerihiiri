@@ -1,5 +1,6 @@
 package com.example.sokerihiiri.ui.components
 
+import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -14,6 +15,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.sokerihiiri.ui.navigation.Screens
 import com.example.sokerihiiri.ui.navigation.screenList
+import com.example.sokerihiiri.utils.baseRoute
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -24,7 +26,12 @@ fun TopBar(
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
 
-    val currentScreen = screenList.find { it.route == currentRoute }
+    val baseRoute = baseRoute(currentRoute)
+
+    val currentScreen = screenList.find { it.route == baseRoute }
+
+    Log.d("TopBar", "currentRoute: $currentRoute")
+    Log.d("TopBar", "currentScreen: $currentScreen")
 
     CenterAlignedTopAppBar(
         title = { Text(text = currentScreen?.title ?: "Sokerihiiri") },
@@ -32,9 +39,9 @@ fun TopBar(
         actions = {
             IconButton(onClick = {
                 val settingsRoute = when (currentRoute) {
-                    Screens.Measurement.route -> Screens.Settings.Defaults.route
-                    Screens.Insulin.route -> Screens.Settings.Defaults.route
-                    Screens.Meal.route -> Screens.Settings.Defaults.route
+                    Screens.Measurements.EditMeasurement.route -> Screens.Settings.Defaults.route
+                    Screens.Injections.EditInjection.route -> Screens.Settings.Defaults.route
+                    Screens.Meals.EditMeal.route -> Screens.Settings.Defaults.route
                     else -> Screens.Settings.Main.route
                 }
                 navController.navigate(settingsRoute)
