@@ -16,7 +16,7 @@ class InsulinNotificationService(
         val notification= NotificationCompat.Builder(context,"sokerihiiri_notification")
             .setContentTitle("Sokerihiiri")
             .setContentText("Muista insuliini!")
-            .setSmallIcon(R.drawable.vaccine)
+            .setSmallIcon(R.drawable.insulin_outlines)
             .setPriority(NotificationManager.IMPORTANCE_HIGH)
             .setAutoCancel(true)
             .build()

@@ -34,6 +34,7 @@ fun TopBar(
     val baseRoute = baseRoute(currentRoute)
 
     val currentScreen = screenList.find { it.route == baseRoute }
+    val currentLogo = currentScreen?.logo
 
     Log.d("TopBar", "currentRoute: $currentRoute")
     Log.d("TopBar", "currentScreen: $currentScreen")
@@ -42,11 +43,14 @@ fun TopBar(
         title = { Text(text = currentScreen?.title ?: "Sokerihiiri") },
         modifier = modifier,
         navigationIcon = {
-            Image(
-                painter = painterResource(id = R.drawable.mouse),
-                contentDescription = "Logo",
-                modifier = Modifier.size(40.dp)
-            )
+            if (currentLogo != null) {
+                Image(
+                    painter = painterResource(id = currentLogo),
+                    contentDescription = "Logo",
+                    modifier = Modifier.size(40.dp)
+                )
+            }
+
         },
         actions = {
             IconButton(onClick = {
