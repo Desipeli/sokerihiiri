@@ -19,7 +19,6 @@ import com.example.sokerihiiri.ui.screens.BrowseViewModel
 import com.example.sokerihiiri.ui.screens.injections.insulin.InsulinViewModel
 import com.example.sokerihiiri.ui.screens.meals.meal.MealViewModel
 import com.example.sokerihiiri.ui.screens.measurements.measurement.MeasurementViewModel
-import com.example.sokerihiiri.ui.screens.others.other.OtherViewModel
 import com.example.sokerihiiri.ui.screens.settings.SettingsViewModel
 
 val LocalMeasurementViewModel = staticCompositionLocalOf<MeasurementViewModel> {
@@ -37,9 +36,6 @@ val LocalSettingsViewModel = staticCompositionLocalOf<SettingsViewModel> {
 val LocalBrowseViewModel = staticCompositionLocalOf<BrowseViewModel> {
     error("No BrowseViewModel provided")
 }
-val LocalOtherViewModel = staticCompositionLocalOf<OtherViewModel> {
-    error("No OtherViewModel provided")
-}
 
 @Composable
 fun AppContent(
@@ -51,15 +47,13 @@ fun AppContent(
     val mealViewModel: MealViewModel = hiltViewModel()
     val settingsViewModel: SettingsViewModel = hiltViewModel()
     val browseViewModel: BrowseViewModel = hiltViewModel()
-    val otherViewModel: OtherViewModel = hiltViewModel()
 
     CompositionLocalProvider (
         LocalMeasurementViewModel provides measurementViewModel,
         LocalInsulinViewModel provides insulinViewModel,
         LocalMealViewModel provides mealViewModel,
         LocalSettingsViewModel provides settingsViewModel,
-        LocalBrowseViewModel provides browseViewModel,
-        LocalOtherViewModel provides otherViewModel
+        LocalBrowseViewModel provides browseViewModel
     ) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),

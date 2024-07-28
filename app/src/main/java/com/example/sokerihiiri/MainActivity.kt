@@ -17,19 +17,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SokerihiiriTheme {
-//                val postNotificationPermission=
-//                    rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
-//                val sokerihiiriNotificationService= SokerihiiriNotificationService(this)
-//                LaunchedEffect(key1 = true){
-//                    if(!postNotificationPermission.status.isGranted) {
-//                        postNotificationPermission.launchPermissionRequest()
-//                    }
-//                }
-//                Button(onClick = {
-//                    sokerihiiriNotificationService.showBasicNotification()
-//                }) {
-//
-//                }
                 AppContent()
             }
         }
