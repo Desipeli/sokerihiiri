@@ -29,6 +29,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.sokerihiiri.ui.LocalInsulinViewModel
 import com.example.sokerihiiri.ui.LocalMealViewModel
 import com.example.sokerihiiri.ui.LocalMeasurementViewModel
+import com.example.sokerihiiri.ui.LocalOtherViewModel
 import com.example.sokerihiiri.ui.LocalSettingsViewModel
 import com.example.sokerihiiri.ui.navigation.Screens
 import com.example.sokerihiiri.utils.baseRoute
@@ -45,6 +46,7 @@ fun BottomBar(
     val insulinViewModel = LocalInsulinViewModel.current
     val mealViewModel = LocalMealViewModel.current
     val settingsViewModel = LocalSettingsViewModel.current
+    val otherViewModel = LocalOtherViewModel.current
 
     val baseRoute = baseRoute(currentRoute)
 
@@ -67,6 +69,9 @@ fun BottomBar(
                 }
 
                 when(baseRoute) {
+                    Screens.Measurements.Main.route -> BrowseCreateNewActionButton(
+                        action = { navController.navigate(Screens.Measurements.NewMeasurement.route) }
+                    )
                     Screens.Measurements.NewMeasurement.route -> CreateNewActionButton(
                         action = {
                             measurementViewModel.saveBloodSugarMeasurement()
@@ -84,6 +89,10 @@ fun BottomBar(
                         },
                         canEdit = measurementViewModel.uiState.canEdit,
                         setCanEdit = { measurementViewModel.setCanEdit(it) }
+                    )
+
+                    Screens.Injections.Main.route -> BrowseCreateNewActionButton(
+                        action = { navController.navigate(Screens.Injections.NewInjection.route) }
                     )
                     Screens.Injections.NewInjection.route -> CreateNewActionButton(
                         action = {
@@ -103,6 +112,10 @@ fun BottomBar(
                         canEdit = insulinViewModel.uiState.canEdit,
                         setCanEdit = { insulinViewModel.setCanEdit(it) }
                     )
+
+                    Screens.Meals.Main.route -> BrowseCreateNewActionButton(
+                        action = { navController.navigate(Screens.Meals.NewMeal.route) }
+                    )
                     Screens.Meals.NewMeal.route -> CreateNewActionButton(
                         action = {
                             mealViewModel.saveMeal()
@@ -121,15 +134,35 @@ fun BottomBar(
                         canEdit = mealViewModel.uiState.canEdit,
                         setCanEdit = { mealViewModel.setCanEdit(it) }
                     )
-                    Screens.Measurements.Main.route -> BrowseCreateNewActionButton(
-                        action = { navController.navigate(Screens.Measurements.NewMeasurement.route) }
+
+                    Screens.Others.Main.route -> BrowseCreateNewActionButton(
+                        action = { navController.navigate(Screens.Others.NewOther.route) }
                     )
-                    Screens.Injections.Main.route -> BrowseCreateNewActionButton(
-                        action = { navController.navigate(Screens.Injections.NewInjection.route) }
+                    Screens.Others.NewOther.route -> CreateNewActionButton(
+                        action = {
+                            otherViewModel.saveOther()
+                            navController.navigateUp()
+                        }
                     )
-                    Screens.Meals.Main.route -> BrowseCreateNewActionButton(
-                        action = { navController.navigate(Screens.Meals.NewMeal.route) }
+                    Screens.Others.NewOther.route -> CreateNewActionButton(
+                        action = {
+                            otherViewModel.saveOther()
+                            navController.navigateUp()
+                        }
                     )
+                    Screens.Others.EditOther.route -> EditActionButton(
+                        updateAction = {
+                            otherViewModel.updateOther()
+                            navController.navigateUp()
+                        },
+                        deleteAction = {
+                            otherViewModel.deleteOther()
+                            navController.navigateUp()
+                        },
+                        canEdit = otherViewModel.uiState.canEdit,
+                        setCanEdit = { otherViewModel.setCanEdit(it) }
+                    )
+
                     Screens.Settings.Defaults.route -> CreateNewActionButton(
                         action = { settingsViewModel.saveDefaultsSettings(snackbarHostState) },
                     )

@@ -29,6 +29,11 @@ sealed class Screens(val route: String, val title: String, val logo: Int? = null
         object EditMeal : Screens(route = "meals_edit_meal", title="Ateria", logo = R.drawable.meal)
         object NewMeal : Screens(route = "meals_new_meal", title="Ateria", logo = R.drawable.meal)
     }
+    object Others: Screens(route = "others", title="Muut") {
+        object Main : Screens(route = "others_main", title="Muut", logo = R.drawable.mouse)
+        object EditOther : Screens(route = "others_edit_other", title="Muut", logo = R.drawable.mouse)
+        object NewOther : Screens(route = "others_new_other", title="Muut", logo = R.drawable.mouse)
+    }
     //}
     object Settings : Screens(route = "settings", title="Asetukset") {
         object Main : Screens(route = "settings_main", title="Asetukset", logo = R.drawable.mouse_settings)
@@ -53,6 +58,9 @@ val screenList = listOf(
     Screens.Meals.Main,
     Screens.Meals.EditMeal,
     Screens.Meals.NewMeal,
+    Screens.Others.Main,
+    Screens.Others.EditOther,
+    Screens.Others.NewOther,
     Screens.Settings.Main,
     Screens.Settings.Defaults,
     Screens.Settings.ControlData,

@@ -15,6 +15,8 @@ import com.example.sokerihiiri.ui.screens.browse.measurements.BrowseMeasurements
 import com.example.sokerihiiri.ui.screens.injections.insulin.InsulinScreen
 import com.example.sokerihiiri.ui.screens.meal.MealScreen
 import com.example.sokerihiiri.ui.screens.measurements.measurement.MeasurementScreen
+import com.example.sokerihiiri.ui.screens.others.BrowseOthersScreen
+import com.example.sokerihiiri.ui.screens.others.other.OtherScreen
 
 @Composable
 fun AppNavHost(navController: NavHostController, snackbarHostState: SnackbarHostState, innerPadding: PaddingValues) {
@@ -61,6 +63,15 @@ fun AppNavHost(navController: NavHostController, snackbarHostState: SnackbarHost
             MealScreen(
                 navController = navController,
                 id = it.arguments?.getString("id"))
+        }
+        composable(route = Screens.Others.Main.route) {
+            BrowseOthersScreen(navController = navController)
+        }
+        composable(route = Screens.Others.NewOther.route) {
+            OtherScreen()
+        }
+        composable(route = Screens.Others.EditOther.route + "/{id}") {
+            OtherScreen(id = it.arguments?.getString("id"))
         }
 
         settingsNavigation(

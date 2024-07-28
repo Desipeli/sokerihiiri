@@ -19,16 +19,19 @@ fun MainScreen(
         .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center){
-        StyledTextButton(
-            onClick = { navController.navigate(Screens.Measurements.Main.route)},
-            content = Screens.Measurements.Main.title
-        )
-        StyledTextButton(
-            onClick = { navController.navigate(Screens.Injections.Main.route) },
-            content = Screens.Injections.Main.title)
+            StyledTextButton(
+                onClick = { navController.navigate(Screens.Measurements.Main.route)},
+                content = Screens.Measurements.Main.title
+            )
+            StyledTextButton(
+                onClick = { navController.navigate(Screens.Injections.Main.route) },
+                content = Screens.Injections.Main.title)
 
-        StyledTextButton(
-            onClick = { navController.navigate(Screens.Meals.Main.route) },
-            content = Screens.Meals.Main.title)
+            StyledTextButton(
+                onClick = { navController.navigate(Screens.Meals.Main.route) },
+                content = Screens.Meals.Main.title)
+            StyledTextButton(
+                onClick = { navController.navigate(Screens.Others.Main.route) },
+                text = Screens.Others.Main.title)
     }
 }

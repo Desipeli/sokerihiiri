@@ -132,4 +132,25 @@ class SokerihiiriRepository @Inject constructor(
     suspend fun deleteAllMeals() {
         mealDao.deleteAll()
     }
+
+    @WorkerThread
+    suspend fun getOtherById(id: Int): Other {
+        return otherDao.getById(id)
+    }
+
+    @WorkerThread
+    suspend fun insertOther(other: Other) {
+        otherDao.insert(other)
+    }
+
+    @WorkerThread
+    suspend fun updateOther(other: Other) {
+        otherDao.update(other)
+    }
+
+    @WorkerThread
+    suspend fun deleteOtherById(id: Int) {
+        otherDao.deleteById(id)
+    }
+
 }

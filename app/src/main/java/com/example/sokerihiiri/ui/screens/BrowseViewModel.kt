@@ -6,6 +6,7 @@ import androidx.lifecycle.asLiveData
 import com.example.sokerihiiri.repository.BloodSugarMeasurement
 import com.example.sokerihiiri.repository.InsulinInjection
 import com.example.sokerihiiri.repository.Meal
+import com.example.sokerihiiri.repository.Other
 import com.example.sokerihiiri.repository.SokerihiiriRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -22,4 +23,7 @@ class BrowseViewModel @Inject constructor(
 
     val allMeals: LiveData<List<Meal>> =
         repository.allMeals.asLiveData()
+
+    val allOthers: LiveData<List<Other>> =
+        repository.allOthers.asLiveData()
 }
