@@ -5,10 +5,10 @@ import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkManager
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.example.sokerihiiri.repository.DataStoreManager
-import com.example.sokerihiiri.utils.isTimestampToday
+import com.example.sokerihiiri.repository.SokerihiiriRepository
+import com.example.sokerihiiri.utils.getTimestampRangeForTodayBefore
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.first
@@ -18,6 +18,7 @@ class InsulinRemainderWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted private val workParameters: WorkerParameters,
     private val dataStoreManager: DataStoreManager,
+    private val repository: SokerihiiriRepository,
     private val workManager: WorkManager
 ) : CoroutineWorker(context, workParameters){
 
@@ -33,14 +34,13 @@ class InsulinRemainderWorker @AssistedInject constructor(
                 val hours = dataStoreManager.getInsulinDeadlineHours().first()
                 val minutes = dataStoreManager.getInsulinDeadlineMinutes().first()
 
-                val latestInsulinTimestamp = dataStoreManager.getLatestInsulinTimestamp().first()
+                val (startTime, endTime) = getTimestampRangeForTodayBefore(hours, minutes)
+                val insulinInjectionsToday = repository.getInjectionsByTimestampRange(startTime, endTime)
 
-                if (latestInsulinTimestamp != null && isTimestampToday(latestInsulinTimestamp)) {
-                    scheduleInsulinNotification(workManager, hours, minutes)
-                } else {
+                if (insulinInjectionsToday.isEmpty()) {
                     insulinNotificationService.showInsulinNotification()
-                    scheduleInsulinNotification(workManager, hours, minutes)
                 }
+                scheduleInsulinNotification(workManager, hours, minutes)
             }
             return Result.success()
         } catch (e: Exception) {

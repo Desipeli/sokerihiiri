@@ -20,7 +20,6 @@ class DataStoreManager @Inject constructor(@ApplicationContext private val conte
     private val DEFAULT_INSULIN_DOSE = intPreferencesKey("default_insulin_dose")
     private val DEFAULT_HOURS_AFTER_MEAL = intPreferencesKey("default_hours_after_meal")
     private val DEFAULT_MINUTES_AFTER_MEAL = intPreferencesKey("default_minutes_after_meal")
-    private val LATEST_INSULIN_TIMESTAMP = longPreferencesKey("latest_insulin_TIMESTAMP")
     private val INSULIN_DEADLINE_ENABLED = booleanPreferencesKey("insuline_deadline_enabled")
     private val INSULIN_DEADLINE_Hours = intPreferencesKey("insulin_deadline_hours")
     private val INSULIN_DEADLINE_Minutes = intPreferencesKey("insulin_deadline_minutes")
@@ -59,18 +58,6 @@ class DataStoreManager @Inject constructor(@ApplicationContext private val conte
     suspend fun setDefaultMinutesAfterMeal(minutes: Int) {
         context.dataStore.edit { preferences ->
             preferences[DEFAULT_MINUTES_AFTER_MEAL] = minutes
-        }
-    }
-
-    fun getLatestInsulinTimestamp(): Flow<Long?> {
-        return context.dataStore.data.map { preferences ->
-            preferences[LATEST_INSULIN_TIMESTAMP]
-        }
-    }
-
-    suspend fun setLatestInsulinTimestamp(timestamp: Long) {
-        context.dataStore.edit { preferences ->
-            preferences[LATEST_INSULIN_TIMESTAMP] = timestamp
         }
     }
 

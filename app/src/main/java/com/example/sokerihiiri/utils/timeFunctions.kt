@@ -62,12 +62,20 @@ fun localDateTimeStringWithTimezoneToLong(dateTimeString: String): Long {
     return instant.toEpochMilli()
 }
 
-fun isTimestampToday(timestamp: Long): Boolean {
-    val now = System.currentTimeMillis()
-    val nowCalendar = Calendar.getInstance().apply { timeInMillis = now }
-    val timestampCalendar = Calendar.getInstance().apply { timeInMillis = timestamp }
+fun getTimestampRangeForTodayBefore(hours: Int, minutes: Int): Pair<Long, Long> {
+    val calendar = Calendar.getInstance()
 
-    return (nowCalendar.get(Calendar.YEAR) == timestampCalendar.get(Calendar.YEAR) &&
-            nowCalendar.get(Calendar.MONTH) == timestampCalendar.get(Calendar.MONTH) &&
-            nowCalendar.get(Calendar.DAY_OF_MONTH) == timestampCalendar.get(Calendar.DAY_OF_MONTH))
+    calendar.set(Calendar.HOUR_OF_DAY, 0)
+    calendar.set(Calendar.MINUTE, 0)
+    calendar.set(Calendar.SECOND, 0)
+    calendar.set(Calendar.MILLISECOND, 0)
+    val startTimestamp = calendar.timeInMillis
+
+    calendar.set(Calendar.HOUR_OF_DAY, hours)
+    calendar.set(Calendar.MINUTE, minutes)
+    calendar.set(Calendar.SECOND, 59)
+    calendar.set(Calendar.MILLISECOND, 999)
+    val endTimestamp = calendar.timeInMillis
+
+    return Pair(startTimestamp, endTimestamp)
 }

@@ -219,6 +219,7 @@ class SettingsViewModel @Inject constructor(
         }
 
         getInsulinDeadline()
+        getInsulinNotification()
     }
 
     fun setDefaultInsulinDose(dose: Int) {
@@ -333,6 +334,14 @@ class SettingsViewModel @Inject constructor(
 
     fun setInsulinDeadline(hours: Int, minutes: Int) {
         uiState = uiState.copy(insulinDeadlineHours = hours, insulinDeadlineMinutes = minutes)
+    }
+
+    private fun getInsulinNotification() {
+        viewModelScope.launch {
+            dataStoreManager.getInsulinDeadlineEnabled().collect { enabled ->
+                uiState = uiState.copy(insulinNotification = enabled)
+            }
+        }
     }
 
     fun getInsulinDeadline() {

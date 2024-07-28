@@ -1,7 +1,6 @@
 package com.example.sokerihiiri.repository
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -49,6 +48,9 @@ interface InsulinInjectionDao {
 
     @Query("SELECT * FROM insulin_injections WHERE id = :id")
     suspend fun getById(id: Int): InsulinInjection
+
+    @Query("SELECT * FROM insulin_injections WHERE timestamp>= :start AND timestamp<= :end")
+    suspend fun getInjectionsByTimestampRange(start: Long, end: Long): List<InsulinInjection>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(injection: InsulinInjection)

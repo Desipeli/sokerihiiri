@@ -60,6 +60,11 @@ class SokerihiiriRepository @Inject constructor(
     }
 
     @WorkerThread
+    suspend fun getInjectionsByTimestampRange(start: Long, end: Long): List<InsulinInjection> {
+        return insulinInjectionDao.getInjectionsByTimestampRange(start, end)
+    }
+
+    @WorkerThread
     suspend fun insertInsulinInjection(insulinInjection: InsulinInjection) {
         insulinInjectionDao.insert(insulinInjection)
     }
