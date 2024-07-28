@@ -22,9 +22,11 @@ import com.example.sokerihiiri.utils.determineFileContent
 import com.example.sokerihiiri.utils.readInsulinInjectionsFromCSV
 import com.example.sokerihiiri.utils.readMealsFromCSV
 import com.example.sokerihiiri.utils.readMeasurementsFromCSV
+import com.example.sokerihiiri.utils.readOthersFromCSV
 import com.example.sokerihiiri.utils.writeInsulinInjectionsToDownloadsCSV
 import com.example.sokerihiiri.utils.writeMealsToDownloadsCSV
 import com.example.sokerihiiri.utils.writeMeasurementsToDownloadsCSV
+import com.example.sokerihiiri.utils.writeOthersToDownloadsCSV
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -61,8 +63,11 @@ class SettingsViewModel @Inject constructor(
         val mealsFileUri = DocumentsContract.createDocument(
             context.contentResolver, documentUri, "text/csv", "meals.csv"
         )
+        val othersFileUri = DocumentsContract.createDocument(
+            context.contentResolver, documentUri, "text/csv", "others.csv"
+        )
 
-        writeCSV(context, measurementsFileUri, insulinInjectionsFileUri, mealsFileUri, snackbarHostState)
+        writeCSV(context, measurementsFileUri, insulinInjectionsFileUri, mealsFileUri, othersFileUri, snackbarHostState)
     }
 
     private fun writeCSV(
@@ -70,47 +75,59 @@ class SettingsViewModel @Inject constructor(
         measurementsFileUri: Uri?,
         insulinInjectionsFileUri: Uri?,
         mealsFileUri: Uri?,
+        othersFileUri: Uri?,
         snackbarHostState: SnackbarHostState) {
 
         viewModelScope.launch {
             try {
-                    val measurements = repository.getAllBloodSugarMeasurementsAsList()
-                    val insulinInjections = repository.getAllInsulinInjectionsAsList()
-                    val meals = repository.getAllMealsAsList()
+                val measurements = repository.getAllBloodSugarMeasurementsAsList()
+                val insulinInjections = repository.getAllInsulinInjectionsAsList()
+                val meals = repository.getAllMealsAsList()
+                val others = repository.getAllOthersAsList()
 
-                    val deferredMeasurements = async {
-                        measurementsFileUri?.let { fileUri ->
-                            writeMeasurementsToDownloadsCSV(
-                                context = context,
-                                measurements = measurements,
-                                fileUri = fileUri
-                            )
-                        }
+                val deferredMeasurements = async {
+                    measurementsFileUri?.let { fileUri ->
+                        writeMeasurementsToDownloadsCSV(
+                            context = context,
+                            measurements = measurements,
+                            fileUri = fileUri
+                        )
                     }
-                    val deferredInsulinInjections = async {
-                        insulinInjectionsFileUri?.let { fileUri ->
-                            writeInsulinInjectionsToDownloadsCSV(
-                                context = context,
-                                insulinInjections = insulinInjections,
-                                fileUri = fileUri
-                            )
-                        }
+                }
+                val deferredInsulinInjections = async {
+                    insulinInjectionsFileUri?.let { fileUri ->
+                        writeInsulinInjectionsToDownloadsCSV(
+                            context = context,
+                            insulinInjections = insulinInjections,
+                            fileUri = fileUri
+                        )
                     }
-                    val deferredMeals = async {
-                        mealsFileUri?.let { fileUri ->
-                            writeMealsToDownloadsCSV(
-                                context = context,
-                                meals = meals,
-                                fileUri = fileUri
-                            )
-                        }
+                }
+                val deferredMeals = async {
+                    mealsFileUri?.let { fileUri ->
+                        writeMealsToDownloadsCSV(
+                            context = context,
+                            meals = meals,
+                            fileUri = fileUri
+                        )
                     }
-                    deferredMeasurements.await()
-                    deferredInsulinInjections.await()
-                    deferredMeals.await()
-                    withContext(Dispatchers.Main) {
-                        snackbarHostState.showSnackbar("Tiedostot tallennettu")
+                }
+                val deferredOthers = async {
+                    othersFileUri?.let { fileUri ->
+                        writeOthersToDownloadsCSV(
+                            context = context,
+                            others = others,
+                            fileUri = fileUri
+                        )
                     }
+                }
+                deferredMeasurements.await()
+                deferredInsulinInjections.await()
+                deferredMeals.await()
+                deferredOthers.await()
+                withContext(Dispatchers.Main) {
+                    snackbarHostState.showSnackbar("Tiedostot tallennettu")
+                }
             } catch (e: Exception) {
                 Log.e("SettingsViewModel", "Error writing CSV", e)
                 withContext(Dispatchers.Main) {
@@ -142,6 +159,10 @@ class SettingsViewModel @Inject constructor(
                 FileType.MEALS -> {
                     uiState = uiState.copy(loadingFileReplaceWarning = "Haluatko varmasti korvata sovelluksessa olevat ateriatiedot tiedoston ${uiState.loadingFileName} sisällöllä?")
                     uiState = uiState.copy(loadingFileType = FileType.MEALS)
+                }
+                FileType.OTHERS -> {
+                    uiState = uiState.copy(loadingFileReplaceWarning = "Haluatko varmasti korvata sovelluksessa olevat muut tiedot tiedoston ${uiState.loadingFileName} sisällöllä?")
+                    uiState = uiState.copy(loadingFileType = FileType.OTHERS)
                 }
                 else -> {
                     uiState = uiState.copy(loadingFileReplaceWarning = "")
@@ -185,6 +206,14 @@ class SettingsViewModel @Inject constructor(
                         }
                         deleteJob.await()
                         repository.insertManyMeals(meals)
+                    }
+                    FileType.OTHERS -> {
+                        val others = readOthersFromCSV(context, uri)
+                        val deleteJob = async(Dispatchers.IO) {
+                            repository.deleteAllOthers()
+                        }
+                        deleteJob.await()
+                        repository.insertManyOthers(others)
                     }
                     else -> {
                         snackbarHostState.showSnackbar("Virhe")
@@ -316,6 +345,18 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    fun deleteAllOthers(snackbarHostState: SnackbarHostState) {
+        viewModelScope.launch {
+            try {
+                repository.deleteAllOthers()
+                snackbarHostState.showSnackbar("Muut tiedot poistettu")
+            } catch (e: Exception) {
+                Log.e("SettingsViewModel", "Error deleting all others", e)
+                snackbarHostState.showSnackbar("Virhe")
+            }
+        }
+    }
+
     fun deleteAllRoomData(snackbarHostState: SnackbarHostState) {
         viewModelScope.launch {
             deleteAllMeals(snackbarHostState)
@@ -325,6 +366,9 @@ class SettingsViewModel @Inject constructor(
         }
         viewModelScope.launch {
             deleteAllInsulinInjections(snackbarHostState)
+        }
+        viewModelScope.launch {
+            deleteAllOthers(snackbarHostState)
         }
     }
 

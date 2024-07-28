@@ -6,6 +6,7 @@ import android.util.Log
 import com.example.sokerihiiri.repository.BloodSugarMeasurement
 import com.example.sokerihiiri.repository.InsulinInjection
 import com.example.sokerihiiri.repository.Meal
+import com.example.sokerihiiri.repository.Other
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.BufferedReader
@@ -110,10 +111,39 @@ suspend fun writeMealsToDownloadsCSV(
     }
 }
 
+suspend fun writeOthersToDownloadsCSV(
+    context: Context,
+    others: List<Other>?,
+    fileUri: Uri,
+) = withContext(Dispatchers.IO) {
+    try {
+        context.contentResolver.openOutputStream(fileUri)?.use { outputStream ->
+            OutputStreamWriter(outputStream).use { writer ->
+                writer.appendLine("Sep=${CSV_SEPARATOR}")
+                writer.appendLine("#others")
+                writer.appendLine("date${CSV_SEPARATOR}" +
+                        "comment")
+                writer.flush()
+                others?.forEach { other ->
+                    writer.appendLine(
+                        "${longToLocalDateTimeStringWithTimezone(other.timestamp)}${CSV_SEPARATOR}" +
+                                other.comment
+                    )
+                    writer.flush()
+                }
+            }
+        }
+    } catch (e: Exception) {
+        Log.e("writeCSVToDownloads", "Error writing CSV file", e)
+        throw e
+    }
+}
+
 enum class FileType {
     MEASUREMENTS,
     INSULIN,
-    MEALS
+    MEALS,
+    OTHERS
 }
 suspend fun determineFileContent(context: Context, uri: Uri): FileType?  =
     withContext(Dispatchers.IO) {
@@ -139,6 +169,9 @@ suspend fun determineFileContent(context: Context, uri: Uri): FileType?  =
                                 }
                                 "#meals" -> {
                                     type = FileType.MEALS
+                                }
+                                "#others" -> {
+                                    type = FileType.OTHERS
                                 }
                             }
                         }
@@ -282,4 +315,39 @@ suspend fun readMealsFromCSV(context: Context, uri: Uri):
             }
         }
         meals
+    }
+
+
+suspend fun readOthersFromCSV(context: Context, uri: Uri):
+        List<Other> =
+    withContext(Dispatchers.IO) {
+        var i = 0
+        var separator = CSV_SEPARATOR
+        val others = mutableListOf<Other>()
+        context.contentResolver.openInputStream(uri)?.use { inputStream ->
+            BufferedReader(InputStreamReader(inputStream)).use { reader ->
+                reader.forEachLine { line ->
+                    when (i) {
+                        0 -> if (line.startsWith("Sep=") || line.length > 4) {
+                            separator = line[4]
+                        }
+                        1,2 -> {
+                        }
+                        else -> {
+                            val fields = line.split(separator)
+                            if (fields.size < 2) {
+                                throw Exception("$i")
+                            }
+                            val other = Other(
+                                timestamp = localDateTimeStringWithTimezoneToLong(fields[0]),
+                                comment = fields[1]
+                            )
+                            others.add(other)
+                        }
+                    }
+                    i++
+                }
+            }
+        }
+        others
     }

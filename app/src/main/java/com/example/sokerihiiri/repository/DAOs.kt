@@ -98,11 +98,17 @@ interface OtherDao {
     @Query("SELECT * FROM others ORDER BY timestamp DESC")
     fun getAll(): Flow<List<Other>>
 
+    @Query("SELECT * FROM others")
+    suspend fun getAllAsList(): List<Other>
+
     @Query("SELECT * FROM others WHERE id = :id")
     suspend fun getById(id: Int): Other
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(other: Other)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertMany(other: List<Other>)
 
     @Update
     suspend fun update(other: Other)
@@ -112,5 +118,4 @@ interface OtherDao {
 
     @Query("DELETE FROM others")
     suspend fun deleteAll()
-
 }

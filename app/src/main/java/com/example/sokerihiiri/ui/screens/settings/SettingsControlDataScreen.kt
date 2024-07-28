@@ -5,7 +5,11 @@ import android.os.Build
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,14 +17,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.documentfile.provider.DocumentFile
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.example.sokerihiiri.ui.LocalSettingsViewModel
 import com.example.sokerihiiri.ui.components.SeriousConfirmDialog
 import com.example.sokerihiiri.ui.components.SettingsBase
-import com.example.sokerihiiri.ui.navigation.Screens
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -40,6 +43,7 @@ fun SettingsControlDataScreen(
     var showRemoveMeasurementsDialog by remember { mutableStateOf(false) }
     var showRemoveInsulinInjectionsDialog by remember { mutableStateOf(false) }
     var showRemoveMealsDialog by remember { mutableStateOf(false) }
+    var showRemoveOthersDialog by remember { mutableStateOf(false) }
     var showLoadFileDialog by remember { mutableStateOf(false) }
 
     val writeCSVDirLauncher = rememberLauncherForActivityResult(
@@ -73,7 +77,7 @@ fun SettingsControlDataScreen(
         android.Manifest.permission.READ_EXTERNAL_STORAGE
     )
 
-    fun handledeleteAllRoomData() {
+    fun handleDeleteAllRoomData() {
         settingsViewModel.deleteAllRoomData(snackbarHostState)
         showRemoveAllRoomDataDialog = false
     }
@@ -91,6 +95,11 @@ fun SettingsControlDataScreen(
     fun handleDeleteAllMealsConfirm() {
         settingsViewModel.deleteAllMeals(snackbarHostState)
         showRemoveMealsDialog = false
+    }
+
+    fun handleDeleteAllOthersConfirm() {
+        settingsViewModel.deleteAllOthers(snackbarHostState)
+        showRemoveOthersDialog = false
     }
 
     fun handleWriteCSVButton() {
@@ -132,12 +141,21 @@ fun SettingsControlDataScreen(
     }
 
     SettingsBase {
+        Text(text = "Tietojen tallennus ja lataus", style = MaterialTheme.typography.titleLarge)
+        Spacer(modifier = Modifier.height(8.dp))
         Button(onClick = { handleWriteCSVButton() }) {
             Text(text = "Tallenna tiedot csv-tiedostoihin")
         }
         Button(onClick = { handleLoadMeasurementsFromCSV() }) {
-            Text(text = "Lataa mittaustiedot tiedostosta")
+            Text(text = "Lataa tietoja csv-tiedostosta")
         }
+        Spacer(modifier = Modifier.height(8.dp))
+        Divider()
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(text = "Tietojen poisto", style = MaterialTheme.typography.titleLarge)
+        Spacer(modifier = Modifier.height(8.dp))
+
         Button(onClick = {
             showRemoveAllRoomDataDialog = true
         }) {
@@ -158,11 +176,16 @@ fun SettingsControlDataScreen(
         }) {
             Text(text = "Poista kaikki ateriatiedot")
         }
+        Button(onClick = {
+            showRemoveOthersDialog = true
+        }) {
+            Text(text = "Poista kaikki muut tiedot")
+        }
     }
 
     if (showRemoveAllRoomDataDialog) {
         SeriousConfirmDialog(
-            onConfirm = { handledeleteAllRoomData() },
+            onConfirm = { handleDeleteAllRoomData() },
             onDismiss = { showRemoveAllRoomDataDialog = false },
             title = "Poista kaikki tiedot",
             message = "Haluatko varmasti poistaa kaikki tiedot? Tietoja ei voi palauttaa poistamisen jälkeen.",
@@ -193,6 +216,15 @@ fun SettingsControlDataScreen(
             onDismiss = { showRemoveMealsDialog = false },
             title = "Poista kaikki ateriatiedot",
             message = "Haluatko varmasti poistaa kaikki ateriatiedot? Tietoja ei voi palauttaa poistamisen jälkeen.",
+            confirmText = "Ymmärrän ja haluan poistaa tiedot.")
+    }
+
+    if (showRemoveOthersDialog) {
+        SeriousConfirmDialog(
+            onConfirm = { handleDeleteAllOthersConfirm() },
+            onDismiss = { showRemoveOthersDialog = false },
+            title = "Poista kaikki muut tiedot",
+            message = "Haluatko varmasti poistaa kaikki muut tiedot? Tietoja ei voi palauttaa poistamisen jälkeen.",
             confirmText = "Ymmärrän ja haluan poistaa tiedot.")
     }
 

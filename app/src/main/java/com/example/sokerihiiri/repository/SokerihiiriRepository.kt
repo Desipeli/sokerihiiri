@@ -144,6 +144,11 @@ class SokerihiiriRepository @Inject constructor(
     }
 
     @WorkerThread
+    suspend fun insertManyOthers(others: List<Other>) {
+        otherDao.insertMany(others)
+    }
+
+    @WorkerThread
     suspend fun updateOther(other: Other) {
         otherDao.update(other)
     }
@@ -152,5 +157,15 @@ class SokerihiiriRepository @Inject constructor(
     suspend fun deleteOtherById(id: Int) {
         otherDao.deleteById(id)
     }
+
+    @WorkerThread
+    suspend fun deleteAllOthers() {
+        otherDao.deleteAll()
+    }
+
+    suspend fun getAllOthersAsList(): List<Other> {
+        return otherDao.getAllAsList()
+    }
+
 
 }
