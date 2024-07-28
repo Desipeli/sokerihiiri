@@ -14,14 +14,16 @@ import androidx.room.RoomDatabase
     [
         BloodSugarMeasurement::class,
         InsulinInjection::class,
-        Meal::class
+        Meal::class,
+        Other::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 abstract class SokerihiiriDatabase : RoomDatabase() {
     abstract fun bloodSugarMeasurementDao(): BloodSugarMeasurementDao
     abstract fun insulinInjectionDao(): InsulinInjectionDao
     abstract fun mealDao(): MealDao
+    abstract fun otherDao(): OtherDao
 }
 

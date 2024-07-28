@@ -7,7 +7,8 @@ import javax.inject.Inject
 class SokerihiiriRepository @Inject constructor(
     private val bloodSugarMeasurementDao: BloodSugarMeasurementDao,
     private val insulinInjectionDao: InsulinInjectionDao,
-    private val mealDao: MealDao
+    private val mealDao: MealDao,
+    private val otherDao: OtherDao,
 ) {
 
     val allBloodSugarMeasurements: Flow<List<BloodSugarMeasurement>> =
@@ -18,6 +19,9 @@ class SokerihiiriRepository @Inject constructor(
 
     val allMeals: Flow<List<Meal>> =
         mealDao.getAll()
+
+    val allOthers: Flow<List<Other>> =
+        otherDao.getAll()
 
     @WorkerThread
     suspend fun getAllBloodSugarMeasurementsAsList(): List<BloodSugarMeasurement> {

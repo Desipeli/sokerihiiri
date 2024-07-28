@@ -31,3 +31,10 @@ class Meal(
     @ColumnInfo(name = "carbohydrates") val carbohydrates: Int,
     @ColumnInfo(name = "comment") val comment: String,
 )
+
+@Entity(tableName = "others")
+class Other(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @ColumnInfo(name = "timestamp") val timestamp: Long,
+    @ColumnInfo(name = "comment") val comment: String,
+)

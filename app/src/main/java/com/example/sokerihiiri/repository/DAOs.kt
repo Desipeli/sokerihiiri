@@ -92,3 +92,25 @@ interface MealDao {
     @Query("DELETE FROM meals WHERE id = :id")
     suspend fun deleteById(id: Int)
 }
+
+@Dao
+interface OtherDao {
+    @Query("SELECT * FROM others ORDER BY timestamp DESC")
+    fun getAll(): Flow<List<Other>>
+
+    @Query("SELECT * FROM others WHERE id = :id")
+    suspend fun getById(id: Int): Other
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(other: Other)
+
+    @Update
+    suspend fun update(other: Other)
+
+    @Query("DELETE FROM others WHERE id = :id")
+    suspend fun deleteById(id: Int)
+
+    @Query("DELETE FROM others")
+    suspend fun deleteAll()
+
+}

@@ -23,3 +23,12 @@ val MIGRATION_2_3 = object : Migration(2, 3) {
         db.execSQL("ALTER TABLE insulin_injections ADD COLUMN comment TEXT NOT NULL DEFAULT ''")
     }
 }
+
+val MIGRATION_3_4 = object : Migration(3, 4) {
+    // Lisätään taulu "others" vapaamuotoiselle tapahtumalle
+
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("CREATE TABLE others (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, timestamp INTEGER NOT NULL, comment TEXT NOT NULL DEFAULT '')")
+    }
+
+}

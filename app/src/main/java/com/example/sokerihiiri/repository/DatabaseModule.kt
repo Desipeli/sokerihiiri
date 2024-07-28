@@ -21,7 +21,7 @@ object DatabaseModule {
             SokerihiiriDatabase::class.java,
             "sokerihiiri_database"
         )
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
             .build()
     }
 
@@ -41,12 +41,18 @@ object DatabaseModule {
     }
 
     @Provides
+    fun provideOtherDao(database: SokerihiiriDatabase): OtherDao {
+        return database.otherDao()
+    }
+
+    @Provides
     @Singleton
     fun provideSokerihiiriRepository(
         bloodSugarMeasurementDao: BloodSugarMeasurementDao,
         insulinInjectionDao: InsulinInjectionDao,
-        mealDao: MealDao
+        mealDao: MealDao,
+        otherDao: OtherDao,
     ): SokerihiiriRepository {
-        return SokerihiiriRepository(bloodSugarMeasurementDao, insulinInjectionDao, mealDao)
+        return SokerihiiriRepository(bloodSugarMeasurementDao, insulinInjectionDao, mealDao, otherDao)
     }
 }
