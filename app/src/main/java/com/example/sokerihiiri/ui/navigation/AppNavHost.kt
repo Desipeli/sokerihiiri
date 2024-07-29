@@ -9,11 +9,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.sokerihiiri.ui.screens.MainScreen
-import com.example.sokerihiiri.ui.screens.browse.injections.BrowseInjectionsScreen
-import com.example.sokerihiiri.ui.screens.browse.meals.BrowseMealsScreen
-import com.example.sokerihiiri.ui.screens.browse.measurements.BrowseMeasurementsScreen
+import com.example.sokerihiiri.ui.screens.injections.BrowseInjectionsScreen
+import com.example.sokerihiiri.ui.screens.meals.BrowseMealsScreen
+import com.example.sokerihiiri.ui.screens.measurements.BrowseMeasurementsScreen
 import com.example.sokerihiiri.ui.screens.injections.insulin.InsulinScreen
-import com.example.sokerihiiri.ui.screens.meal.MealScreen
+import com.example.sokerihiiri.ui.screens.meals.meal.MealScreen
 import com.example.sokerihiiri.ui.screens.measurements.measurement.MeasurementScreen
 import com.example.sokerihiiri.ui.screens.others.BrowseOthersScreen
 import com.example.sokerihiiri.ui.screens.others.other.OtherScreen

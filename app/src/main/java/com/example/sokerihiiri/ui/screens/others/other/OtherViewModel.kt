@@ -1,11 +1,13 @@
 package com.example.sokerihiiri.ui.screens.others.other
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.sokerihiiri.R
 import com.example.sokerihiiri.repository.Other
 import com.example.sokerihiiri.repository.SokerihiiriRepository
 import com.example.sokerihiiri.utils.dateAndTimeToUTCLong
@@ -35,9 +37,9 @@ class OtherViewModel @Inject constructor(
         return uiState.comment.isNotEmpty()
     }
 
-    fun saveOther() {
+    fun saveOther(context: Context) {
         try {
-            if (!validateFields()) throw Exception("Kommentti puuttuu")
+            if (!validateFields()) throw Exception(context.getString(R.string.comment_missing))
             val timestamp = dateAndTimeToUTCLong(
                 uiState.date,
                 uiState.hour,
@@ -78,9 +80,9 @@ class OtherViewModel @Inject constructor(
         }
     }
 
-    fun updateOther() {
+    fun updateOther(context: Context) {
         try {
-            if (!validateFields()) throw Exception("Kommentti puuttuu")
+            if (!validateFields()) throw Exception(context.getString(R.string.comment_missing))
 
             val timestamp = dateAndTimeToUTCLong(
                 uiState.date,

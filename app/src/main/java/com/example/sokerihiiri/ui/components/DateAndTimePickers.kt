@@ -14,6 +14,8 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.ui.res.stringResource
+import com.example.sokerihiiri.R
 import java.time.LocalTime
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -23,8 +25,8 @@ fun AppDatePickerDialog(
     initialState: Long = System.currentTimeMillis(),
     onDateSelected: (Long) -> Unit,
     onDismissRequest: () -> Unit = { showState.value = false },
-    confirmButtonText: String = "OK",
-    dismissButtonText: String = "Peruuta"
+    confirmButtonText: String = stringResource(R.string.ok),
+    dismissButtonText: String = stringResource(id = R.string.cancel)
 ) {
     val datePickerState = rememberDatePickerState(initialSelectedDateMillis = initialState)
 
@@ -58,8 +60,8 @@ fun AppTimePickerDialog(
     initialHour: Int = LocalTime.now().hour,
     initialMinute: Int = LocalTime.now().minute,
     onTimeSelected: (Int, Int) -> Unit,
-    confirmButtonText: String = "OK",
-    dismissButtonText: String = "Peruuta",
+    confirmButtonText: String = stringResource(id = R.string.ok),
+    dismissButtonText: String = stringResource(id = R.string.cancel),
     onDismissRequest: () -> Unit = { showState.value = false },
 ) {
     val timePickerState = rememberTimePickerState(

@@ -1,11 +1,13 @@
 package com.example.sokerihiiri.ui.screens.meals.meal
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.sokerihiiri.R
 import com.example.sokerihiiri.repository.Meal
 import com.example.sokerihiiri.repository.SokerihiiriRepository
 import com.example.sokerihiiri.utils.dateAndTimeToUTCLong
@@ -49,9 +51,9 @@ class MealViewModel @Inject constructor(
         uiState = UiState()
     }
 
-    fun saveMeal() {
+    fun saveMeal(context: Context) {
         try {
-            validateFields()
+            validateFields(context)
             val dateTime = dateAndTimeToUTCLong(
                 uiState.date,
                 uiState.hour,
@@ -101,10 +103,10 @@ class MealViewModel @Inject constructor(
         }
     }
 
-    fun updateMeal() {
+    fun updateMeal(context: Context) {
         Log.d("MealViewModel", "Updating meal")
         try {
-            validateFields()
+            validateFields(context)
             val dateTime = dateAndTimeToUTCLong(
                 uiState.date,
                 uiState.hour,
@@ -143,12 +145,12 @@ class MealViewModel @Inject constructor(
         }
     }
 
-    private fun validateFields() {
+    private fun validateFields(context: Context) {
         if (uiState.calories <= 0) {
-            throw InvalidCaloriesException("Kcal oltava suurempi kuin 0")
+            throw InvalidCaloriesException(context.getString(R.string.kcal_error))
         }
         if (uiState.carbohydrates <= 0) {
-            throw InvalidCarbohydratesException("Hiilarien oltava suurempi kuin 0")
+            throw InvalidCarbohydratesException(context.getString(R.string.carbs_error))
         }
     }
 

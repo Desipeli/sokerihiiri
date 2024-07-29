@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.example.sokerihiiri.ui.components.StyledTextButton
 import com.example.sokerihiiri.ui.navigation.Screens
@@ -21,17 +22,17 @@ fun MainScreen(
         verticalArrangement = Arrangement.Center){
             StyledTextButton(
                 onClick = { navController.navigate(Screens.Measurements.Main.route)},
-                content = Screens.Measurements.Main.title
+                content = stringResource(id = Screens.Measurements.Main.titleResourceId)
             )
             StyledTextButton(
                 onClick = { navController.navigate(Screens.Injections.Main.route) },
-                content = Screens.Injections.Main.title)
+                content = stringResource(id = Screens.Injections.Main.titleResourceId))
 
             StyledTextButton(
                 onClick = { navController.navigate(Screens.Meals.Main.route) },
-                content = Screens.Meals.Main.title)
+                content = stringResource(id = Screens.Meals.Main.titleResourceId))
             StyledTextButton(
                 onClick = { navController.navigate(Screens.Others.Main.route) },
-                text = Screens.Others.Main.title)
+                text = stringResource(id = Screens.Others.Main.titleResourceId))
     }
 }

@@ -12,34 +12,34 @@ import com.example.sokerihiiri.R
 
 
 
-sealed class Screens(val route: String, val title: String, val logo: Int? = null) {
-    object Main : Screens(route = "main", title="Sokerihiiri", logo = R.drawable.mouse)
-    object Measurements : Screens(route = "measurements", title="Mittaukset") {
-        object Main : Screens(route = "measurements_main", title="Mittaukset", logo = R.drawable.blood_sugar)
-        object EditMeasurement : Screens(route = "measurements_edit_measurement", title="Mittaus", logo = R.drawable.blood_sugar)
-        object NewMeasurement : Screens(route = "measurements_new_measurement", title="Mittaus", logo = R.drawable.blood_sugar)
+sealed class Screens(val route: String, val titleResourceId: Int, val logo: Int? = null) {
+    object Main : Screens(route = "main", titleResourceId= R.string.app_name, logo = R.drawable.mouse)
+    object Measurements : Screens(route = "measurements", titleResourceId = R.string.measurements_title) {
+        object Main : Screens(route = "measurements_main", titleResourceId = R.string.measurements_title, logo = R.drawable.blood_sugar)
+        object EditMeasurement : Screens(route = "measurements_edit_measurement", titleResourceId = R.string.measurement_title, logo = R.drawable.blood_sugar)
+        object NewMeasurement : Screens(route = "measurements_new_measurement", titleResourceId = R.string.measurement_title, logo = R.drawable.blood_sugar)
     }
-    object Injections : Screens(route = "injections", title="Insuliini") {
-        object Main : Screens(route = "injections_main", title="Insuliini", logo = R.drawable.insulin_color)
-        object EditInjection : Screens(route = "injections_edit_injection", title="Insuliini", logo = R.drawable.insulin_color)
-        object NewInjection : Screens(route = "injections_new_injection", title="Insuliini", logo = R.drawable.insulin_color)
+    object Injections : Screens(route = "injections", titleResourceId = R.string.insulin_title) {
+        object Main : Screens(route = "injections_main", titleResourceId = R.string.insulin_title, logo = R.drawable.insulin_color)
+        object EditInjection : Screens(route = "injections_edit_injection", titleResourceId = R.string.insulin_title, logo = R.drawable.insulin_color)
+        object NewInjection : Screens(route = "injections_new_injection", titleResourceId = R.string.insulin_title, logo = R.drawable.insulin_color)
     }
-    object Meals: Screens(route = "meals", title="Ateriat") {
-        object Main : Screens(route = "meals_main", title="Ateriat", logo = R.drawable.meal)
-        object EditMeal : Screens(route = "meals_edit_meal", title="Ateria", logo = R.drawable.meal)
-        object NewMeal : Screens(route = "meals_new_meal", title="Ateria", logo = R.drawable.meal)
+    object Meals: Screens(route = "meals", titleResourceId= R.string.meals_title) {
+        object Main : Screens(route = "meals_main", titleResourceId= R.string.meals_title, logo = R.drawable.meal)
+        object EditMeal : Screens(route = "meals_edit_meal", titleResourceId =R.string.meal_title, logo = R.drawable.meal)
+        object NewMeal : Screens(route = "meals_new_meal", titleResourceId =R.string.meal_title, logo = R.drawable.meal)
     }
-    object Others: Screens(route = "others", title="Muut") {
-        object Main : Screens(route = "others_main", title="Muut", logo = R.drawable.mouse)
-        object EditOther : Screens(route = "others_edit_other", title="Muut", logo = R.drawable.mouse)
-        object NewOther : Screens(route = "others_new_other", title="Muut", logo = R.drawable.mouse)
+    object Others: Screens(route = "others", titleResourceId = R.string.others_title) {
+        object Main : Screens(route = "others_main", titleResourceId = R.string.others_title, logo = R.drawable.mouse)
+        object EditOther : Screens(route = "others_edit_other", titleResourceId = R.string.others_title, logo = R.drawable.mouse)
+        object NewOther : Screens(route = "others_new_other", titleResourceId = R.string.others_title, logo = R.drawable.mouse)
     }
     //}
-    object Settings : Screens(route = "settings", title="Asetukset") {
-        object Main : Screens(route = "settings_main", title="Asetukset", logo = R.drawable.mouse_settings)
-        object Defaults : Screens(route = "settings_defaults", title="Oletusarvot", logo = R.drawable.mouse_settings)
-        object ControlData : Screens(route = "settings_control_data", title="Tiedot", logo = R.drawable.mouse_settings)
-        object Notifications: Screens(route = "settings_notifications", title="Ilmoitukset", logo = R.drawable.mouse_settings)
+    object Settings : Screens(route = "settings", titleResourceId = R.string.settings_title) {
+        object Main : Screens(route = "settings_main", titleResourceId = R.string.settings_title, logo = R.drawable.mouse_settings)
+        object Defaults : Screens(route = "settings_defaults", titleResourceId = R.string.defaults_title, logo = R.drawable.mouse_settings)
+        object ControlData : Screens(route = "settings_control_data", titleResourceId = R.string.data_settings_title, logo = R.drawable.mouse_settings)
+        object Notifications: Screens(route = "settings_notifications", titleResourceId = R.string.notifications_title, logo = R.drawable.mouse_settings)
 
     }
 }

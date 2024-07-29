@@ -5,13 +5,15 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import com.example.sokerihiiri.R
 
 @Composable
 fun ConfirmDialog(
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
-    title: String = "Tietojen poisto",
-    message: String = "Halautko varmasti poistaa kirjauksen?",
+    title: String = stringResource(R.string.confirm_remove_data_title),
+    message: String = stringResource(R.string.confirm_remove_data_message),
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -25,12 +27,12 @@ fun ConfirmDialog(
                     Log.e("ConfirmDialog", "Error confirming dialog", e)
                 }
             }) {
-                Text(text = "Kyllä")
+                Text(text = stringResource(R.string.yes))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(text = "Peruuta")
+                Text(text = stringResource(R.string.cancel))
             }
         }
     )

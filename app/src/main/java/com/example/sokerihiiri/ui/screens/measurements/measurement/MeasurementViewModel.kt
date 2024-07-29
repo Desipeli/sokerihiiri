@@ -1,11 +1,13 @@
 package com.example.sokerihiiri.ui.screens.measurements.measurement
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.sokerihiiri.R
 import com.example.sokerihiiri.repository.BloodSugarMeasurement
 import com.example.sokerihiiri.repository.DataStoreManager
 import com.example.sokerihiiri.repository.SokerihiiriRepository
@@ -80,9 +82,9 @@ class MeasurementViewModel @Inject constructor (
         uiState = BloodSugarMeasurementState()
     }
 
-    fun saveBloodSugarMeasurement() {
+    fun saveBloodSugarMeasurement(context: Context) {
         try {
-            validateFields()
+            validateFields(context)
             val dateTime = dateAndTimeToUTCLong(
                 uiState.date,
                 uiState.hour,
@@ -112,10 +114,10 @@ class MeasurementViewModel @Inject constructor (
         }
     }
 
-    fun updateBloodSugarMeasurement() {
+    fun updateBloodSugarMeasurement(context: Context) {
         Log.d("MeasurementViewModel", "updateBloodSugarMeasurement state: $uiState")
         try {
-            validateFields()
+            validateFields(context)
             val dateTime = dateAndTimeToUTCLong(
                 uiState.date,
                 uiState.hour,
@@ -175,9 +177,9 @@ class MeasurementViewModel @Inject constructor (
         }
     }
 
-    private fun validateFields() {
+    private fun validateFields(context: Context) {
         if (uiState.value <= 0.0f) {
-            throw InvalidValueException("Verensokeriarvon on oltava suurempi kuin 0")
+            throw InvalidValueException(context.getString(R.string.blood_sugar_value_error))
         }
     }
 

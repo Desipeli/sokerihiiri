@@ -12,6 +12,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkManager
+import com.example.sokerihiiri.R
 import com.example.sokerihiiri.notifications.cancelInsulinNotification
 import com.example.sokerihiiri.notifications.scheduleInsulinNotification
 import com.example.sokerihiiri.repository.DataStoreManager
@@ -126,12 +127,12 @@ class SettingsViewModel @Inject constructor(
                 deferredMeals.await()
                 deferredOthers.await()
                 withContext(Dispatchers.Main) {
-                    snackbarHostState.showSnackbar("Tiedostot tallennettu")
+                    snackbarHostState.showSnackbar(context.getString(R.string.data_exported))
                 }
             } catch (e: Exception) {
                 Log.e("SettingsViewModel", "Error writing CSV", e)
                 withContext(Dispatchers.Main) {
-                    snackbarHostState.showSnackbar("Virhe")
+                    snackbarHostState.showSnackbar(context.getString(R.string.error))
                 }
             }
         }
@@ -149,25 +150,37 @@ class SettingsViewModel @Inject constructor(
             val fileType = determineFileContent(context, uri)
             when (fileType) {
                 FileType.MEASUREMENTS -> {
-                    uiState = uiState.copy(loadingFileReplaceWarning = "Haluatko varmasti korvata sovelluksessa olevat mittaustulokset tiedoston ${uiState.loadingFileName} sisällöllä?")
+                    uiState = uiState.copy(loadingFileReplaceWarning = context.getString(
+                        R.string.replace_measurements_warning,
+                        uiState.loadingFileName
+                    ))
                     uiState = uiState.copy(loadingFileType = FileType.MEASUREMENTS)
                 }
                 FileType.INSULIN -> {
-                    uiState = uiState.copy(loadingFileReplaceWarning = "Haluatko varmasti korvata sovelluksessa olevat insuliinitiedot tiedoston ${uiState.loadingFileName} sisällöllä?")
+                    uiState = uiState.copy(loadingFileReplaceWarning = context.getString(
+                        R.string.replace_insulin_warning,
+                        uiState.loadingFileName
+                    ))
                     uiState = uiState.copy(loadingFileType = FileType.INSULIN)
                 }
                 FileType.MEALS -> {
-                    uiState = uiState.copy(loadingFileReplaceWarning = "Haluatko varmasti korvata sovelluksessa olevat ateriatiedot tiedoston ${uiState.loadingFileName} sisällöllä?")
+                    uiState = uiState.copy(loadingFileReplaceWarning = context.getString(
+                        R.string.replace_meals_warning,
+                        uiState.loadingFileName
+                    ))
                     uiState = uiState.copy(loadingFileType = FileType.MEALS)
                 }
                 FileType.OTHERS -> {
-                    uiState = uiState.copy(loadingFileReplaceWarning = "Haluatko varmasti korvata sovelluksessa olevat muut tiedot tiedoston ${uiState.loadingFileName} sisällöllä?")
+                    uiState = uiState.copy(loadingFileReplaceWarning = context.getString(
+                        R.string.replace_others_warning,
+                        uiState.loadingFileName
+                    ))
                     uiState = uiState.copy(loadingFileType = FileType.OTHERS)
                 }
                 else -> {
                     uiState = uiState.copy(loadingFileReplaceWarning = "")
                     uiState = uiState.copy(loadingFileType = null)
-                    snackbarHostState.showSnackbar("Virhe. Tarkista, että tiedosto sisältää pakolliset rivit.")
+                    snackbarHostState.showSnackbar(context.getString(R.string.import_error))
                 }
             }
         }
@@ -216,12 +229,12 @@ class SettingsViewModel @Inject constructor(
                         repository.insertManyOthers(others)
                     }
                     else -> {
-                        snackbarHostState.showSnackbar("Virhe")
+                        snackbarHostState.showSnackbar(context.getString(R.string.error))
                     }
                 }
-                snackbarHostState.showSnackbar("Valmis")
+                snackbarHostState.showSnackbar(context.getString(R.string.ready))
             } catch (e: Exception) {
-                snackbarHostState.showSnackbar("Virhe")
+                snackbarHostState.showSnackbar(context.getString(R.string.error))
             }
 
         }

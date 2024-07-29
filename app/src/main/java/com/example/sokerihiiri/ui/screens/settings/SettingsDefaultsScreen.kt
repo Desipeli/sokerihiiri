@@ -10,8 +10,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.sokerihiiri.R
 import com.example.sokerihiiri.ui.LocalSettingsViewModel
 import com.example.sokerihiiri.ui.components.NumberTextField
 import com.example.sokerihiiri.ui.components.SettingsBase
@@ -49,27 +51,27 @@ fun SettingsDefaultsScreen(
     }
 
     SettingsBase {
-        Text("Verensokeri", style = MaterialTheme.typography.headlineSmall)
-        Text(text = "Aterian jälkeen")
+        Text(stringResource(R.string.blood_sugar), style = MaterialTheme.typography.headlineSmall)
+        Text(text = stringResource(R.string.after_meal))
         Row(verticalAlignment = Alignment.CenterVertically) {
             NumberTextField(
                 modifier = Modifier.width(82.dp),
                 value = if (uiState.defaultHoursAfterMeal <= 0) "" else uiState.defaultHoursAfterMeal.toString(),
                 onValueChange = { handleHoursAfterMealChange(it) } ,
-                label = { Text(text = "h") })
+                label = { Text(text = stringResource(R.string.h)) })
             Spacer(modifier = Modifier.width(16.dp))
             NumberTextField(
                 modifier = Modifier.width(82.dp),
                 value = if (uiState.defaultMinutesAfterMeal <= 0) "" else uiState.defaultMinutesAfterMeal.toString(),
                 onValueChange = { handleMinutesAfterMealChange(it) } ,
-                label = { Text(text = "min") })
+                label = { Text(text = stringResource(R.string.min)) })
         }
 
-        Text("Insuliini", style = MaterialTheme.typography.headlineSmall)
+        Text(stringResource(R.string.insulin), style = MaterialTheme.typography.headlineSmall)
         NumberTextField(
             modifier = Modifier.width(170.dp),
             value = if (uiState.defaultInsulinDose <= 0) "" else uiState.defaultInsulinDose.toString(),
             onValueChange = { handleInsulinDoseChange(it)},
-            label = { Text("Insuliini") })
+            label = { Text(stringResource(R.string.insulin_dose_label)) })
     }
 }

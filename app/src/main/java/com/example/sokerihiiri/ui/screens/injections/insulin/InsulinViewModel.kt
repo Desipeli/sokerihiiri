@@ -1,11 +1,14 @@
 package com.example.sokerihiiri.ui.screens.injections.insulin
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.sokerihiiri.R
+import com.example.sokerihiiri.SokerihiiriApplication
 import com.example.sokerihiiri.repository.DataStoreManager
 import com.example.sokerihiiri.repository.InsulinInjection
 import com.example.sokerihiiri.repository.SokerihiiriRepository
@@ -58,9 +61,9 @@ class InsulinViewModel @Inject constructor(
         }
     }
 
-    fun saveInsulinInjection() {
+    fun saveInsulinInjection(context: Context) {
         try {
-            validateFields()
+            validateFields(context = context)
             Log.d("saveInsulinInjection", "Saving insulin injection")
             val dateTime = dateAndTimeToUTCLong(
                 uiState.date,
@@ -107,9 +110,9 @@ class InsulinViewModel @Inject constructor(
         }
     }
 
-    fun updateInsulinInjection() {
+    fun updateInsulinInjection(context: Context) {
         try {
-            validateFields()
+            validateFields(context)
             val dateTime = dateAndTimeToUTCLong(
                 uiState.date,
                 uiState.hour,
@@ -143,11 +146,11 @@ class InsulinViewModel @Inject constructor(
         }
     }
 
-    private fun validateFields() {
+    private fun validateFields(context: Context) {
         Log.d("validateFields", "Validating fields")
         Log.d("validateFields", "dose: ${uiState.dose}")
         if (uiState.dose <= 0) {
-            throw InvalidDoseException("Annoksen oltava suurempi kuin 0")
+            throw InvalidDoseException(context.getString(R.string.insulin_dose_exception))
         }
     }
 

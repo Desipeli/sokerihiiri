@@ -19,8 +19,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.documentfile.provider.DocumentFile
+import com.example.sokerihiiri.R
 import com.example.sokerihiiri.ui.LocalSettingsViewModel
 import com.example.sokerihiiri.ui.components.SeriousConfirmDialog
 import com.example.sokerihiiri.ui.components.SettingsBase
@@ -141,45 +143,45 @@ fun SettingsControlDataScreen(
     }
 
     SettingsBase {
-        Text(text = "Tietojen tallennus ja lataus", style = MaterialTheme.typography.titleLarge)
+        Text(text = stringResource(R.string.import_and_export_data), style = MaterialTheme.typography.titleLarge)
         Spacer(modifier = Modifier.height(8.dp))
         Button(onClick = { handleWriteCSVButton() }) {
-            Text(text = "Tallenna tiedot csv-tiedostoihin")
+            Text(text = stringResource(R.string.export_data))
         }
         Button(onClick = { handleLoadMeasurementsFromCSV() }) {
-            Text(text = "Lataa tietoja csv-tiedostosta")
+            Text(text = stringResource(R.string.import_data))
         }
         Spacer(modifier = Modifier.height(8.dp))
         Divider()
         Spacer(modifier = Modifier.height(8.dp))
 
-        Text(text = "Tietojen poisto", style = MaterialTheme.typography.titleLarge)
+        Text(text = stringResource(R.string.delete_data), style = MaterialTheme.typography.titleLarge)
         Spacer(modifier = Modifier.height(8.dp))
 
         Button(onClick = {
             showRemoveAllRoomDataDialog = true
         }) {
-            Text(text = "Poista kaikki tiedot")
+            Text(text = stringResource(R.string.delete_all_data))
         }
         Button(onClick = {
             showRemoveMeasurementsDialog = true
         }) {
-            Text(text = "Poista kaikki mittaukset")
+            Text(text = stringResource(R.string.delete_all_measurements))
         }
         Button(onClick = {
             showRemoveInsulinInjectionsDialog = true
         }) {
-            Text(text = "Poista kaikki insuliinikirjaukset")
+            Text(text = stringResource(R.string.delete_all_insulin))
         }
         Button(onClick = {
             showRemoveMealsDialog = true
         }) {
-            Text(text = "Poista kaikki ateriatiedot")
+            Text(text = stringResource(R.string.delete_all_meals))
         }
         Button(onClick = {
             showRemoveOthersDialog = true
         }) {
-            Text(text = "Poista kaikki muut tiedot")
+            Text(text = stringResource(R.string.delete_all_others))
         }
     }
 
@@ -187,45 +189,46 @@ fun SettingsControlDataScreen(
         SeriousConfirmDialog(
             onConfirm = { handleDeleteAllRoomData() },
             onDismiss = { showRemoveAllRoomDataDialog = false },
-            title = "Poista kaikki tiedot",
-            message = "Haluatko varmasti poistaa kaikki tiedot? Tietoja ei voi palauttaa poistamisen jälkeen.",
-            confirmText = "Ymmärrän ja haluan poistaa tiedot.")
+            title = stringResource(R.string.delete_all_data),
+            message = stringResource(R.string.delete_all_data_message),
+            confirmText = stringResource(R.string.confirm_delete_data)
+        )
     }
 
     if (showRemoveMeasurementsDialog) {
         SeriousConfirmDialog(
             onConfirm = { handleDeleteAllMeasurementsConfirm() },
             onDismiss = { showRemoveMeasurementsDialog = false },
-            title = "Poista kaikki mittaustiedot",
-            message = "Haluatko varmasti poistaa kaikki mittaustiedot? Tietoja ei voi palauttaa poistamisen jälkeen.",
-            confirmText = "Ymmärrän ja haluan poistaa tiedot.")
+            title = stringResource(R.string.delete_all_measurements),
+            message = stringResource(R.string.delete_all_measurements_message),
+            confirmText = stringResource(R.string.confirm_delete_data))
     }
 
     if (showRemoveInsulinInjectionsDialog) {
         SeriousConfirmDialog(
             onConfirm = { handleDeleteAllInsulinInjectionsConfirm() },
             onDismiss = { showRemoveInsulinInjectionsDialog = false },
-            title = "Poista kaikki insuliinikirjaukset",
-            message = "Haluatko varmasti poistaa kaikki insuliinikirjaukset? Tietoja ei voi palauttaa poistamisen jälkeen.",
-            confirmText = "Ymmärrän ja haluan poistaa tiedot.")
+            title = stringResource(R.string.delete_all_insulin),
+            message = stringResource(R.string.delete_all_insulin_message),
+            confirmText = stringResource(R.string.confirm_delete_data))
     }
 
     if (showRemoveMealsDialog) {
         SeriousConfirmDialog(
             onConfirm = { handleDeleteAllMealsConfirm() },
             onDismiss = { showRemoveMealsDialog = false },
-            title = "Poista kaikki ateriatiedot",
-            message = "Haluatko varmasti poistaa kaikki ateriatiedot? Tietoja ei voi palauttaa poistamisen jälkeen.",
-            confirmText = "Ymmärrän ja haluan poistaa tiedot.")
+            title = stringResource(R.string.delete_all_meals),
+            message = stringResource(R.string.delete_all_meals_message),
+            confirmText = stringResource(R.string.confirm_delete_data))
     }
 
     if (showRemoveOthersDialog) {
         SeriousConfirmDialog(
             onConfirm = { handleDeleteAllOthersConfirm() },
             onDismiss = { showRemoveOthersDialog = false },
-            title = "Poista kaikki muut tiedot",
-            message = "Haluatko varmasti poistaa kaikki muut tiedot? Tietoja ei voi palauttaa poistamisen jälkeen.",
-            confirmText = "Ymmärrän ja haluan poistaa tiedot.")
+            title = stringResource(R.string.delete_all_others),
+            message = stringResource(R.string.delete_all_others_message),
+            confirmText = stringResource(R.string.confirm_delete_data))
     }
 
     if (showLoadFileDialog && uiState.loadingFileType != null) {
@@ -235,9 +238,9 @@ fun SettingsControlDataScreen(
                 settingsViewModel.readFileContent(context, snackbarHostState)
             },
             onDismiss = { showLoadFileDialog = false },
-            title = "Lataa tietoja csv-tiedostosta",
+            title = stringResource(R.string.import_data),
             message = uiState.loadingFileReplaceWarning,
-            confirmText = "Kyllä"
+            confirmText = stringResource(R.string.yes)
         )
     }
 }

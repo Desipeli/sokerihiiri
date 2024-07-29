@@ -14,7 +14,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.sokerihiiri.R
 import com.example.sokerihiiri.ui.LocalOtherViewModel
 import com.example.sokerihiiri.ui.components.AppDatePickerDialog
 import com.example.sokerihiiri.ui.components.AppTimePickerDialog
@@ -75,7 +77,7 @@ fun OtherScreen(
             value = uiState.comment,
             onValueChange = { otherViewModel.setComment(it)},
             enabled = uiState.canEdit,
-            label = { Text("Kommentti") })
+            label = { Text(text = stringResource(R.string.comment)) })
     }
 
     if (showDatePicker.value) {

@@ -1,4 +1,4 @@
-package com.example.sokerihiiri.ui.screens.meal
+package com.example.sokerihiiri.ui.screens.meals.meal
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
@@ -15,8 +15,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.sokerihiiri.R
 import com.example.sokerihiiri.ui.LocalMealViewModel
 import com.example.sokerihiiri.ui.components.AppDatePickerDialog
 import com.example.sokerihiiri.ui.components.AppTimePickerDialog
@@ -94,7 +96,7 @@ fun MealScreen(
                 .fillMaxWidth(0.5f),
             value = if (uiState.calories == 0) "" else uiState.calories.toString(),
             onValueChange = { handleCalorieChange(it) },
-            label = { Text(text = "Kcal")},
+            label = { Text(text = stringResource(R.string.kcal))},
             enabled = uiState.canEdit,
             isError = uiState.caloriesError != null
         )
@@ -104,7 +106,7 @@ fun MealScreen(
                 .fillMaxWidth(0.5f),
             value = if (uiState.carbohydrates == 0) "" else uiState.carbohydrates.toString(),
             onValueChange = { handleChangeCarbs(it) },
-            label = { Text(text = "Hiilihydraatit")},
+            label = { Text(text = stringResource(R.string.carbs))},
             enabled = uiState.canEdit,
             isError = uiState.carbohydratesError != null
         )
@@ -130,7 +132,7 @@ fun MealScreen(
         StyledTextField(
             value = uiState.comment,
             onValueChange = {handleChangeComment(it)},
-            label = {Text("Kommentti")},
+            label = {Text(stringResource(R.string.comment))},
             enabled = uiState.canEdit)
     }
 

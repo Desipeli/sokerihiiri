@@ -29,7 +29,7 @@ class InsulinNotificationService(
         )
 
         val notification= NotificationCompat.Builder(context,"sokerihiiri_notification")
-            .setContentTitle("Sokerihiiri")
+            .setContentTitle(context.getString(R.string.app_name))
             .setContentText("Muista insuliini!")
             .setSmallIcon(R.drawable.insulin_outlines)
             .setPriority(NotificationManager.IMPORTANCE_HIGH)

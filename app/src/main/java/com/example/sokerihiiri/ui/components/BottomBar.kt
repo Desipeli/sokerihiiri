@@ -24,8 +24,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.sokerihiiri.R
 import com.example.sokerihiiri.ui.LocalInsulinViewModel
 import com.example.sokerihiiri.ui.LocalMealViewModel
 import com.example.sokerihiiri.ui.LocalMeasurementViewModel
@@ -39,6 +42,7 @@ import com.example.sokerihiiri.utils.baseRoute
 fun BottomBar(
     navController: NavController,
     snackbarHostState: SnackbarHostState) {
+    val context = LocalContext.current
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
 
@@ -60,12 +64,14 @@ fun BottomBar(
                 IconButton(onClick = { navController.navigateUp() }) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = "Takaisin")
+                        contentDescription = stringResource(R.string.back)
+                    )
                 }
                 IconButton(onClick = { navController.navigate(Screens.Main.route) }) {
                     Icon(
                         imageVector = Icons.Filled.Home,
-                        contentDescription = "Päävalikko")
+                        contentDescription = stringResource(R.string.menu)
+                    )
                 }
 
                 when(baseRoute) {
@@ -74,13 +80,13 @@ fun BottomBar(
                     )
                     Screens.Measurements.NewMeasurement.route -> CreateNewActionButton(
                         action = {
-                            measurementViewModel.saveBloodSugarMeasurement()
+                            measurementViewModel.saveBloodSugarMeasurement(context)
                             navController.navigateUp()
                         },
                     )
                     baseRoute(Screens.Measurements.EditMeasurement.route) -> EditActionButton(
                         updateAction = {
-                            measurementViewModel.updateBloodSugarMeasurement()
+                            measurementViewModel.updateBloodSugarMeasurement(context)
                             navController.navigateUp()
                         },
                         deleteAction = {
@@ -96,13 +102,13 @@ fun BottomBar(
                     )
                     Screens.Injections.NewInjection.route -> CreateNewActionButton(
                         action = {
-                            insulinViewModel.saveInsulinInjection()
+                            insulinViewModel.saveInsulinInjection(context)
                             navController.navigateUp()
                         }
                     )
                     baseRoute(Screens.Injections.EditInjection.route) -> EditActionButton(
                         updateAction = {
-                            insulinViewModel.updateInsulinInjection()
+                            insulinViewModel.updateInsulinInjection(context)
                             navController.navigateUp()
                         },
                         deleteAction = {
@@ -118,13 +124,13 @@ fun BottomBar(
                     )
                     Screens.Meals.NewMeal.route -> CreateNewActionButton(
                         action = {
-                            mealViewModel.saveMeal()
+                            mealViewModel.saveMeal(context)
                             navController.navigateUp()
                                  },
                         )
                     baseRoute(Screens.Meals.EditMeal.route) -> EditActionButton(
                         updateAction = {
-                            mealViewModel.updateMeal()
+                            mealViewModel.updateMeal(context)
                             navController.navigateUp()
                         },
                         deleteAction = {
@@ -140,19 +146,13 @@ fun BottomBar(
                     )
                     Screens.Others.NewOther.route -> CreateNewActionButton(
                         action = {
-                            otherViewModel.saveOther()
-                            navController.navigateUp()
-                        }
-                    )
-                    Screens.Others.NewOther.route -> CreateNewActionButton(
-                        action = {
-                            otherViewModel.saveOther()
+                            otherViewModel.saveOther(context)
                             navController.navigateUp()
                         }
                     )
                     Screens.Others.EditOther.route -> EditActionButton(
                         updateAction = {
-                            otherViewModel.updateOther()
+                            otherViewModel.updateOther(context)
                             navController.navigateUp()
                         },
                         deleteAction = {
@@ -197,7 +197,7 @@ fun EditActionButton(
                     }
                 })
             {
-                Icon(imageVector = Icons.Filled.Check, contentDescription = "Päivitä")
+                Icon(imageVector = Icons.Filled.Check, contentDescription = stringResource(R.string.update))
             }
         } else {
             IconButton(
@@ -205,7 +205,7 @@ fun EditActionButton(
                     expandend = true
                 })
             {
-                Icon(imageVector = Icons.Filled.Edit, contentDescription = "Muokkaa")
+                Icon(imageVector = Icons.Filled.Edit, contentDescription = stringResource(R.string.edit))
             }
         }
 
@@ -213,13 +213,13 @@ fun EditActionButton(
             expanded = expandend,
             onDismissRequest = { expandend = false }) {
             DropdownMenuItem(
-                text = { Text("Muokkaa") },
+                text = { Text(stringResource(R.string.edit)) },
                 onClick = {
                     setCanEdit(true)
                     expandend = false
                 })
             DropdownMenuItem(
-                text = { Text("Poista") },
+                text = { Text(stringResource(R.string.remove)) },
                 onClick = {
                     confirmDialogState = true
                 })
@@ -247,7 +247,7 @@ fun CreateNewActionButton(
             }
         })
     {
-        Icon(imageVector = Icons.Filled.Check, contentDescription = "Tallenna")
+        Icon(imageVector = Icons.Filled.Check, contentDescription = stringResource(R.string.save))
     }
 }
 
@@ -260,6 +260,6 @@ fun BrowseCreateNewActionButton(
             action()
         })
     {
-        Icon(imageVector = Icons.Filled.Add, contentDescription = "Kirjaa uusi")
+        Icon(imageVector = Icons.Filled.Add, contentDescription = stringResource(R.string.book_new))
     }
 }

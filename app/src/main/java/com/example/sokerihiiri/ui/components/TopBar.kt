@@ -2,6 +2,7 @@ package com.example.sokerihiiri.ui.components
 
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
@@ -14,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -39,7 +41,15 @@ fun TopBar(
     Log.d("TopBar", "currentScreen: $currentScreen")
 
     CenterAlignedTopAppBar(
-        title = { Text(text = currentScreen?.title ?: "Sokerihiiri") },
+        title = {
+            Row {
+                if (currentScreen?.titleResourceId == null) {
+                    Text(text = "Sokerihiiri")
+                } else {
+                    Text(text = stringResource(id = currentScreen.titleResourceId))
+                }
+            }
+        },
         modifier = modifier,
         navigationIcon = {
             if (currentLogo != null) {

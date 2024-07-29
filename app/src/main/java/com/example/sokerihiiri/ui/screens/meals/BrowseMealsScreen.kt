@@ -1,4 +1,4 @@
-package com.example.sokerihiiri.ui.screens.browse.meals
+package com.example.sokerihiiri.ui.screens.meals
 
 
 import androidx.compose.foundation.Image
@@ -19,6 +19,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -39,9 +40,9 @@ fun BrowseMealsScreen(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween)
         {
-            Text(text = "Pvm. ja aika")
-            Text(text = "Kcal")
-            Text(text = "Hiilarit")
+            Text(text = stringResource(R.string.date_and_time_title))
+            Text(text = stringResource(R.string.kcal))
+            Text(text = stringResource(R.string.carbs))
         }
         Divider()
         LazyColumn {
@@ -59,7 +60,7 @@ fun BrowseMealsScreen(
                     if (meal.comment != "") {
                         Image(
                             painter = painterResource(id = R.drawable.comment),
-                            contentDescription = "Kommentti")
+                            contentDescription = stringResource(R.string.comment))
                     }
                 }
                 Spacer(modifier = Modifier.height(8.dp))

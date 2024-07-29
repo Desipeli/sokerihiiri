@@ -20,8 +20,10 @@ import androidx.compose.ui.Modifier
 import java.text.SimpleDateFormat
 import java.util.Locale
 import androidx.compose.runtime.MutableState
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.sokerihiiri.R
 import com.example.sokerihiiri.ui.LocalMeasurementViewModel
 import com.example.sokerihiiri.ui.components.AppDatePickerDialog
 import com.example.sokerihiiri.ui.components.AppTimePickerDialog
@@ -99,7 +101,7 @@ fun MeasurementScreen(
                 .fillMaxWidth(0.5f),
             value = if (uiState.value <= 0.0f) "" else uiState.value.toString(),
             onValueChange = { handleValueChange(it) },
-            label = { Text("Verensokeri mmol/l ") },
+            label = { Text(stringResource(R.string.blood_sugar_mmol)) },
             enabled = uiState.canEdit,
             isError = uiState.valueError != null
         )
@@ -124,7 +126,7 @@ fun MeasurementScreen(
         )
 
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("Aterian jälkeen")
+            Text(stringResource(R.string.after_meal))
             Checkbox(
                 checked = uiState.afterMeal,
                 enabled = uiState.canEdit,
@@ -140,7 +142,7 @@ fun MeasurementScreen(
                     .width(64.dp),
                 value = if (uiState.minutesFromMeal < 60) "" else (uiState.minutesFromMeal / 60).toString(),
                 onValueChange = { handleHourChange(it) },
-                label = { Text("h") },
+                label = { Text(stringResource(R.string.h)) },
                 enabled = uiState.canEdit && uiState.afterMeal
             )
             Spacer(modifier = Modifier.width(8.dp))
@@ -149,7 +151,7 @@ fun MeasurementScreen(
                     .width(64.dp),
                 value = if (uiState.minutesFromMeal % 60 == 0) "" else (uiState.minutesFromMeal % 60).toString(),
                 onValueChange = { handleMinutesChange(it) },
-                label = { Text("min") },
+                label = { Text(stringResource(R.string.min)) },
                 enabled = uiState.canEdit && uiState.afterMeal
             )
         }
@@ -157,7 +159,7 @@ fun MeasurementScreen(
             value = uiState.comment,
             onValueChange = { measurementViewModel.setComment(it)},
             enabled = uiState.canEdit,
-            label = { Text("Kommentti") })
+            label = { Text(stringResource(R.string.comment)) })
     }
 
     if (showDatePicker.value) {

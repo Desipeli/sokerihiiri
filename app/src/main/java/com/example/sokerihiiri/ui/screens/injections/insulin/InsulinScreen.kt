@@ -15,7 +15,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.sokerihiiri.R
 import com.example.sokerihiiri.ui.LocalInsulinViewModel
 import com.example.sokerihiiri.ui.components.AppDatePickerDialog
 import com.example.sokerihiiri.ui.components.AppTimePickerDialog
@@ -69,7 +71,7 @@ fun InsulinScreen(
                 modifier = Modifier.fillMaxWidth(0.5f),
                 value = if (uiState.dose <= 0) "" else uiState.dose.toString(),
                 onValueChange = {handleDoseChange(it)},
-                label = { Text("Insuliiniannos") },
+                label = { Text(stringResource(R.string.insulin_dose_label)) },
                 enabled = uiState.canEdit,
                 isError = uiState.doseError != null)
             uiState.doseError?.let { Text(text = it) }
@@ -94,7 +96,7 @@ fun InsulinScreen(
                 value = uiState.comment,
                 onValueChange = { insulinViewModel.setComment(it)},
                 enabled = uiState.canEdit,
-                label = { Text("Kommentti") })
+                label = { Text(stringResource(R.string.comment)) })
     }
 
     if (showDatePicker.value) {

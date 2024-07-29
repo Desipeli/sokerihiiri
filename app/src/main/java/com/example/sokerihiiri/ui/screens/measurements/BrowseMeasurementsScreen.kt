@@ -1,4 +1,4 @@
-package com.example.sokerihiiri.ui.screens.browse.measurements
+package com.example.sokerihiiri.ui.screens.measurements
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -18,6 +18,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -45,9 +46,9 @@ fun BrowseMeasurementsScreen(
         )
         {
 
-            Text(text = "Pvm. ja aika")
-            Text(text = "Arvo")
-            Text(text = "Aterian jälkeen")
+            Text(text = stringResource(R.string.date_and_time_title))
+            Text(text = stringResource(R.string.value))
+            Text(text = stringResource(R.string.after_meal))
 
         }
         Divider()
@@ -73,7 +74,7 @@ fun BrowseMeasurementsScreen(
                     )
                     if (measurement.afterMeal) {
                         Text(
-                            text = "$hours h $minutes min",
+                            text = "$hours ${stringResource(R.string.h)} $minutes ${stringResource(R.string.min)}",
                             Modifier.weight(0.40f),
                             textAlign = TextAlign.End
                         )
@@ -83,7 +84,7 @@ fun BrowseMeasurementsScreen(
                     if (measurement.comment != "") {
                         Image(
                             painter = painterResource(id = R.drawable.comment),
-                            contentDescription = "Kommentti")
+                            contentDescription = stringResource(R.string.comment))
                     }
                 }
                 Spacer(modifier = Modifier.height(8.dp))

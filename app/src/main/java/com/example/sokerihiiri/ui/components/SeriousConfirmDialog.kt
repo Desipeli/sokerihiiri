@@ -16,6 +16,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.stringResource
+import com.example.sokerihiiri.R
 
 @Composable
 fun SeriousConfirmDialog(
@@ -68,14 +70,14 @@ fun SeriousConfirmDialog(
                     }
                 }
             ) {
-                Text(text = "OK")
+                Text(text = stringResource(id = R.string.ok))
             }
         },
         dismissButton = {
             TextButton(
                 onClick = onDismiss
             ) {
-                Text(text = "Peruuta")
+                Text(text = stringResource(id = R.string.cancel))
             }
         }
     )

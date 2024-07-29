@@ -4,7 +4,6 @@ import android.Manifest
 import android.os.Build
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
@@ -17,8 +16,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import com.example.sokerihiiri.R
 import com.example.sokerihiiri.ui.LocalSettingsViewModel
 import com.example.sokerihiiri.ui.components.AppTimePickerDialog
 import com.example.sokerihiiri.ui.components.SettingsBase
@@ -54,7 +53,7 @@ fun SettingsNotificationsScreen(
     if (notificationsAllowed) {
         SettingsNotificationScreenContent(snackbarHostState)
     } else {
-        Text(text = "Sovelluksella ei ole lupaa lähettää ilmoituksia")
+        Text(text = stringResource(R.string.notification_permission_not_granted))
     }
 
 }
@@ -80,9 +79,9 @@ fun SettingsNotificationScreenContent(snackbarHostState: SnackbarHostState) {
                         settingsViewModel.setInsulinNotification(checked)
                     })
                 if (uiState.insulinNotification) {
-                    Text(text = "Ilmoitus käytössä")
+                    Text(text = stringResource(R.string.notifications_in_use))
                 } else {
-                    Text(text = "Ota ilmoitus käyttöön")
+                    Text(text = stringResource(R.string.use_notifications))
                 }
 
             }
@@ -98,7 +97,7 @@ fun SettingsNotificationScreenContent(snackbarHostState: SnackbarHostState) {
                 )
             )
             Text(
-                text = "Puhelin muistuttaa valittuna ajankohtana, mikäli siihen mennessä ei ole kirjattu tapahtumaa."
+                text = stringResource(R.string.notifications_explanation)
             )
         }
     }
