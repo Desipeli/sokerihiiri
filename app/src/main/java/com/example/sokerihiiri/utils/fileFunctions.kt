@@ -213,7 +213,7 @@ suspend fun readMeasurementsFromCSV(context: Context, uri: Uri):
                             throw Exception("$i")
                         }
                         var minutesFromMeal = 0
-                        if (fields.size == 3) {
+                        if (fields.size >= 3) {
                             minutesFromMeal = fields[2].split(":")[1].toInt()
                             minutesFromMeal += fields[2].split(":")[0].toInt() * 60
                         }
