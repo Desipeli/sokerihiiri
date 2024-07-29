@@ -80,27 +80,27 @@ fun SettingsControlDataScreen(
     )
 
     fun handleDeleteAllRoomData() {
-        settingsViewModel.deleteAllRoomData(snackbarHostState)
+        settingsViewModel.deleteAllRoomData(snackbarHostState, context)
         showRemoveAllRoomDataDialog = false
     }
 
     fun handleDeleteAllMeasurementsConfirm() {
-        settingsViewModel.deleteAllMeasurements(snackbarHostState)
+        settingsViewModel.deleteAllMeasurements(snackbarHostState, context)
         showRemoveMeasurementsDialog = false
     }
 
     fun handleDeleteAllInsulinInjectionsConfirm() {
-        settingsViewModel.deleteAllInsulinInjections(snackbarHostState)
+        settingsViewModel.deleteAllInsulinInjections(snackbarHostState, context)
         showRemoveInsulinInjectionsDialog = false
     }
 
     fun handleDeleteAllMealsConfirm() {
-        settingsViewModel.deleteAllMeals(snackbarHostState)
+        settingsViewModel.deleteAllMeals(snackbarHostState, context)
         showRemoveMealsDialog = false
     }
 
     fun handleDeleteAllOthersConfirm() {
-        settingsViewModel.deleteAllOthers(snackbarHostState)
+        settingsViewModel.deleteAllOthers(snackbarHostState, context)
         showRemoveOthersDialog = false
     }
 

@@ -322,66 +322,66 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun deleteAllMeasurements(snackbarHostState: SnackbarHostState) {
+    fun deleteAllMeasurements(snackbarHostState: SnackbarHostState, context: Context) {
         viewModelScope.launch {
             try {
                 repository.deleteAllBloodSugarMeasurements()
-                snackbarHostState.showSnackbar("Mittaustiedot poistettu")
+                snackbarHostState.showSnackbar(context.getString(R.string.measurements_deleted))
             } catch (e: Exception) {
                 Log.e("SettingsViewModel", "Error deleting all measurements", e)
-                snackbarHostState.showSnackbar("Virhe")
+                snackbarHostState.showSnackbar(context.getString(R.string.error))
             }
         }
     }
 
-    fun deleteAllInsulinInjections(snackbarHostState: SnackbarHostState) {
+    fun deleteAllInsulinInjections(snackbarHostState: SnackbarHostState, context: Context) {
         viewModelScope.launch {
             try {
                 repository.deleteAllInsulinInjections()
-                snackbarHostState.showSnackbar("Insuliinitiedot poistettu")
+                snackbarHostState.showSnackbar(context.getString(R.string.insulin_deleted))
             } catch (e: Exception) {
                 Log.e("SettingsViewModel", "Error deleting all insulin injections", e)
-                snackbarHostState.showSnackbar("Virhe")
+                snackbarHostState.showSnackbar(context.getString(R.string.error))
             }
         }
     }
 
-    fun deleteAllMeals(snackbarHostState: SnackbarHostState) {
+    fun deleteAllMeals(snackbarHostState: SnackbarHostState, context: Context) {
         viewModelScope.launch {
             try {
                 repository.deleteAllMeals()
-                snackbarHostState.showSnackbar("Ateriatiedot poistettu")
+                snackbarHostState.showSnackbar(context.getString(R.string.meals_deleted))
             } catch (e: Exception) {
                 Log.e("SettingsViewModel", "Error deleting all meals", e)
-                snackbarHostState.showSnackbar("Virhe")
+                snackbarHostState.showSnackbar(context.getString(R.string.error))
             }
         }
     }
 
-    fun deleteAllOthers(snackbarHostState: SnackbarHostState) {
+    fun deleteAllOthers(snackbarHostState: SnackbarHostState, context: Context) {
         viewModelScope.launch {
             try {
                 repository.deleteAllOthers()
-                snackbarHostState.showSnackbar("Muut tiedot poistettu")
+                snackbarHostState.showSnackbar(context.getString(R.string.others_deleted))
             } catch (e: Exception) {
                 Log.e("SettingsViewModel", "Error deleting all others", e)
-                snackbarHostState.showSnackbar("Virhe")
+                snackbarHostState.showSnackbar(context.getString(R.string.error))
             }
         }
     }
 
-    fun deleteAllRoomData(snackbarHostState: SnackbarHostState) {
+    fun deleteAllRoomData(snackbarHostState: SnackbarHostState, context: Context) {
         viewModelScope.launch {
-            deleteAllMeals(snackbarHostState)
+            deleteAllMeals(snackbarHostState, context)
         }
         viewModelScope.launch {
-            deleteAllMeasurements(snackbarHostState)
+            deleteAllMeasurements(snackbarHostState, context)
         }
         viewModelScope.launch {
-            deleteAllInsulinInjections(snackbarHostState)
+            deleteAllInsulinInjections(snackbarHostState, context)
         }
         viewModelScope.launch {
-            deleteAllOthers(snackbarHostState)
+            deleteAllOthers(snackbarHostState, context)
         }
     }
 
