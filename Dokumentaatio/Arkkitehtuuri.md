@@ -28,3 +28,14 @@ classDiagram
     class DataStoreManager{
     }
 ```
+
+# Tietokanta
+
+Tietokanta sisältää neljä taulua, joissa jokaisessa säilytetään tietyntyyppisiä käyttäjän kirjaamia tapahtumia. Alla olevassa kuvassa kenttien tyypit on merkattu vastaamaan sovelluksissa käytettäviä tyyppejä, mutta `Room` muuttaa tyypit pohjalla toimivalle SQLitelle sopivaan muotoon:
+
+- Int -> INTEGER
+- String -> TEXT
+- float -> REAL
+- Boolean -> INTEGER
+
+![](schema.png?raw=true)
