@@ -1,5 +1,16 @@
 # Arkkitehtuuri
 
+## Pakkausrakenne
+
+Sovelluksen koodi on jaettu neljään päähakemistoon: notifications, repository, ui ja utils.
+
+![](package.png?raw=true)
+
+- notifications sisältää ajastettuihin ilmoituksiin liittyvät luokat ja funktiot. Ilmoitukset tarvitsevat tietoa repository-hakemistossa olevalta DataStoreManagerilta.
+- repository sisältää tietokantaan ja DataStoreen liittyvän koodin.
+- ui sisältää käyttöliittymätason koodin, ja on riippuvainen repositoriosta ja DataStoresta.
+- utils sisältää erityyppisiä apufunktioita.
+
 ## Ruutu
 
 Jokainen ruutu tai näkymä koostuu yhdestä tai useammasta `@Composable`-funktiosta, joiden ui-tilat ovat `ViewModel`-luokissa. Muutokset ViewModeleissa oleviin ui-tiloihin aiheuttavat uudelleenkokoonpanon, mikä mahdollistaa sovelluksen reaaliaikaisen päivittymisen käyttäjän toimien mukaan.
@@ -49,7 +60,7 @@ Sovellus käyttää DataStorea oletusarvojen tallentamiseen, sekä tiedon välit
 
 ## Datan tuominen ja vieminen
 
-Kaiken tietokannassa olevan datan saa vietyä csv-tiedostoihin käyttäjän valitsemaan hakemistoon. Csv-tidostojen rakenne on seuraavanlainen:
+Kaiken tietokannassa olevan datan saa vietyä csv-tiedostoihin käyttäjän valitsemaan hakemistoon. Csv-tiedostojen rakenne on seuraavanlainen:
 
 ```csv
 Sep=;
