@@ -13,8 +13,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkManager
 import com.example.sokerihiiri.R
-import com.example.sokerihiiri.notifications.cancelInsulinNotification
-import com.example.sokerihiiri.notifications.scheduleInsulinNotification
+import com.example.sokerihiiri.utils.cancelInsulinNotification
+import com.example.sokerihiiri.utils.scheduleInsulinNotification
 import com.example.sokerihiiri.repository.DataStoreManager
 import com.example.sokerihiiri.repository.SokerihiiriRepository
 import com.example.sokerihiiri.utils.FileType
