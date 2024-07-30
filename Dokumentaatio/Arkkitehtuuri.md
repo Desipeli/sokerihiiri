@@ -1,5 +1,6 @@
+# Arkkitehtuuri
 
-# Ruutu
+## Ruutu
 
 Jokainen ruutu tai näkymä koostuu yhdestä tai useammasta `@Composable`-funktiosta, joiden ui-tilat ovat `ViewModel`-luokissa. Muutokset ViewModeleissa oleviin ui-tiloihin aiheuttavat uudelleenkokoonpanon, mikä mahdollistaa sovelluksen reaaliaikaisen päivittymisen käyttäjän toimien mukaan.
 
@@ -29,7 +30,7 @@ classDiagram
     }
 ```
 
-# Tiedon tallennus
+## Tiedon tallennus
 
 Tietokanta sisältää neljä taulua, joissa jokaisessa säilytetään tietyntyyppisiä käyttäjän kirjaamia tapahtumia. Alla olevassa kuvassa kenttien tyypit on merkattu vastaamaan sovelluksissa käytettäviä tyyppejä, mutta `Room` muuttaa tyypit pohjalla toimivalle SQLitelle sopivaan muotoon:
 
@@ -46,7 +47,7 @@ Kaikki mahdolliset tietokantakyselyt on määritelty tiedostossa repository/DAOs
 
 Sovellus käyttää DataStorea oletusarvojen tallentamiseen, sekä tiedon välittämiseen `InsulinRemainderWorker`:lle.
 
-# Datan tuominen ja vieminen
+## Datan tuominen ja vieminen
 
 Kaiken tietokannassa olevan datan saa vietyä csv-tiedostoihin käyttäjän valitsemaan hakemistoon. Csv-tidostojen rakenne on seuraavanlainen:
 
@@ -59,3 +60,7 @@ date;value;time_from_meal;comment
 Ensimmäisellä rivillä määritellään erotin. Suurin etu tässä on se, että excel osaa avata ja näyttää tiedoston sisällön suoraan oikein. Toisella rivillä on tieto siitä, mitä tiedosto sisältää. Sovellus päättää tämän rivin perusteella, mitä funktiota se käyttää tiedoston tietojen lukemiseen. Kolmannella rivillä on otsikot, jonka jälkeen alkaa varsinainen data.
 
 Sovelluksen tietokannassa olevan datan voi korvata csv-tiedostossa olevalla datalla. Tämä on hyödyllistä esimerkiksi silloin, kun käyttäjä haluaa siirtää datan toiselle laitteelle.
+
+## Navigointi
+
+Sovelluksen sisäinen navigointi on toteutettu `androidx.navigation:navigation-compose`:n avulla. Luokka `Screens` sisältää kaikki mahdolliset reitit, sekä niille otsikko- ja kuvatiedot. Funktio AppNavHost käyttää `NavHost` @Composablea, jossa määritellään reittejä vastaavat näkymät. Navigointi tiettyyn kohteeseen onnistuu kutsumalla sovelluksen ylimmässä komponentissa määritellyn `NavController`:n metodia navigate(<REITTI>).
