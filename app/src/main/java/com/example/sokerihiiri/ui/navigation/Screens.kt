@@ -11,6 +11,9 @@ import com.example.sokerihiiri.R
 // Kommentti https://www.freepik.com/icon/message_5356196
 
 
+/*
+Kaikki mahdolliset reitit, niiden otsikko ja niihin liittyvä kuva, jotka näytetään yläpalkissa.
+ */
 
 sealed class Screens(val route: String, val titleResourceId: Int, val logo: Int? = null) {
     object Main : Screens(route = "main", titleResourceId= R.string.app_name, logo = R.drawable.mouse)

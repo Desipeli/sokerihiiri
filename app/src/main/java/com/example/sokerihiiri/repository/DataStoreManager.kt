@@ -9,6 +9,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
@@ -17,6 +18,11 @@ import javax.inject.Inject
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 class DataStoreManager @Inject constructor(@ApplicationContext private val context: Context) {
+
+    /*
+    DataStore sovelluksen asetusten tallentamista varten.
+     */
+
     private val DEFAULT_INSULIN_DOSE = intPreferencesKey("default_insulin_dose")
     private val DEFAULT_HOURS_AFTER_MEAL = intPreferencesKey("default_hours_after_meal")
     private val DEFAULT_MINUTES_AFTER_MEAL = intPreferencesKey("default_minutes_after_meal")

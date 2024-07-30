@@ -21,11 +21,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.sokerihiiri.R
+import com.example.sokerihiiri.ui.LocalBrowseViewModel
 import com.example.sokerihiiri.ui.navigation.Screens
-import com.example.sokerihiiri.ui.screens.BrowseViewModel
 import com.example.sokerihiiri.utils.minutesToHoursAndMinutes
 import com.example.sokerihiiri.utils.timestampToDateTimeString
 
@@ -33,8 +32,12 @@ import com.example.sokerihiiri.utils.timestampToDateTimeString
 fun BrowseMeasurementsScreen(
     navController: NavController,
 ) {
+    // Mittausten selailunäkymä
+    // viewmodel saadaan LocalProviderin avulla. Tarkkaillaan tietokannassa olevia mittauksia
+    // ja päivitetään näkymä niiden muuttuessa.
+    // Tapahtumaa klikkaamalla saa muokkausikkunan auki.
 
-    val browseViewModel: BrowseViewModel = hiltViewModel()
+    val browseViewModel = LocalBrowseViewModel.current
     val allMeasurements by browseViewModel.allMeasurements.observeAsState(emptyList())
 
 
@@ -45,14 +48,13 @@ fun BrowseMeasurementsScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         )
         {
-
             Text(text = stringResource(R.string.date_and_time_title))
             Text(text = stringResource(R.string.value))
             Text(text = stringResource(R.string.after_meal))
-
         }
         Divider()
         LazyColumn {
+            // Ei renderöidä kaikkia tapahtumia, vaan vain ne jotka mahtuvat ruudulle.
             items(allMeasurements) { measurement ->
                 val (hours, minutes) = minutesToHoursAndMinutes(measurement.minutesFromMeal)
                 Row(
@@ -83,7 +85,7 @@ fun BrowseMeasurementsScreen(
                     }
                     if (measurement.comment != "") {
                         Image(
-                            painter = painterResource(id = R.drawable.comment),
+                            painter = painterResource(R.drawable.comment),
                             contentDescription = stringResource(R.string.comment))
                     }
                 }

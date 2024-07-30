@@ -55,6 +55,7 @@ fun BottomBar(
     val baseRoute = baseRoute(currentRoute)
 
     Log.d("BottomBar", "Current route: $currentRoute")
+    Log.d("BottomBar", "Base route: $baseRoute")
 
     BottomAppBar(
         actions = {

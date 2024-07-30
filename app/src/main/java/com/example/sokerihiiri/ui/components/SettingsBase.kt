@@ -21,6 +21,7 @@ fun SettingsBase(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
+    // Pohja asetusruudille
     Box(
         modifier = modifier
             .fillMaxSize()

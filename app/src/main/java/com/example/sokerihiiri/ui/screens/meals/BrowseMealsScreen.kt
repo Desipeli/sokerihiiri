@@ -32,6 +32,8 @@ import com.example.sokerihiiri.utils.timestampToDateTimeString
 fun BrowseMealsScreen(
     navController: NavController
 ) {
+    // Näkymä ateriatietojen selailuun
+
     val browseViewModel = LocalBrowseViewModel.current
     val allMeals by browseViewModel.allMeals.observeAsState(emptyList())
 

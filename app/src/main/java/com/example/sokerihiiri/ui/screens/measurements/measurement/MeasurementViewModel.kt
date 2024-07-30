@@ -26,6 +26,7 @@ class MeasurementViewModel @Inject constructor (
     private val repository: SokerihiiriRepository,
     private val dataStoreManager: DataStoreManager
 ) : ViewModel() {
+    // ViewModel mittaustuloksen luomiseen, muokkamiseen ja poistamiseen.
     var uiState: BloodSugarMeasurementState by
         mutableStateOf(BloodSugarMeasurementState())
             private set
@@ -37,6 +38,7 @@ class MeasurementViewModel @Inject constructor (
         uiState = uiState.copy(date = date)
     }
     fun setHoursFromMeal(hours: Int) {
+        // Lisätään tunnit minuutteina ui-tilaan
         var newHours = hours
         if (newHours < 0 ) newHours = 0
 
@@ -45,13 +47,17 @@ class MeasurementViewModel @Inject constructor (
     }
 
     fun setMinutesFromMeal(minutes: Int) {
+        // Lisätään minuutit ui-tilaan
         var newMinutes = minutes
         if (newMinutes < 0 || minutes > 59) newMinutes = 0
-        val hours = uiState.minutesFromMeal / 60 * 60
-        Log.d("MeasurementViewModel", "Tunteja oli: $hours")
-        uiState = uiState.copy(minutesFromMeal = hours+newMinutes)
+        // Lasketaan kokonaiset tunnit ja kerrotaan 60, jolloin saadaan kokonaiset tunnit minuutteina.
+        // Toimii, koska kahden kokonaisluvun jakolaskun tulos on kokonaisluku
+        val hoursInMinutes = uiState.minutesFromMeal / 60 * 60
+        uiState = uiState.copy(minutesFromMeal = hoursInMinutes+newMinutes)
     }
     fun setAfterMeal(afterMeal: Boolean) {
+        // Asetetaan aterian jälkeen arvoksi tosi tai epätosi
+        // Jos asetetaan tosi, haetaan oletusarvot DataStoresta.
         uiState = uiState.copy(afterMeal = afterMeal)
         if (afterMeal) {
             viewModelScope.launch {
@@ -83,6 +89,7 @@ class MeasurementViewModel @Inject constructor (
     }
 
     fun saveBloodSugarMeasurement(context: Context) {
+        // Tallennetaan mittaustulos tietokantaan
         try {
             validateFields(context)
             val dateTime = dateAndTimeToUTCLong(
@@ -115,6 +122,7 @@ class MeasurementViewModel @Inject constructor (
     }
 
     fun updateBloodSugarMeasurement(context: Context) {
+        // Päivitetään mittaustulos tietokantaan
         Log.d("MeasurementViewModel", "updateBloodSugarMeasurement state: $uiState")
         try {
             validateFields(context)
@@ -146,6 +154,8 @@ class MeasurementViewModel @Inject constructor (
     }
 
     fun getMeasurementFromId(id: String?) {
+        // Haetaan mittaustulos tietokannasta id:n perusteella
+        // Erotetaan aika päivämäärästä, jotta sen muuttaminen on helpompaa
         if (id.toString() == uiState.id.toString()) return
         if (id == null) {
             resetState()

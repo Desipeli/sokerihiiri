@@ -32,9 +32,14 @@ import java.util.Locale
 fun SettingsNotificationsScreen(
     snackbarHostState: SnackbarHostState
 ) {
+    // Notifikaatioasetusten ikkuna
+
     var notificationsAllowed by remember { mutableStateOf(false) }
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        // Kysytään lupaa notifikaatioihin, jos API version >= 33
+        // Vanhemmissa ei onnistu, mutta oletuksena sallittu
+
         val postNotificationPermission =
             rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
 
@@ -60,6 +65,8 @@ fun SettingsNotificationsScreen(
 
 @Composable
 fun SettingsNotificationScreenContent(snackbarHostState: SnackbarHostState) {
+    // Notifikaatioasetukset. Näytetään jos lupaa notifikaatioihin on hyväksytty, tai API version < 33
+    
     val settingsViewModel = LocalSettingsViewModel.current
     val uiState = settingsViewModel.uiState
 

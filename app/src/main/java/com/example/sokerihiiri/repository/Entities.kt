@@ -3,7 +3,10 @@ package com.example.sokerihiiri.repository
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.sql.Timestamp
+
+/*
+Tietokantataulujen skeemat
+ */
 
 @Entity(tableName = "blood_sugar_measurements")
 class BloodSugarMeasurement(

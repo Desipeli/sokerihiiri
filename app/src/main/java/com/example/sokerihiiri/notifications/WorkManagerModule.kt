@@ -13,6 +13,8 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object WorkManagerModule {
 
+    // Hilt tarjoaa workManagerin sovellukselle.
+
     @Provides
     @Singleton
     fun provideWorkManager(@ApplicationContext context: Context): WorkManager {

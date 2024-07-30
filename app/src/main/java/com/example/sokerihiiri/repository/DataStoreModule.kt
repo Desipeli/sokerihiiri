@@ -11,6 +11,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DataStoreModule {
+    // Hilt tarjoaa DataStoreManager singletonin
 
     @Provides
     @Singleton

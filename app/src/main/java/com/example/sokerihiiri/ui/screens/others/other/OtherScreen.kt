@@ -30,6 +30,8 @@ import java.util.Locale
 fun OtherScreen(
     id: String? = null,
 ) {
+    // Näkymä muu-tapahtuman luomiseen ja muokkaukseen
+
     val otherViewModel = LocalOtherViewModel.current
     val uiState = otherViewModel.uiState
 

@@ -28,6 +28,8 @@ fun AppDatePickerDialog(
     confirmButtonText: String = stringResource(R.string.ok),
     dismissButtonText: String = stringResource(id = R.string.cancel)
 ) {
+    // Päivämäärän valitsin
+
     val datePickerState = rememberDatePickerState(initialSelectedDateMillis = initialState)
 
     DatePickerDialog(
@@ -64,6 +66,7 @@ fun AppTimePickerDialog(
     dismissButtonText: String = stringResource(id = R.string.cancel),
     onDismissRequest: () -> Unit = { showState.value = false },
 ) {
+    // Ajan valinta
     val timePickerState = rememberTimePickerState(
         is24Hour = true,
         initialHour = initialHour,

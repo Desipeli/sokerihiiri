@@ -14,6 +14,8 @@ fun NavGraphBuilder.settingsNavigation(
     navController: NavController,
     snackbarHostState: SnackbarHostState
 ) {
+    // Asetusten navigointigraafi
+
     navigation(
         route = Screens.Settings.route,
         startDestination = Screens.Settings.Main.route

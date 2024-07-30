@@ -14,8 +14,13 @@ class InsulinNotificationService(
 ) {
     // https://medium.com/@kathankraithatha/notifications-with-jetpack-compose-3302f27e1348
 
+    /*
+    Palvelu notifikaatioiden lähettämiseen
+     */
+
     private val notificationManager=context.getSystemService(NotificationManager::class.java)
     fun showInsulinNotification(){
+        // Insuliinimuistutus. Intent vaaditaan, jotta ilmoitusta klikkaamalla saa sovelluksen auki.
 
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

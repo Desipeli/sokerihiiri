@@ -14,6 +14,7 @@ fun SettingsScreen(
     modifier: Modifier = Modifier,
     navController: NavController
 ) {
+    // Asetusten päävalikko
     SettingsBase {
         Button(
             onClick = {

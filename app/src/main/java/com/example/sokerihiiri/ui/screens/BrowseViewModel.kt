@@ -15,6 +15,9 @@ import javax.inject.Inject
 class BrowseViewModel @Inject constructor(
     repository: SokerihiiriRepository
 ) : ViewModel() {
+    /*
+    ViewModel, joka tarjoaa tietokannasta tiedot kaikkiin selailunäkymiin.
+     */
     val allMeasurements: LiveData<List<BloodSugarMeasurement>> =
         repository.allBloodSugarMeasurements.asLiveData()
 

@@ -10,6 +10,7 @@ import javax.inject.Inject
 
 @HiltAndroidApp
 class SokerihiiriApplication : Application(), Configuration.Provider {
+    // Tätä luokkaa tarvitaan notifikaatiokanavaa ja workManageria varten.
 
     @Inject
     lateinit var workerFactory: HiltWorkerFactory

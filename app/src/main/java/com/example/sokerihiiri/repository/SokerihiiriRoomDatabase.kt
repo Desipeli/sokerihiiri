@@ -1,13 +1,15 @@
 package com.example.sokerihiiri.repository
 
-import android.content.Context
 import androidx.room.Database
-import androidx.room.Room
 import androidx.room.RoomDatabase
 
 //
 //
 // https://developer.android.com/codelabs/android-room-with-a-view-kotlin#7
+
+/*
+Tietokannan määrittley
+ */
 
 @Database(
     entities =

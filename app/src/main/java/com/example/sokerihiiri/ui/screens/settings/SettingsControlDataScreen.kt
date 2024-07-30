@@ -37,10 +37,12 @@ import com.google.accompanist.permissions.shouldShowRationale
 fun SettingsControlDataScreen(
     snackbarHostState: SnackbarHostState
 ) {
+    // Tietojen import ja export ikkuna
     val context = LocalContext.current
     val settingsViewModel = LocalSettingsViewModel.current
     val uiState = settingsViewModel.uiState
 
+    // Kaikki eri varmistusdialogien tilat
     var showRemoveAllRoomDataDialog by remember { mutableStateOf(false) }
     var showRemoveMeasurementsDialog by remember { mutableStateOf(false) }
     var showRemoveInsulinInjectionsDialog by remember { mutableStateOf(false) }
@@ -51,6 +53,7 @@ fun SettingsControlDataScreen(
     val writeCSVDirLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocumentTree())
     {  uri: Uri? ->
+        // Käyttäjä valitsee, mihin hakemistoon hän haluaa csv-tiedostot tallentaa
         if (uri != null) {
             Log.d("SettingsControlDataScreen", "SettingsControlDataScreen: $uri")
             settingsViewModel.startWriteToCSV(context, uri, snackbarHostState)
@@ -60,6 +63,8 @@ fun SettingsControlDataScreen(
     val readCSVLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument())
     {  uri: Uri? ->
+        // Käyttäjä valitsee, mistä hakemistosta hän haluaa lukea csv-tiedostot
+        // Pyydetään vielä varmistus dialogin avulla.
         if (uri != null) {
             settingsViewModel.setLoadingFileUri(uri)
             val documentFile = DocumentFile.fromSingleUri(context, uri)

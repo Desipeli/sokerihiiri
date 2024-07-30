@@ -16,23 +16,24 @@ fun MainScreen(
     modifier: Modifier = Modifier,
     navController: NavController
 ) {
-        Column(modifier = modifier
-        .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center){
-            StyledTextButton(
-                onClick = { navController.navigate(Screens.Measurements.Main.route)},
-                content = stringResource(id = Screens.Measurements.Main.titleResourceId)
-            )
-            StyledTextButton(
-                onClick = { navController.navigate(Screens.Injections.Main.route) },
-                content = stringResource(id = Screens.Injections.Main.titleResourceId))
+    // Päävalikko
+    Column(modifier = modifier
+    .fillMaxSize(),
+    horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.Center){
+        StyledTextButton(
+            onClick = { navController.navigate(Screens.Measurements.Main.route)},
+            content = stringResource(id = Screens.Measurements.Main.titleResourceId)
+        )
+        StyledTextButton(
+            onClick = { navController.navigate(Screens.Injections.Main.route) },
+            content = stringResource(id = Screens.Injections.Main.titleResourceId))
 
-            StyledTextButton(
-                onClick = { navController.navigate(Screens.Meals.Main.route) },
-                content = stringResource(id = Screens.Meals.Main.titleResourceId))
-            StyledTextButton(
-                onClick = { navController.navigate(Screens.Others.Main.route) },
-                text = stringResource(id = Screens.Others.Main.titleResourceId))
+        StyledTextButton(
+            onClick = { navController.navigate(Screens.Meals.Main.route) },
+            content = stringResource(id = Screens.Meals.Main.titleResourceId))
+        StyledTextButton(
+            onClick = { navController.navigate(Screens.Others.Main.route) },
+            text = stringResource(id = Screens.Others.Main.titleResourceId))
     }
 }

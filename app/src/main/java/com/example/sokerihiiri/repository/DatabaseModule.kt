@@ -13,6 +13,8 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
 
+    // Hilt tarjoaa tietokanta- ja repositoriosingletonit, jotka ovat käytössä koko sovelluksessa
+
     @Provides
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): SokerihiiriDatabase {

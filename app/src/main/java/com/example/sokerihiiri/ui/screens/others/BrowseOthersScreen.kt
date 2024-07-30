@@ -28,6 +28,8 @@ import com.example.sokerihiiri.utils.timestampToDateTimeString
 fun BrowseOthersScreen(
     navController: NavController
 ) {
+    // Muiden tapahtumien selailu
+
     val browseViewModel = LocalBrowseViewModel.current
     val allOthers by browseViewModel.allOthers.observeAsState(emptyList())
 

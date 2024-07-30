@@ -22,11 +22,13 @@ import com.example.sokerihiiri.ui.components.SettingsBase
 fun SettingsDefaultsScreen(
     snackbarHostState: SnackbarHostState
 ) {
+    // Oletusasetuksien ikkuna
     val settingsViewModel = LocalSettingsViewModel.current
 
     val uiState = settingsViewModel.uiState
 
     fun handleInsulinDoseChange(value: String) {
+        // Yritetään muuttaa arvo kokonaisluvuksi. Jos tapahtuu virhe, tallennetaan arvoksi 0
         try {
             settingsViewModel.setDefaultInsulinDose(value.toInt())
         } catch (e: NumberFormatException) {

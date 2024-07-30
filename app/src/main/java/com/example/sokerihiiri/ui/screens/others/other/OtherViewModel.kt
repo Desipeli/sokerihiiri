@@ -21,6 +21,7 @@ import javax.inject.Inject
 class OtherViewModel @Inject constructor(
     private val repository: SokerihiiriRepository,
 ): ViewModel() {
+    // ViewModel uuden Muut-tapahtuman luontiin, poistoon ja muokkaukseen
 
     var uiState: UiState by mutableStateOf(UiState())
         private set
@@ -38,6 +39,7 @@ class OtherViewModel @Inject constructor(
     }
 
     fun saveOther(context: Context) {
+        // Tallennetaan tapahtuma tietokantaan
         try {
             if (!validateFields()) throw Exception(context.getString(R.string.comment_missing))
             val timestamp = dateAndTimeToUTCLong(
@@ -61,6 +63,8 @@ class OtherViewModel @Inject constructor(
     }
 
     fun getOtherById(id: String?) {
+        // Haetaan tapahtuma tietokannasta id:n perusteella, paitsi jos tapahtuma on jo haettu tai
+        // id == null
         if (id.toString() == uiState.id.toString()) return
         if (id == null) {
             resetState()
@@ -81,6 +85,7 @@ class OtherViewModel @Inject constructor(
     }
 
     fun updateOther(context: Context) {
+        // Päivitetään tapahtuma tietokantaan
         try {
             if (!validateFields()) throw Exception(context.getString(R.string.comment_missing))
 
@@ -105,6 +110,7 @@ class OtherViewModel @Inject constructor(
     }
 
     fun deleteOther() {
+        // Poistetaan tapahtuma tietokannasta
         try {
             viewModelScope.launch {
                 repository.deleteOtherById(uiState.id!!)

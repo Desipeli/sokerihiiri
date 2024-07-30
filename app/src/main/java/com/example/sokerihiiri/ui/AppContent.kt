@@ -45,6 +45,15 @@ val LocalOtherViewModel = staticCompositionLocalOf<OtherViewModel> {
 fun AppContent(
     navController: NavHostController = rememberNavController(),
 ) {
+    /*
+     Määritellään sovelluksen ui:n rakenne:
+     - yläpalkki
+     - sisältö NavHostin avulla
+     - alapalkki
+
+      ViewModelit saadaan otetaan käyttöön Hilt:n avulla, ja tarjotaan eteenpäin LocalProvideria käyttäen.
+
+     */
     val snackbarHostState = remember { SnackbarHostState() }
     val measurementViewModel: MeasurementViewModel = hiltViewModel()
     val insulinViewModel: InsulinViewModel = hiltViewModel()

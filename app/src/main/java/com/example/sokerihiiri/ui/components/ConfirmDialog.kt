@@ -15,6 +15,8 @@ fun ConfirmDialog(
     title: String = stringResource(R.string.confirm_remove_data_title),
     message: String = stringResource(R.string.confirm_remove_data_message),
 ) {
+    // Varmistusdialogi
+
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(text = title) },

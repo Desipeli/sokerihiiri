@@ -41,20 +41,28 @@ class SettingsViewModel @Inject constructor(
     private val repository: SokerihiiriRepository,
     private val workManager: WorkManager
 ) : ViewModel() {
+    /*
+    Kaikkien asetusikkunoiden ViewModel
+     */
 
     var uiState: UiState by mutableStateOf(UiState())
         private set
 
     fun startWriteToCSV(context: Context, dirUri: Uri, snackbarHostState: SnackbarHostState) {
+        /* Aloitetaan tietojen kirjoittaminen CSV-tiedostoihin. */
+
         context.contentResolver.takePersistableUriPermission(
             dirUri,
             Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
         )
+
+        // Uri oikeaan muotoon
         val documentUri = DocumentsContract.buildDocumentUriUsingTree(
             dirUri,
             DocumentsContract.getTreeDocumentId(dirUri)
         )
 
+        // Luodaan tiedostot
         val measurementsFileUri = DocumentsContract.createDocument(
             context.contentResolver, documentUri, "text/csv", "measurements.csv"
         )
@@ -68,6 +76,7 @@ class SettingsViewModel @Inject constructor(
             context.contentResolver, documentUri, "text/csv", "others.csv"
         )
 
+        // Kirjoitetaan tiedot
         writeCSV(context, measurementsFileUri, insulinInjectionsFileUri, mealsFileUri, othersFileUri, snackbarHostState)
     }
 
@@ -78,6 +87,10 @@ class SettingsViewModel @Inject constructor(
         mealsFileUri: Uri?,
         othersFileUri: Uri?,
         snackbarHostState: SnackbarHostState) {
+
+        // Kirjoitetaan tiedot csv-tiedostoihin
+        // Haetaan repositoriosta tiedot listana, ei flowna.
+        // Suoritetaan tiedostojen kirjoitukset yksi kerrallaan
 
         viewModelScope.launch {
             try {
@@ -139,13 +152,17 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun setLoadingFileName(fileName: String) {
+        // Laitetaan muistiin importattvan csv-tiedoston nimi
         uiState = uiState.copy(loadingFileName = fileName)
     }
 
     fun setLoadingFileUri(uri: Uri) {
+        // Laitetaan muistiin importattvan csv-tiedoston uri
         uiState = uiState.copy(loadingFileUri = uri)
     }
     fun checkFileContent(context: Context, uri: Uri, snackbarHostState: SnackbarHostState) {
+        // Selvitetään, minkä tyyppistä dataa tiedostossa on
+
         viewModelScope.launch {
             val fileType = determineFileContent(context, uri)
             when (fileType) {
@@ -188,6 +205,9 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun readFileContent(context: Context, snackbarHostState: SnackbarHostState) {
+        // Luetaan tiedoston sisältö. Käytetään tiedoston sisältöön sopivaa funktiota.
+        // Poistetaan vanhat tiedot ennen uusien tallentamista
+
         val uri = uiState.loadingFileUri
         if (uri == null) {
             Log.e("SettingsViewModel", "No file selected")
@@ -241,6 +261,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     init {
+        // Haetaan aluksi oletusasetukset DataStoresta
         Log.d("SettingsViewModel", "init")
         viewModelScope.launch {
             dataStoreManager.getDefaultInsulinDose().collect { dose ->
@@ -265,20 +286,24 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun setDefaultInsulinDose(dose: Int) {
+        // Asetetaan oletusarvo insuliiniannokselle
         if (dose <= MAX_INSULIN_DOSE) {
             uiState = uiState.copy(defaultInsulinDose = dose)
         }
     }
 
     fun setDefaultHoursAfterMeal(hours: Int) {
+        // Asetetaan oletusarvo aterian jälkeiselle mittaukselle (tunnit)
         uiState = uiState.copy(defaultHoursAfterMeal = hours)
     }
 
     fun setDefaultMinutesAfterMeal(minutes: Int) {
+        // Asetetaan oletusarvo aterian jälkeiselle mittaukselle (minuutit)
         uiState = uiState.copy(defaultMinutesAfterMeal = minutes)
     }
 
     private fun saveDefaultInsulinDose() {
+        // Tallennetaan oletusarvo insuliiniannokselle DataStoreen.
         viewModelScope.launch {
             try {
                 dataStoreManager.setDefaultInsulinDose(uiState.defaultInsulinDose)
@@ -289,6 +314,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     private fun saveDefaultHoursAfterMeal() {
+        // Tallennetaan oletusarvo aterian jälkeiselle mittaukselle (tunnit) DataStoreen.
         viewModelScope.launch {
             try {
                 dataStoreManager.setDefaultHoursAfterMeal(uiState.defaultHoursAfterMeal)
@@ -299,6 +325,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     private fun saveDefaultMinutesAfterMeal() {
+        // Tallennetaan oletusarvo aterian jälkeiselle mittaukselle (minuutit) DataStoreen.
         viewModelScope.launch {
             try {
                 dataStoreManager.setDefaultMinutesAfterMeal(uiState.defaultMinutesAfterMeal)
@@ -310,6 +337,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun saveDefaultsSettings(snackbarHostState: SnackbarHostState) {
+        // Tallennetaan oletusasetukset DataStoreen.
         viewModelScope.launch {
             try {
                 saveDefaultInsulinDose()
@@ -323,6 +351,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun deleteAllMeasurements(snackbarHostState: SnackbarHostState, context: Context) {
+        // Poistetaan kaikki mittaukset tietokannasta.
         viewModelScope.launch {
             try {
                 repository.deleteAllBloodSugarMeasurements()
@@ -335,6 +364,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun deleteAllInsulinInjections(snackbarHostState: SnackbarHostState, context: Context) {
+        // Poistetaan kaikki insuliinikirjaukset tietokannasta.
         viewModelScope.launch {
             try {
                 repository.deleteAllInsulinInjections()
@@ -347,6 +377,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun deleteAllMeals(snackbarHostState: SnackbarHostState, context: Context) {
+        // Poistetaan kaikki ateriat tietokannasta.
         viewModelScope.launch {
             try {
                 repository.deleteAllMeals()
@@ -359,6 +390,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun deleteAllOthers(snackbarHostState: SnackbarHostState, context: Context) {
+        // Poistetaan kaikki muut tiedot tietokannasta.
         viewModelScope.launch {
             try {
                 repository.deleteAllOthers()
@@ -371,6 +403,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun deleteAllRoomData(snackbarHostState: SnackbarHostState, context: Context) {
+        // Poistetaan kaikki tiedot tietokannasta
         viewModelScope.launch {
             deleteAllMeals(snackbarHostState, context)
         }
@@ -386,14 +419,17 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun setInsulinNotification(active: Boolean) {
+        // Notifikaatiot päälle/pois
         uiState = uiState.copy(insulinNotification = active)
     }
 
     fun setInsulinDeadline(hours: Int, minutes: Int) {
+        // Asetetaan notifikaation aika.
         uiState = uiState.copy(insulinDeadlineHours = hours, insulinDeadlineMinutes = minutes)
     }
 
     private fun getInsulinNotification() {
+        // Haetaan notifikaatiotila DataStoresta
         viewModelScope.launch {
             dataStoreManager.getInsulinDeadlineEnabled().collect { enabled ->
                 uiState = uiState.copy(insulinNotification = enabled)
@@ -402,6 +438,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun getInsulinDeadline() {
+        // Haetaan notifikaatioaika DataStoresta
         viewModelScope.launch {
             dataStoreManager.getInsulinDeadlineHours().collect { hours ->
                 uiState = uiState.copy(insulinDeadlineHours = hours)
@@ -415,6 +452,8 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun saveInsulinDeadline(snackbarHostState: SnackbarHostState) {
+        // Tallennetaan notifikaatioaika DataStoreen.
+        // Ajastetaan uusi notifikaatio tai poistetaan vanha.
         viewModelScope.launch {
             try {
                 if (uiState.insulinNotification) {

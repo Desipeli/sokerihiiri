@@ -4,13 +4,15 @@ import androidx.annotation.WorkerThread
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class SokerihiiriRepository @Inject constructor(
+class SokerBloodihiiriRepository @Inject constructor(
     private val bloodSugarMeasurementDao: BloodSugarMeasurementDao,
     private val insulinInjectionDao: InsulinInjectionDao,
     private val mealDao: MealDao,
     private val otherDao: OtherDao,
 ) {
+    // Repositorioluokka. Yhteys tietokannan ja ViewModelien välille.
 
+    // Kaikkien taulujen seuranta Flown avulla
     val allBloodSugarMeasurements: Flow<List<BloodSugarMeasurement>> =
         bloodSugarMeasurementDao.getAll()
 
@@ -23,6 +25,7 @@ class SokerihiiriRepository @Inject constructor(
     val allOthers: Flow<List<Other>> =
         otherDao.getAll()
 
+    // Tietokantaoperaatiot, suoritetaan erillisissä säikeissä.
     @WorkerThread
     suspend fun getAllBloodSugarMeasurementsAsList(): List<BloodSugarMeasurement> {
         return bloodSugarMeasurementDao.getAllAsList()
@@ -163,6 +166,7 @@ class SokerihiiriRepository @Inject constructor(
         otherDao.deleteAll()
     }
 
+    @WorkerThread
     suspend fun getAllOthersAsList(): List<Other> {
         return otherDao.getAllAsList()
     }

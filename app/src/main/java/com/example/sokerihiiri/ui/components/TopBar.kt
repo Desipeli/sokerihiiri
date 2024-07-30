@@ -29,12 +29,15 @@ fun TopBar(
     modifier: Modifier = Modifier,
     navController: NavController) {
 
+    // Yläpalkki. Näytetään reittiin liittyvä otsikko ja kuva, sekä nappi asetuksiin
+
+    // Nykyisen reitin tiedot
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
 
-    val baseRoute = baseRoute(currentRoute)
+    val baseRoute = baseRoute(currentRoute) // Mahdollinen id-osa pois reitistä.
 
-    val currentScreen = screenList.find { it.route == baseRoute }
+    val currentScreen = screenList.find { it.route == baseRoute } // Haetaan Screen-olio baseRouten perusteella
     val currentLogo = currentScreen?.logo
 
     Log.d("TopBar", "currentRoute: $currentRoute")

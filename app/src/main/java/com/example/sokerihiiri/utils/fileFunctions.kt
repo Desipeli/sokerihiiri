@@ -17,7 +17,17 @@ suspend fun writeMeasurementsToDownloadsCSV(
     measurements: List<BloodSugarMeasurement>?,
     fileUri: Uri,
 ) = withContext(Dispatchers.IO) {
+    /*
+    Kirjoitetaan tietokannasta haetut mittaustulokset csv-tiedostoon.
+    Käytetään WithContext(Dispatchers.IO), jotta operaatio tehdään IO:n tarkoitetulla säikeellä.
+    Muut kirjoitusfunktiot toimivat samalla periaatteella
+     */
     try {
+        /*
+        Avataan tiedosto ja kirjoitetaan otsakkeet.
+        Käydään läpi kaikki mittaustapahtumat, ja kirjataan jokaisesta tarvittavat tiedot
+        oikeassa muodossa riville. Rivierottimena oletus on ;
+         */
         context.contentResolver.openOutputStream(fileUri)?.use { outputStream ->
             OutputStreamWriter(outputStream).use { writer ->
                 writer.appendLine("Sep=${CSV_SEPARATOR}")
@@ -139,6 +149,7 @@ suspend fun writeOthersToDownloadsCSV(
     }
 }
 
+// FileType kertoo, mitä tietoja tiedosto sisältää
 enum class FileType {
     MEASUREMENTS,
     INSULIN,
@@ -147,7 +158,12 @@ enum class FileType {
 }
 suspend fun determineFileContent(context: Context, uri: Uri): FileType?  =
     withContext(Dispatchers.IO) {
+        /*
+        Selvitetään mitä tiedosto sisältää, jotta sen voi ohjata oikealle lukufunktiolle
+        Palautetaan sisältöä vastaava FileType tai null
+         */
     try {
+
         var type: FileType? = null
         var i = 0
         context.contentResolver.openInputStream(uri)?.use { inputStream ->
@@ -155,6 +171,7 @@ suspend fun determineFileContent(context: Context, uri: Uri): FileType?  =
                 reader.forEachLine { line ->
                     when (i) {
                         0 -> {
+                            // Tarkastetaan, että erotin on asetettu
                             if (!line.startsWith("Sep=") || line.length <= 4) {
                                 throw Exception("Invalid CSV file format")
                             }
@@ -193,6 +210,11 @@ suspend fun determineFileContent(context: Context, uri: Uri): FileType?  =
 suspend fun readMeasurementsFromCSV(context: Context, uri: Uri):
         List<BloodSugarMeasurement> =
     withContext(Dispatchers.IO) {
+    /*
+    Luetaan mittaustulokset csv-tiedostosta ja palautetaan ne listana
+    Käytetään withContext(Dispatchers.IO), jotta operaatio tehdään IO:n tarkoitetulla säikeellä.
+    Muut lukufunktiot toimivat samalla periaatteella
+     */
     var i = 0
     var separator = CSV_SEPARATOR
     val measurements = mutableListOf<BloodSugarMeasurement>()
@@ -201,6 +223,7 @@ suspend fun readMeasurementsFromCSV(context: Context, uri: Uri):
             reader.forEachLine { line ->
                 when (i) {
                     0 -> if (line.startsWith("Sep=") || line.length > 4) {
+                        // Käytetään tiedostossa olevaa erotinta
                         separator = line[4]
                         Log.d("readMeasurementsFromCSV", "Separator: $separator")
                     }
@@ -208,6 +231,10 @@ suspend fun readMeasurementsFromCSV(context: Context, uri: Uri):
                         Log.d("readMeasurementsFromCSV", "Skipping header lines")
                     }
                     else -> {
+                        // Jaetaan jokainen rivi erottimella osiin ja luodaan mittausolio.
+                        // Kulunut aika ateriasta muutetaan minuuteiksi
+                        // pvm ja aikatieto muutetaan Unix timestampiksi
+                        // Lisätään mittausolio listaan
                         val fields = line.split(separator)
                         if (fields.size < 2) {
                             throw Exception("$i")

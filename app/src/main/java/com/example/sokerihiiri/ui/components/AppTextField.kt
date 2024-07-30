@@ -11,6 +11,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 
+/*
+Tyylitellyt kentät, jotta näyttävät varmasti samalta koko sovelluksessa.
+ */
+
 @Composable
 fun StyledTextField(
     modifier: Modifier = Modifier,

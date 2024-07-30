@@ -22,6 +22,9 @@ class InsulinRemainderWorker @AssistedInject constructor(
     private val workManager: WorkManager
 ) : CoroutineWorker(context, workParameters){
 
+    // Työ, joka lähettää ilmoituksen ja ajastaa uuden työn.
+    // Jos ilmoitukset on otettu pois käytöstä, ei tehdä mitään.
+
     private val insulinNotificationService = InsulinNotificationService(context)
 
     override suspend fun doWork(): Result {

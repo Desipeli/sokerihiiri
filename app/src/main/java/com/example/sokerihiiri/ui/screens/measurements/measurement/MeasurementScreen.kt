@@ -37,6 +37,8 @@ fun MeasurementScreen(
     modifier: Modifier = Modifier,
     id: String? = null,
 ) {
+    // Näkymä mittaustapahtuman luomiseen, muokkaukseen ja poistoon
+
     val measurementViewModel = LocalMeasurementViewModel.current
     val uiState = measurementViewModel.uiState
 

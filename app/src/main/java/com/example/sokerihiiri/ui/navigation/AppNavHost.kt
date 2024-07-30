@@ -22,6 +22,13 @@ import com.example.sokerihiiri.ui.screens.others.other.OtherScreen
 fun AppNavHost(navController: NavHostController, snackbarHostState: SnackbarHostState, innerPadding: PaddingValues) {
     // Navigointi https://developer.android.com/codelabs/basic-android-kotlin-compose-navigation#1
     // https://nameisjayant.medium.com/nested-navigation-in-jetpack-compose-597ecdc6eebb
+
+    /*
+    Sovelluksen sisäinen navigointi. Kaikki mahdolliset ruudut ja niiden reitit ovat määritelty täällä.
+    Näkymään renderöidään kutsumalla navController.navigate(<REITTI>) metodia.
+    Joihinkin reitteihin on lisätty parametri id, jonka perusteella tietty tapahtuma haetaan tietokannasta.
+    Reitit on määritelty tiedostossa Screens.kt
+     */
     NavHost(
         navController = navController,
         startDestination = Screens.Main.route,

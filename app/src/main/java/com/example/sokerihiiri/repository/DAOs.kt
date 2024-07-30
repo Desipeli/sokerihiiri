@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.Flow
 //
 // https://developer.android.com/codelabs/android-room-with-a-view-kotlin#5
 
+// Kaikki mahdolliset tietokantakyselyt
 @Dao
 interface BloodSugarMeasurementDao {
     @Query("SELECT * FROM blood_sugar_measurements ORDER BY timestamp DESC")

@@ -27,6 +27,8 @@ fun SeriousConfirmDialog(
     message: String = "",
     confirmText: String = "",
 ) {
+    // Vahvistusdialogi, joka vaatii checkboxin käyttämistä.
+
     var checked by remember { mutableStateOf(false) }
     var isError by remember { mutableStateOf(false) }
 
@@ -37,6 +39,7 @@ fun SeriousConfirmDialog(
     )
 
     LaunchedEffect(checked) {
+        // nollataan virhe jos checkboxi on valittu
         if (checked) {
             isError = false
         }
