@@ -4,7 +4,7 @@ import androidx.annotation.WorkerThread
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class SokerBloodihiiriRepository @Inject constructor(
+class SokerihiiriRepository @Inject constructor(
     private val bloodSugarMeasurementDao: BloodSugarMeasurementDao,
     private val insulinInjectionDao: InsulinInjectionDao,
     private val mealDao: MealDao,
