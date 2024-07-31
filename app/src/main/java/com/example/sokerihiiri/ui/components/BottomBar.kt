@@ -42,6 +42,13 @@ import com.example.sokerihiiri.utils.baseRoute
 fun BottomBar(
     navController: NavController,
     snackbarHostState: SnackbarHostState) {
+
+    /* Sovelluksessa näkyvä alapalkki.
+    Oikeassa laidassa oleva toimintonappi vaihtuu reitin mukaan.
+    Id:n sisältävistä reiteistä on poistettava id-osa, jotta oikean napin luominen onnistuu
+    Toimintonapit vaativat usein saman ViewModelin kuin varsinainen ruutu.
+     */
+
     val context = LocalContext.current
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
@@ -184,6 +191,9 @@ fun EditActionButton(
     deleteAction: () -> Unit,
     canEdit: Boolean,
     setCanEdit: (Boolean) -> Unit) {
+
+    // Muokkausruudussa oleva toimintonappi
+
     var expandend by remember { mutableStateOf(false) }
     var confirmDialogState by remember { mutableStateOf(false) }
 
@@ -239,6 +249,7 @@ fun EditActionButton(
 fun CreateNewActionButton(
     action: () -> Unit = {},
 ) {
+    // Nappi uuden tapahtuman luomiseen
     IconButton(
         onClick = {
             try {
@@ -256,6 +267,7 @@ fun CreateNewActionButton(
 fun BrowseCreateNewActionButton(
     action: () -> Unit = {}
 ) {
+    // Nappi, jota painamalla avataan ruutu uuden tapahtuman luomiseen.
     IconButton(
         onClick = {
             action()
