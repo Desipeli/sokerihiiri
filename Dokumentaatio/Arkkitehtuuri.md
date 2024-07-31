@@ -75,3 +75,9 @@ Sovelluksen tietokannassa olevan datan voi korvata csv-tiedostossa olevalla data
 ## Navigointi
 
 Sovelluksen sisäinen navigointi on toteutettu `androidx.navigation:navigation-compose`:n avulla. Luokka `Screens` sisältää kaikki mahdolliset reitit, sekä niille otsikko- ja kuvatiedot. Funktio AppNavHost käyttää `NavHost` @Composablea, jossa määritellään reittejä vastaavat näkymät. Navigointi tiettyyn kohteeseen onnistuu kutsumalla sovelluksen ylimmässä komponentissa määritellyn `NavController`:n metodia navigate(<REITTI>).
+
+## Ilmoitukset
+
+Sovellus voi tarvittaessa muistuttaa käyttäjää ilmoituksella joka päivä tiettyyn aikaan, jos insuliinikirjausta ei ole tehty.
+
+`utils/scheduleInsulinNotification.kt` sisältää funktion `scheduleInsulinNotification`, joka ajastaa yhden ilmoituksen hälyttämään tiettyyn kellonaikaan. Ajastukseen käytetään [WorkManager-luokkaa](https://developer.android.com/topic/libraries/architecture/workmanager), ja ilmoitukset näytetään vaikka sovelluksen sulkisi kokonaan. Workeriin liittyvä koodi löytyy hakemistosta `notifications`, ja ilmoituskanava määritellään tiedostossa `SokerihiiriApplication`.
