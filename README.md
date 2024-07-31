@@ -4,7 +4,7 @@ Tampereen yliopiston kurssin COMP.CS.220-2023-2024-1 Mobiiliohjelmointi harjoitu
 
 Diabeteksen seurantasovellus
 
-Lataa uusin APK-asennustiedosto [tästä](https://github.com/Desipeli/sokerihiiri/releases/download/v1.0.0/app-release.apk)
+Lataa uusin APK-asennustiedosto [tästä](https://github.com/Desipeli/sokerihiiri/releases/download/v1.0.0/sokerihiiri.apk)
 
 [Käyttöohje](./Dokumentaatio/instructions.pdf)
 
